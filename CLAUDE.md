@@ -60,3 +60,17 @@ First person, short sentences, plain words, confident but not inflated. Describe
 5. Contact (form + booking)  
 6. Launch polish (SEO, sitemap, a11y audit, performance, Services flag, production deploy)
 
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues on `Kynot54/portV3`, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The default five: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `GLOSSARY.md` and `docs/adr/` at the repo root, created as terms and decisions come up. See `docs/agents/domain.md`.
