@@ -137,6 +137,9 @@ Open:   [ Kyle Whynott   (█Contact█)  ✕ ]
 - **Motion:** a short open animation, and none under `prefers-reduced-motion`.
 - **Build:** a shadcn component (for example `collapsible`) or plain markup. No packages outside the approved list.
 
+### Logo
+- The logo is the text **KW** (Geist, bold) linking to `/`. Its accessible name is **"Kyle Whynott, home"** (`aria-label`), as Kyle decided.
+
 ### Type
 - **Geist** (sans) for everything, and **Geist Mono** for the small uppercase micro-labels. Both load through `next/font/google`, which downloads them at build time and serves them from our own domain. There is no new dependency.
 
@@ -158,11 +161,13 @@ Open:   [ Kyle Whynott   (█Contact█)  ✕ ]
 1. **`next-themes`, chosen over the docs' inline-script method.** In dev it logs a React "script tag" warning, but the production build, which e2e and Lighthouse run against, is clean. It treats "no preference" as light, not dark. Its last release was in March 2025.
 2. **No-JS visitors always get dark,** even if their system is light (the brief says light follows the system).
 3. **Blue is quieter than "blue in different shades" might suggest.** It's used for focus, link underlines and keywords, so the accent isn't diluted.
+4. **Logo name vs visible text (WCAG 2.5.3 "Label in Name", Level A).** The visible text "KW" isn't part of the accessible name "Kyle Whynott, home". A voice-control user who says "click KW" may not hit it. Built as Kyle directed. A fix that keeps his wording would be the name "KW, Kyle Whynott, home".
 
 ## Needs Kyle's call (in the PR)
 
 - The exact grey values, if he wants them tuned after seeing the preview.
-- Logo mark (text "Kyle Whynott" until then), meta description copy, footer social links (they need `content/source/resume.md`).
+- Meta description copy and footer social links (they need `content/source/resume.md`).
+- **Decided by Kyle:** the grey values are tuned after he sees the preview (the builder ships sensible greys now).
 
 ## Review focus (failure modes worth testing)
 

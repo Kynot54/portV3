@@ -253,6 +253,7 @@ test('choosing System again follows the OS', async () => {
 - [ ] **Step 1: Write the failing tests** in `tests/unit/header.test.tsx`. Mock `next/navigation` `usePathname`.
 
 ```tsx
+test('logo shows KW and is named "Kyle Whynott, home", linking to /', ...)
 test('desktop nav: logo, Work, Blog, theme toggle, Contact in DOM order', ...)   // within nav "Main"; Contact is last
 test('marks current section, including nested paths', ...)                       // '/blog/x' → Blog aria-current="page"
 test('Contact uses the accent button style', ...)                                 // has class from Button default variant (bg-primary)
@@ -266,6 +267,7 @@ test('menu closes when viewport crosses to desktop', ...)                       
 - [ ] **Step 2:** Run `npm test`. Expected: FAIL, because `Header` is not found.
 - [ ] **Step 3: Implement `site.ts`, `Header` and `Footer`.**
   - **Nav markup:** `<header>` → `<nav aria-label="Main">`. It's a floating pill: fixed or sticky, centred, `rounded-full`, with a border, a `max-w` cap and fluid side margins.
+  - **Logo:** the visible text `KW` (bold), with `aria-label="Kyle Whynott, home"`, linking to `/`.
   - **From `sm` up:** logo link, Work, Blog, `ThemeToggle`, Contact (`Button` default variant, `rounded-full`).
   - **Below `sm`:** logo, Contact, Menu button (`aria-expanded`, `aria-controls="mobile-menu"`, Lucide `Menu`/`X` icons).
   - **Panel:** `#mobile-menu` holds Work, Blog and `ThemeToggle`.
@@ -277,7 +279,7 @@ test('menu closes when viewport crosses to desktop', ...)                       
   - **Body:** `Header`, then `<main id="main" tabIndex={-1}>` with top padding that clears the floating pill, then `Footer`.
   - **Pages:** each route renders `<h1 className="text-hero">` (Kyle Whynott / Work / Blog / Contact) and one line, `Placeholder. This page arrives in Slice NN.` with `{/* TODO(kyle) */}`. Each sets `metadata.title`, except Home.
   - **404:** `not-found.tsx` renders `<h1>Page not found</h1>` and a link home.
-- [ ] **Step 5:** Run `npm test`. Expected: PASS (8 new tests). Then run `npm run build`. Expected: exit 0, listing the routes `/`, `/work`, `/blog`, `/contact` and `/_not-found`.
+- [ ] **Step 5:** Run `npm test`. Expected: PASS (9 new tests). Then run `npm run build`. Expected: exit 0, listing the routes `/`, `/work`, `/blog`, `/contact` and `/_not-found`.
 - [ ] **Step 6: Commit.** `feat: responsive pill nav with mobile menu, shell and placeholder routes`
 
 ---
@@ -350,9 +352,9 @@ test('menu closes when viewport crosses to desktop', ...)                       
   - **Summary.**
   - **Test evidence:** command tails, and the Lighthouse medians with the `.lighthouseci/` report paths.
   - **Preview URL:** pending Kyle's Vercel setup.
-  - **Needs Kyle's call:** grey values, logo mark, meta description, footer links.
-  - **TODO(kyle):** `resume.md`, logo, page copy, social links.
-  - **Conflicts flagged:** the 3 from the spec.
+  - **Needs Kyle's call:** grey values (tuned after the preview), meta description, footer links.
+  - **TODO(kyle):** `resume.md`, page copy, social links.
+  - **Conflicts flagged:** the 4 from the spec (including the logo's label-in-name).
   - **Kyle's checklist:** create `Kynot54/portfolio-v3` and push the branch; connect a **new** Vercel project without touching V2 or the domain; make `quality` a required check on `main`; open the PR.
 - [ ] **Step 4: Commit.** `docs: Slice 01 PR description and handoff checklist`
 
