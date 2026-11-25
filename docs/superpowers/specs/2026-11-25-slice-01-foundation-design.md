@@ -53,11 +53,11 @@ Environment facts found during recon:
 - **Dev:** `tailwindcss` and `@tailwindcss/turbopack` (from the scaffold), `vitest`, `jsdom`, `@testing-library/react`, `@testing-library/dom`, `@testing-library/jest-dom`, `@testing-library/user-event`, `@playwright/test`, `@axe-core/playwright` and `@lhci/cli`.
 - **Not approved:** `@vitejs/plugin-react` (it conflicts) and `vite-tsconfig-paths` (use Vitest's own `resolve.alias`).
 
-## Remote setup: Kyle does this later
+## Remote setup
 
 The GitHub repo exists (`Kynot54/portV3`, public), and the slice branch is pushed. Kyle connects Vercel later. His current V2 site is on Vercel, and V3 replaces it when V3 is ready; that switch is Slice 6 and Kyle's alone. So in Slice 1:
 
-- All checks (lint, typecheck, unit, e2e, axe, Lighthouse) are proven **locally** against a production build. The CI workflow is written and validated, but it can't run until the repo exists.
+- All checks (lint, typecheck, unit, e2e, axe, Lighthouse) are proven **locally** against a production build, then again by the CI workflow on the PR.
 - The slice ends with the branch pushed and a PR open into `main`; CI runs on it for real. Kyle's checklist:
   1. Connect the repo to a **new** Vercel project; don't touch the V2 project or the domain.
   2. Make the CI job a **required status check** on `main` (branch protection).
