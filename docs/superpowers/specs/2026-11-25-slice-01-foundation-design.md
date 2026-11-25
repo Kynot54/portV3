@@ -35,7 +35,7 @@ From `CLAUDE.md`, unchanged:
 - **Accessibility:** WCAG AA, with ≥ 4.5:1 for body text. Full keyboard support with visible focus. `prefers-reduced-motion` honoured. No audio. Nothing flashes more than 3 times per second.
 - **Privacy:** no phone number or personal email anywhere.
 - **New dependencies are a joint decision.** The packages under "Approved dependencies" below are approved. Anything else is proposed under "Needs Kyle's call" and not installed.
-- **Kyle's actions only:** creating the GitHub repo `Kynot54/portfolio-v3`, connecting Vercel, any domain or DNS change, merging, and any production deploy.
+- **Kyle's actions only:** creating the GitHub repo `Kynot54/portV3`, connecting Vercel, any domain or DNS change, merging, and any production deploy.
 - **Git:** branch `slice/01-foundation`, one PR, no merge.
 - **Definition of done:** tests green, axe zero, Lighthouse near-perfect with the report attached, no console errors, a manual keyboard pass, and mobile, tablet and desktop checked.
 
@@ -55,14 +55,13 @@ Environment facts found during recon:
 
 ## Remote setup: Kyle does this later
 
-Kyle creates the GitHub repo and connects Vercel later. His current V2 site is on Vercel, and V3 replaces it when V3 is ready; that switch is Slice 6 and Kyle's alone. So in Slice 1:
+The GitHub repo exists (`Kynot54/portV3`, public), and the slice branch is pushed. Kyle connects Vercel later. His current V2 site is on Vercel, and V3 replaces it when V3 is ready; that switch is Slice 6 and Kyle's alone. So in Slice 1:
 
 - All checks (lint, typecheck, unit, e2e, axe, Lighthouse) are proven **locally** against a production build. The CI workflow is written and validated, but it can't run until the repo exists.
-- The slice ends on the local branch `slice/01-foundation`, with no push. It hands Kyle a short checklist:
-  1. Create `Kynot54/portfolio-v3` and push the branch.
-  2. Connect it to a **new** Vercel project; don't touch the V2 project or the domain.
-  3. Make the CI job a **required status check** on `main` (branch protection).
-  4. Open the PR.
+- The slice ends with the branch pushed and a PR open into `main`; CI runs on it for real. Kyle's checklist:
+  1. Connect the repo to a **new** Vercel project; don't touch the V2 project or the domain.
+  2. Make the CI job a **required status check** on `main` (branch protection).
+  3. Review and merge.
 - The PR body is written and saved locally (`docs/plans/slice-01-pr.md`), ready to paste, with "Preview URL: pending Kyle's Vercel setup".
 
 ## Approaches considered

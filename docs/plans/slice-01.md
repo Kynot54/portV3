@@ -51,7 +51,7 @@ The `CLAUDE.md` working agreement asks for these three.
   - Never `@vitejs/plugin-react` or `vite-tsconfig-paths`.
   - Never `--legacy-peer-deps` or `--force`.
 - **Copy.** No phone number or email. Placeholders are marked `TODO(kyle)`. No invented claims.
-- **Git.** Branch `slice/01-foundation`, local only: no push, no remote, no merge, no deploy.
+- **Git.** Branch `slice/01-foundation`, pushed to `origin` (`github.com/Kynot54/portV3`). One PR into `main`. Never merge, never push to `main`, never deploy.
 - **Environment notes (this machine).**
   - Run npm with `npm_config_cache=$TMPDIR/npm-cache`, because `~/.npm` is sandbox-blocked.
   - `next build` needs network access to `fonts.googleapis.com` and `fonts.gstatic.com`.
@@ -348,15 +348,15 @@ test('menu closes when viewport crosses to desktop', ...)                       
 
 - [ ] **Step 1:** Run the full local suite: `npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run lhci`. Expected: all green. Save the tail of each output for the PR.
 - [ ] **Step 2: Manual keyboard pass.** At 375 px and 1440 px, in each theme state: tab through, open and close the menu with Enter and Esc, and cycle the toggle. Record the result.
-- [ ] **Step 3: Write `docs/plans/slice-01-pr.md`.** It holds:
+- [ ] **Step 3: Write the PR body** to `docs/plans/slice-01-pr.md`. It holds:
   - **Summary.**
   - **Test evidence:** command tails, and the Lighthouse medians with the `.lighthouseci/` report paths.
   - **Preview URL:** pending Kyle's Vercel setup.
   - **Needs Kyle's call:** grey values (tuned after the preview), meta description, footer links.
   - **TODO(kyle):** `resume.md`, page copy, social links.
   - **Conflicts flagged:** the 4 from the spec (including the logo's label-in-name).
-  - **Kyle's checklist:** create `Kynot54/portfolio-v3` and push the branch; connect a **new** Vercel project without touching V2 or the domain; make `quality` a required check on `main`; open the PR.
-- [ ] **Step 4: Commit.** `docs: Slice 01 PR description and handoff checklist`
+  - **Kyle's checklist:** connect a **new** Vercel project to `Kynot54/portV3` without touching V2 or the domain; make `quality` a required check on `main`; review and merge.
+- [ ] **Step 4: Commit and push**, then open the PR: `gh pr create --base main --head slice/01-foundation --title "Slice 01: Foundation" --body-file docs/plans/slice-01-pr.md`. Expected: a PR URL. The first CI run on the PR proves the `quality` job for real.
 
 ## Self-review notes
 
