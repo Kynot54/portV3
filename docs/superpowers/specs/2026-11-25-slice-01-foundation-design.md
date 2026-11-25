@@ -18,7 +18,7 @@ kwhynott.dev V3 has to read as "AI/SWE engineer, open to work" to employers and 
 
 ## Non-goals (later slices)
 
-- Home hero, the "Open to work" note, and About copy → Slice 2. Work content → Slice 3. Blog/MDX → Slice 4. Contact form and booking → Slice 5. SEO, sitemap, the Services flag and the production deploy → Slice 6.
+- Home hero, the "Open to work" note, and About copy → Slice 2. Work content → Slice 3. Blog/MDX → Slice 4. **Recorded for Slice 4:** on mobile, the blog list is compact (title and date), and each entry can be expanded to show more. Contact form and booking → Slice 5. SEO, sitemap, the Services flag and the production deploy → Slice 6.
 - Any admin, auth, database, cross-posting or consulting work (V3.1+). Don't block them: content stays in files under `content/`.
 
 ## Anti-goals (a failure even if it "works")
@@ -79,7 +79,7 @@ Kyle creates the GitHub repo and connects Vercel later. His current V2 site is o
 
 ### Components: shadcn/ui on Base UI
 - Run `shadcn init` with **Base UI** as the base library, no preset, and the neutral base colour. Then **replace** its colour values with the palette below.
-- Add only the components Slice 1 uses. Expected: `button`. More arrive in later slices, when needed.
+- Add only the components Slice 1 uses. Expected: `button`, plus one for the mobile menu if it helps (for example `collapsible`). More arrive in later slices, when needed.
 
 ### Theme: `next-themes`
 - `ThemeProvider` with `attribute="class"`, `defaultTheme="system"`, `enableSystem`, `disableTransitionOnChange`. The storage key is next-themes' default.
@@ -114,6 +114,29 @@ The remaining shadcn tokens (`card`, `popover`, `secondary`, `accent`, `destruct
 - **Links:** body-colour text with a **blue underline**.
 - **Keywords:** **blue text, no underline, normal weight**, used for a few key terms per section, not every noun. Slice 1 ships the token and a `<Keyword>` component (a `<span>`), so MDX and pages can use it later.
 
+### Responsive (whole site)
+- **Nothing fixed-size.** No fixed pixel widths or heights for layout. Type and spacing scale fluidly with `clamp()` (for example, the hero h1 runs from about 30 px on mobile to about 44 px on desktop). Content sits in max-width containers with side padding that scales. Tall sections use dynamic viewport units (`dvh`/`svh`), so mobile browser bars don't cut them off.
+- **Widths verified:** 320, 375, 768, 1024 and 1440 px, plus a short landscape phone (about 667×375) and 200% zoom. None of them may scroll horizontally.
+- Later slices inherit these rules.
+
+### Mobile nav (below 640 px, Tailwind `sm`)
+```
+Closed: [ Kyle Whynott   (█Contact█)  ☰ ]
+Open:   [ Kyle Whynott   (█Contact█)  ✕ ]
+        ┌───────────────────────────────┐
+        │ Work                          │
+        │ Blog                          │
+        │ Theme: System  ◐              │
+        └───────────────────────────────┘
+```
+- **Contact stays visible** next to the menu button. The accent never hides inside a menu.
+- **What's in the menu:** a panel drops down under the pill, holding Work, Blog and the three-state theme toggle.
+- **Pattern:** a disclosure, not a modal. The button is named "Menu" and carries `aria-expanded` and `aria-controls`. There's no focus trap.
+- **Closing:** Esc closes the menu and returns focus to the button. Choosing a link, or a route change, closes it too.
+- **Tap targets:** every item is ≥ 44 px tall.
+- **Motion:** a short open animation, and none under `prefers-reduced-motion`.
+- **Build:** a shadcn component (for example `collapsible`) or plain markup. No packages outside the approved list.
+
 ### Type
 - **Geist** (sans) for everything, and **Geist Mono** for the small uppercase micro-labels. Both load through `next/font/google`, which downloads them at build time and serves them from our own domain. There is no new dependency.
 
@@ -145,6 +168,6 @@ The remaining shadcn tokens (`card`, `popover`, `secondary`, `accent`, `destruct
 
 1. **A stored theme against the opposite system setting:** the correct theme appears on first paint and after client-side navigation. Cycling back to System makes the site follow the OS again, live, when the OS setting changes.
 2. **`localStorage` blocked** (Safari private mode): no crash and no console error, and the theme follows the system.
-3. **320 px width and 200% zoom:** the pill nav fits with no horizontal scroll.
+3. **320 px width, landscape phone and 200% zoom:** no horizontal scroll. At 640 px and above, the full pill shows. Below 640 px, the menu button shows, and the menu opens, closes on Esc, returns focus, and closes on navigation.
 4. **axe in both themes,** covering contrast on muted text, links and the accent button.
 5. **Keyboard:** the tab order is skip link → logo → Work → Blog → Toggle → Contact (or the builder's documented order), and every stop has a visible blue ring.
