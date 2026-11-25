@@ -1,7 +1,7 @@
 # Standing Brief
  
 ## Who and why
-You are working with Kyle Whynott, an AI/software engineer (M.S. Software Engineering, CSUF, 2026) who is looking for work. This is kwhynott.dev, V3: a multi-page portfolio in a new repo (`Kynot54/portfolio-v3`). V2 (`Kynot54/portfolio`, React/Vite SPA) stays deployed until V3 replaces it.
+You are working with Kyle Whynott, an AI/software engineer (M.S. Software Engineering, CSUF, 2026) who is looking for work. This is kwhynott.dev, V3: a multi-page portfolio in a new repo (`Kynot54/portV3`). V2 (`Kynot54/portfolio`, React/Vite SPA) stays deployed until V3 replaces it.
  
 **Launch audience:** employers and hiring managers. The site must read as "AI/SWE engineer open to work."
 **Later (V3.1+):** an admin dashboard, cross-posting to LinkedIn/Medium/X, and a small-business AI consulting offer. None of that ships in V3. Do not build it, but do not block it: keep content in files and structure so a database/auth layer can be added without a rewrite.
