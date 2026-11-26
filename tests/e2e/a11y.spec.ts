@@ -9,6 +9,8 @@ const A11Y_ROUTES = [
   "/work/ulti-health",
   "/work/video-interview-plugin",
   "/work/ai-mind-companion",
+  "/blog/sample-formatting",
+  "/blog/sample-long-read",
 ];
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
@@ -48,6 +50,17 @@ for (const theme of ["dark", "light"] as const) {
       expect(await scan(page)).toEqual([]);
     });
   }
+
+  test(`axe: blog list fully expanded in ${theme}`, async ({ page }) => {
+    await storeTheme(page, theme);
+    await page.goto("/blog");
+    await hydrated(page);
+    await page.evaluate(() =>
+      document.querySelectorAll("details").forEach((d) => (d.open = true)),
+    );
+    await expect(page.locator(".blog-entry-body").first()).toBeVisible();
+    expect(await scan(page)).toEqual([]);
+  });
 
   test(`axe: mobile menu open in ${theme}`, async ({ page }) => {
     test.skip(!isMobile(page), "mobile only");

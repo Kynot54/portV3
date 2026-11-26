@@ -194,6 +194,13 @@
     position: relative;
     z-index: 1;
   }
+  .blog-entry-hint-open,
+  .blog-entry:has(> details[data-entry][open]) .blog-entry-hint-closed {
+    display: none;
+  }
+  .blog-entry:has(> details[data-entry][open]) .blog-entry-hint-open {
+    display: inline;
+  }
   /* Phones: the post shows only at level 2. 640px+: whenever the entry is open. */
   .blog-entry-body {
     display: none;

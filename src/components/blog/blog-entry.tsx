@@ -37,21 +37,25 @@ export async function BlogEntry({ post }: { post: BlogPost }) {
         </div>
       </div>
 
+      {/* Visual hint only, outside <summary> so the toggle's name stays the
+          title (label-in-name); clicks on it reach the row overlay. */}
+      <span
+        aria-hidden="true"
+        className="blog-entry-hint absolute top-6 right-8 hidden min-h-11 items-center text-sm text-muted-foreground sm:inline-flex"
+      >
+        <span className="blog-entry-hint-closed">Read full post</span>
+        <span className="blog-entry-hint-open">Collapse</span>
+      </span>
+
       <details data-entry className="group">
         <summary
           aria-labelledby={titleId}
           className="blog-entry-toggle list-none [&::-webkit-details-marker]:hidden"
         >
-          <span
+          <ChevronDown
             aria-hidden="true"
-            className="absolute top-6 right-0 inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground"
-          >
-            <span className="hidden group-open:sm:hidden sm:inline">
-              Read full post
-            </span>
-            <span className="hidden group-open:sm:inline">Collapse</span>
-            <ChevronDown className="size-5 transition-transform group-open:rotate-180" />
-          </span>
+            className="absolute top-9 right-0 size-5 text-muted-foreground transition-transform group-open:rotate-180"
+          />
         </summary>
 
         <div className="blog-entry-content">

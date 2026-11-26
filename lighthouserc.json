@@ -12,7 +12,9 @@
         "http://localhost:3200/work/control-bh",
         "http://localhost:3200/work/ulti-health",
         "http://localhost:3200/work/video-interview-plugin",
-        "http://localhost:3200/work/ai-mind-companion"
+        "http://localhost:3200/work/ai-mind-companion",
+        "http://localhost:3200/blog/sample-formatting",
+        "http://localhost:3200/blog/sample-long-read"
       ],
       "numberOfRuns": 3
     },
