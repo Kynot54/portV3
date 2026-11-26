@@ -1,5 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { Hero } from "@/components/home/hero";
+import { SelectedWork } from "@/components/home/selected-work";
+import { About } from "@/components/home/about";
+import { ContactCta } from "@/components/home/contact-cta";
+import type { WorkEntry } from "@/lib/content/types";
 
 /** The proof line spans several inline items; match the paragraph's full text. */
 const byFullText = (text: string) => (_: string, el: Element | null) =>
@@ -44,4 +48,94 @@ test("visual is decorative: aria-hidden, nothing focusable, sits after the proof
   expect(
     proof.compareDocumentPosition(v!) & Node.DOCUMENT_POSITION_FOLLOWING,
   ).toBeTruthy();
+});
+
+const entry = (
+  n: number,
+  label: string,
+  title: string,
+  summary: string,
+): WorkEntry => ({
+  slug: `e${n}`,
+  title,
+  summary,
+  date: "2026-01",
+  tags: [],
+  placeholder: false,
+  featured: true,
+  order: n,
+  label,
+  body: "",
+});
+const FIXTURE_THREE = [
+  entry(
+    1,
+    "AI · 2025–26",
+    "AI document pipelines",
+    "I built AI pipelines for 10+ clients. Manual review dropped 50%.",
+  ),
+  entry(
+    2,
+    "Web · 2024–25",
+    "C.O.N.T.R.O.L. BH",
+    "I built and maintained a nonprofit web app for 1,000+ users. Donations rose 40%.",
+  ),
+  entry(
+    3,
+    "AI · Mobile · 2025–26",
+    "Ulti-Health",
+    "I built a wellness app that plans workouts and meals from the user's own data.",
+  ),
+];
+const ABOUT =
+  "I grew up with analog, came of age with digital, and adapted and evolved with AI. I've lived with all three, so I can explain each one plainly and connect them. I designed and taught a machine learning course to 40+ students at Cal State Fullerton, and I've taught C++ from object-oriented design up to data structures.";
+const CONTACT =
+  "I'm looking for my next role as an AI or software engineer. Let's talk.";
+
+test("SelectedWork renders one linked card per entry with label, title, summary", () => {
+  render(<SelectedWork entries={FIXTURE_THREE} />);
+  expect(
+    screen.getByRole("heading", { level: 2, name: "Selected work" }),
+  ).toBeInTheDocument();
+  const cards = screen.getAllByRole("link");
+  expect(cards).toHaveLength(3);
+  cards.forEach((c) => expect(c).toHaveAttribute("href", "/work"));
+  expect(cards[0]).toHaveTextContent("AI · 2025–26");
+  expect(cards[0]).toHaveTextContent("AI document pipelines");
+  expect(cards[1]).toHaveTextContent(FIXTURE_THREE[1].summary);
+  expect(document.getElementById("work")).not.toBeNull();
+});
+
+test("About and Contact copy verbatim; Contact CTA is accent → /contact", () => {
+  render(
+    <>
+      <About />
+      <ContactCta />
+    </>,
+  );
+  expect(
+    screen.getByRole("heading", { level: 2, name: "About" }),
+  ).toBeInTheDocument();
+  expect(screen.getByText(byFullText(ABOUT))).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { level: 2, name: "Contact" }),
+  ).toBeInTheDocument();
+  expect(screen.getByText(byFullText(CONTACT))).toBeInTheDocument();
+  const cta = screen.getByRole("link", { name: "Get in touch →" });
+  expect(cta).toHaveAttribute("href", "/contact");
+  expect(cta.className).toContain("bg-primary");
+});
+
+test("no generational label anywhere on Home", () => {
+  const { container } = render(
+    <>
+      <Hero />
+      <SelectedWork entries={FIXTURE_THREE} />
+      <About />
+      <ContactCta />
+    </>,
+  );
+  expect(container.textContent).not.toMatch(
+    /zillennial|millennial|gen ?z|generation/i,
+  );
 });

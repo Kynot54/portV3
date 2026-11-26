@@ -20,15 +20,8 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **The Slice 2 design is approved** (Kyle, 2026-11-26).
-2. **Done:** the plan is written to `docs/plans/slice-02.md` (6 tasks). **Current step:** Kyle reviews the plan and confirms the execution method. Previously: use the `superpowers:writing-plans` skill to write `docs/plans/slice-02.md`. Then ask how to run it (Native or subagent-driven). Kyle used Native for Slice 1.
-3. **Build**, with `superpowers:executing-plans`. Follow the Slice 1 pattern:
-   - a progress ledger in `.superpowers/sdd/`
-   - a duplicate-file scan before each task
-   - TDD
-   - commit and push each task
-   - an independent whole-branch review at the end
-   - a PR with the description in `docs/plans/slice-02-pr.md`
+1. **Slice 2 build in progress (Native).** The ledger is `.superpowers/sdd/slice-02/progress.md` (git-ignored; if it's lost, trust `git log`). Tasks 1–4 are committed and pushed: content and loader, hero, three eras visual, sections. **Next: Task 5** (full quality pass: lint, typecheck, unit, e2e ×3, LHCI, keyboard pass, screenshots), then **Task 6** (PR, whole-branch review, checkpoint). The plan is `docs/plans/slice-02.md`.
+2. **Use the PR description's ⚠️ note:** merging deploys to production.
 
 ## Notes on the live site
 

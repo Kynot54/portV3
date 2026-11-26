@@ -163,3 +163,57 @@ test.describe("hero text wrapping", () => {
     });
   }
 });
+
+test.describe("home sections", () => {
+  test("sections appear in order: hero, Selected work, About, Contact", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const headings = await page.locator("main h1, main h2").allTextContents();
+    expect(headings.map((h) => h.trim())).toEqual([
+      "I'm Kyle Whynott, an AI engineer.",
+      "Selected work",
+      "About",
+      "Contact",
+    ]);
+  });
+
+  test("See my work scrolls to #work and its heading is visible below the pill", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: "See my work" }).click();
+    await expect(page).toHaveURL(/#work$/);
+    const heading = page.getByRole("heading", {
+      level: 2,
+      name: "Selected work",
+    });
+    await expect(heading).toBeInViewport();
+    const [h, nav] = await Promise.all([
+      heading.boundingBox(),
+      page.getByRole("navigation", { name: "Main" }).boundingBox(),
+    ]);
+    expect(h!.y).toBeGreaterThanOrEqual(nav!.y + nav!.height);
+  });
+
+  test("all three cards link to /work and show the approved titles", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const cards = page.locator("#work a");
+    await expect(cards).toHaveCount(3);
+    for (const c of await cards.all())
+      await expect(c).toHaveAttribute("href", "/work");
+    await expect(cards.nth(0)).toContainText("AI document pipelines");
+    await expect(cards.nth(1)).toContainText("C.O.N.T.R.O.L. BH");
+    await expect(cards.nth(2)).toContainText("Ulti-Health");
+  });
+
+  test("both Get in touch buttons go to /contact", async ({ page }) => {
+    await page.goto("/");
+    const ctas = page.getByRole("link", { name: "Get in touch →" });
+    await expect(ctas).toHaveCount(2);
+    for (const c of await ctas.all())
+      await expect(c).toHaveAttribute("href", "/contact");
+  });
+});
