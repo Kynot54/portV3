@@ -1,0 +1,13 @@
+.next
+node_modules
+.agents
+.claude
+.superpowers
+docs/superpowers
+package-lock.json
+*.mdx
+.lighthouseci
+playwright-report
+test-results
+.mcp.json
+skills-lock.json

@@ -1,0 +1,13 @@
+<!-- TODO(kyle): placeholder KW favicon; swap for a designed mark if wanted. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .bg { fill: #000000; }
+    .fg { fill: #39ff14; }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: #ffffff; }
+      .fg { fill: #ff0080; }
+    }
+  </style>
+  <rect class="bg" width="64" height="64" rx="14"/>
+  <text class="fg" x="32" y="43" text-anchor="middle" font-family="Geist, ui-sans-serif, system-ui, sans-serif" font-size="30" font-weight="800" letter-spacing="-1">KW</text>
+</svg>
