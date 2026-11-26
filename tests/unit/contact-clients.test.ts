@@ -96,3 +96,17 @@ test("isFakeSend is ignored in production", () => {
   );
   expect(isFakeSend({})).toBe(false);
 });
+
+test("both outbound calls carry a timeout signal", async () => {
+  const f = vi.fn(async () => json({ success: true, id: "em_1" }));
+  await verifyTurnstile("t", "s", null, f);
+  await sendEmail(email, "k", f);
+  for (const [, init] of f.mock.calls as unknown as [string, RequestInit][])
+    expect(init.signal).toBeInstanceOf(AbortSignal);
+});
+
+test("fake-send never runs on a Vercel deployment", () => {
+  expect(
+    isFakeSend({ CONTACT_FAKE_SEND: "1", VERCEL: "1", VERCEL_ENV: "preview" }),
+  ).toBe(false);
+});

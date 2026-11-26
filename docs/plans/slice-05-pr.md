@@ -52,8 +52,8 @@ https://portv3-git-slice-05-contact-kynot54s-projects.vercel.app/contact (sign i
 | Check                                                                         | Result                                                                                                                                                                        |
 | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | lint · format · typecheck                                                     | pass                                                                                                                                                                          |
-| Unit (Vitest)                                                                 | **194 passed**, including header injection, a malformed reply-to, bad and oversized bodies, a double-click, the Turnstile reset after failure, and that no secrets are echoed |
-| E2E (Chromium mobile, tablet and desktop; WebKit; Firefox)                    | **423 passed**. Third parties are stubbed, so CI never calls Cloudflare, Cal.com or Resend                                                                                    |
+| Unit (Vitest)                                                                 | **215 passed**, including header injection, a malformed reply-to, bad and oversized bodies, a double-click, the Turnstile reset after failure, and that no secrets are echoed |
+| E2E (Chromium mobile, tablet and desktop; WebKit; Firefox)                    | **428 passed**. Third parties are stubbed, so CI never calls Cloudflare, Cal.com or Resend                                                                                    |
 | No third-party request before interaction                                     | asserted                                                                                                                                                                      |
 | axe: `/contact` in both themes, plus the error, sent and calendar-open states | 0 violations (third-party iframes excluded)                                                                                                                                   |
 | Lighthouse (11 URLs, 3 runs each)                                             | **100 in every category**, `/contact` included                                                                                                                                |
@@ -68,6 +68,35 @@ https://portv3-git-slice-05-contact-kynot54s-projects.vercel.app/contact (sign i
   - "Open the booking page"
 - **Sender address.** Mail comes from `onboarding@resend.dev`. To send from `@kwhynott.dev`, you'd add Resend's DNS records in Cloudflare later; only the From line changes.
 - **Resend's official package.** I didn't use it. One `fetch` call does the job with no new dependency. Say if you want it.
+
+- **Remove `localhost` from the production Turnstile widget** (Cloudflare → Turnstile → your widget → Hostnames). My setup guide listed it at first. It lets anyone generate real tokens locally, and local work uses test keys anyway. The guide is now corrected.
+- **Confirm Vercel Authentication is on for `portv3` previews.** Previews use the always-pass Turnstile test keys and send real email, so they must stay behind the Vercel login.
+
+## Independent review
+
+A fresh reviewer read the whole branch and found no critical issues and 4 important ones. It confirmed that no secret appears in the client bundle and that `/contact` is static. I fixed these, each with a test I watched fail first:
+
+- **Sending before Turnstile had a token.** This happened when a visitor was fast, when Cloudflare needed a click, or when the script failed, and it always ended in a 403 and "Something went wrong". The form now waits up to 10 s for the token and never posts without one.
+- **Malformed emails that Resend would refuse,** such as `kyle@gmail.com,`, `a@b..co` and `"a@b.co"`. They now get "Enter a valid email address." instead of a generic failure.
+- **Cross-site form posts.** `/api/contact` now accepts JSON only, and a plain HTML form on another site can't send that.
+- **The "sent" message could go unannounced by screen readers,** because its region was `display:none` while empty. It now stays in the accessibility tree, and a browser test checks that.
+
+**I regraded six Minor findings to Important because visitors or your inbox would feel them, and fixed them too:**
+
+- A second message after a successful one failed once. Turnstile is now reset after success.
+- A name containing a line break could add a fake line, such as `Email: ceo@bigco.com`, to your email. Control characters and Unicode line breaks are now flattened.
+- A hung Cloudflare or Resend call kept "Sending…" up. Both now time out after 10 s.
+- Keyboard focus dropped to the page while sending. The button now stays focusable.
+- Focus was left in an empty box when the calendar failed. The box now goes away and the booking link takes focus.
+- Test mode could switch on inside any Vercel deployment. It's now off on every one.
+
+**Deferred minor findings:**
+
+- The calendar keeps the theme it opened with if you switch themes afterwards.
+- "Calendar loaded" means its iframe appeared. If cal.com itself is down, the iframe shows Cal.com's own error and the fallback link doesn't appear.
+- There's no idempotency key on the Resend call, so a retry after a lost response could send twice.
+- The body size check for chunked requests runs after reading. Vercel's 4.5 MB cap bounds it.
+- The accessibility scan of the form states is skipped in Firefox (axe crashes it there). Chromium and WebKit cover it.
 
 ## Conflicts flagged
 

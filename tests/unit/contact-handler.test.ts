@@ -134,3 +134,14 @@ test("responses never contain the input or env values", async () => {
       expect(text).not.toContain(secret);
   }
 });
+
+test("a non-JSON content type is refused (blocks cross-site form posts)", async () => {
+  const d = setup();
+  const res = await handleContact(
+    post(JSON.stringify(body), { "content-type": "text/plain" }),
+    d,
+  );
+  expect(res.status).toBe(415);
+  expect(d.verify).not.toHaveBeenCalled();
+  expect(d.send).not.toHaveBeenCalled();
+});

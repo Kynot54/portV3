@@ -59,7 +59,14 @@ const field =
  * The message form. Turnstile (managed, invisible unless Cloudflare needs a
  * click) loads on the first focus inside the form, never on page load.
  */
-export function ContactForm({ siteKey }: { siteKey: string | undefined }) {
+export function ContactForm({
+  siteKey,
+  tokenTimeoutMs = 10_000,
+}: {
+  siteKey: string | undefined;
+  /** How long a submit waits for Turnstile's token before giving up. */
+  tokenTimeoutMs?: number;
+}) {
   const empty = Object.fromEntries(FIELDS.map((f) => [f, ""])) as Record<
     ContactField,
     string
@@ -75,6 +82,35 @@ export function ContactForm({ siteKey }: { siteKey: string | undefined }) {
   const token = useRef("");
   const started = useRef(false);
   const sending = useRef(false);
+  // Resolves a submit that is waiting for Turnstile's first (or fresh) token.
+  const tokenWaiter = useRef<((t: string) => void) | null>(null);
+
+  const onToken = (t: string) => {
+    token.current = t;
+    tokenWaiter.current?.(t);
+    tokenWaiter.current = null;
+  };
+
+  /** The current token, the next one Turnstile issues, or "" after the timeout. */
+  const getToken = () =>
+    token.current
+      ? Promise.resolve(token.current)
+      : new Promise<string>((resolve) => {
+          const timer = setTimeout(() => {
+            tokenWaiter.current = null;
+            resolve("");
+          }, tokenTimeoutMs);
+          tokenWaiter.current = (t) => {
+            clearTimeout(timer);
+            resolve(t);
+          };
+        });
+
+  // Tokens are single-use: clear it and ask Turnstile for a fresh one.
+  const resetTurnstile = () => {
+    token.current = "";
+    if (widgetId.current) window.turnstile?.reset(widgetId.current);
+  };
 
   const startTurnstile = () => {
     if (started.current || !siteKey) return;
@@ -86,7 +122,7 @@ export function ContactForm({ siteKey }: { siteKey: string | undefined }) {
           sitekey: siteKey,
           appearance: "interaction-only",
           size: "flexible",
-          callback: (t: string) => (token.current = t),
+          callback: onToken,
           "expired-callback": () => (token.current = ""),
           "error-callback": () => (token.current = ""),
         });
@@ -105,10 +141,7 @@ export function ContactForm({ siteKey }: { siteKey: string | undefined }) {
 
   const fail = () => {
     setStatus("failed");
-    if (widgetId.current) {
-      token.current = "";
-      window.turnstile?.reset(widgetId.current);
-    }
+    resetTurnstile();
   };
 
   async function onSubmit(e: FormEvent) {
@@ -126,15 +159,23 @@ export function ContactForm({ siteKey }: { siteKey: string | undefined }) {
     }
     sending.current = true;
     setStatus("sending");
+    startTurnstile();
     try {
+      // Never post without a token: it would be a guaranteed 403.
+      const t = await getToken();
+      if (!t) {
+        fail();
+        return;
+      }
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...result.data, token: token.current }),
+        body: JSON.stringify({ ...result.data, token: t }),
       });
       if (res.ok) {
         setValues(empty);
         setStatus("sent");
+        resetTurnstile();
       } else if (res.status === 400) {
         const json = (await res.json().catch(() => ({}))) as {
           errors?: ContactErrors;
@@ -197,20 +238,22 @@ export function ContactForm({ siteKey }: { siteKey: string | undefined }) {
 
       <div ref={widgetRef} />
 
-      <div className="flex flex-col items-start gap-3">
+      {/* No gap: an empty status line must stay in the accessibility tree (not display:none) without adding space. */}
+      <div className="flex flex-col items-start">
         <Button
           type="submit"
           disabled={status === "sending"}
+          focusableWhenDisabled
           className="h-11 px-5 text-sm"
         >
           {status === "sending" ? "Sending…" : "Send message"}
         </Button>
         {/* Always present, so screen readers announce the text when it appears. */}
-        <p role="status" className="text-sm text-foreground empty:hidden">
+        <p role="status" className="text-sm text-foreground not-empty:mt-3">
           {status === "sent" ? SENT : ""}
         </p>
         {status === "failed" && (
-          <p role="alert" className="text-sm text-destructive">
+          <p role="alert" className="mt-3 text-sm text-destructive">
             {FAILED}
           </p>
         )}

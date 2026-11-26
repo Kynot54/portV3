@@ -23,6 +23,9 @@ export async function handleContact(
 ): Promise<Response> {
   const { env, verify, send, log = console.error } = deps;
 
+  // JSON only: a cross-site <form> can't send application/json.
+  if (!request.headers.get("content-type")?.startsWith("application/json"))
+    return reply(415, { ok: false });
   if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY)
     return reply(400, { ok: false, errors: {} });
   let body: unknown;

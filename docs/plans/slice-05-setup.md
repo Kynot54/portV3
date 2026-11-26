@@ -22,7 +22,7 @@ You need five values at the end:
 ## 2. Cloudflare Turnstile (bot check), about 5 minutes
 
 1. In the Cloudflare dashboard (same account as your DNS): **Turnstile → Add widget**.
-2. Name it `kwhynott.dev contact`. Add the hostnames `kwhynott.dev` and `localhost`.
+2. Name it `kwhynott.dev contact`. Add the hostname `kwhynott.dev` only. Local development and tests use Cloudflare's test keys, so `localhost` isn't needed, and leaving it off stops anyone generating real tokens from their own machine.
 3. Widget mode: **Managed**. Most visitors see no puzzle.
 4. Copy the **Site key** and the **Secret key**.
 
@@ -42,5 +42,6 @@ Two projects are involved:
   - secret `1x0000000000000000000000000000000AA`
 
   Previews will then send real emails to you through Resend. That's how you test it end to end.
+  - **Keep Vercel Authentication (Deployment Protection) on for `portv3` previews.** The test keys accept any visitor, so a public preview would let anyone send you email and use up Resend's 100-a-day allowance.
 
 Then tell me "keys are in". The code reads them by these exact names. Until they exist, the page builds and tests run on test keys and a fake mailer.

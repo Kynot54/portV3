@@ -11,9 +11,13 @@ export function missingServerEnv(env: Env): string[] {
   return SERVER_ENV.filter((k) => !env[k]?.trim());
 }
 
-/** Test-only: skip Turnstile and Resend. Never honoured in production. */
+/** Test-only: skip Turnstile and Resend. Never honoured on any Vercel deployment. */
 export function isFakeSend(env: Env): boolean {
-  return env.CONTACT_FAKE_SEND === "1" && env.VERCEL_ENV !== "production";
+  return (
+    env.CONTACT_FAKE_SEND === "1" &&
+    !env.VERCEL &&
+    env.VERCEL_ENV !== "production"
+  );
 }
 
 const PUBLIC_ENV = [

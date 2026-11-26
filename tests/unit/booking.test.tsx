@@ -49,10 +49,7 @@ test("click loads embed.js and calls Cal init/inline with the link", async () =>
   expect(loadScript).toHaveBeenCalledWith("https://app.cal.com/embed/embed.js");
   expect(Cal.mock.calls[0]).toEqual(["init", { origin: "https://cal.com" }]);
   const inline = Cal.mock.calls.find((c) => c[0] === "inline")!;
-  expect(inline[1]).toMatchObject({
-    calLink: "kyle/30min",
-    layout: "month_view",
-  });
+  expect(inline[1]).toMatchObject({ calLink: "kyle/30min" });
 });
 
 test("the calendar region is focused, labelled, and rendered in the full-width target", async () => {
@@ -94,4 +91,24 @@ test("no calLink → no button, no link", () => {
   expect(screen.getByText("A 30-minute intro call.")).toBeInTheDocument();
   expect(screen.queryByRole("button")).toBeNull();
   expect(screen.queryByRole("link")).toBeNull();
+});
+
+test("layout goes inside config, as in Cal.com's inline snippet", async () => {
+  const user = userEvent.setup();
+  renderBooking();
+  await user.click(screen.getByRole("button", { name: "Book a call" }));
+  const inline = Cal.mock.calls.find((c) => c[0] === "inline")!;
+  expect(inline[1]).toMatchObject({ config: { layout: "month_view" } });
+});
+
+test("on failure the empty calendar region goes away and the link takes focus", async () => {
+  vi.mocked(loadScript).mockRejectedValueOnce(new Error("blocked"));
+  const user = userEvent.setup();
+  renderBooking();
+  await user.click(screen.getByRole("button", { name: "Book a call" }));
+  const link = await screen.findByRole("link", {
+    name: "Open the booking page",
+  });
+  expect(screen.queryByRole("region", { name: "Booking calendar" })).toBeNull();
+  expect(link).toHaveFocus();
 });

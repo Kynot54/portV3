@@ -99,3 +99,26 @@ test("non-string field values are treated as empty", () => {
   const r = validateContact({ ...valid, name: 42 });
   expect(r.ok).toBe(false);
 });
+
+test.each([
+  "kyle@gmail.com,",
+  "a@b.co>",
+  "<a@b.co",
+  "a@b..co",
+  "a@b.co;",
+  '"a@b.co"',
+  "a..b@c.co",
+  ".a@b.co",
+])("rejects addresses Resend would refuse as reply-to: %j", (email) => {
+  const r = validateContact({ ...valid, email });
+  expect(r.ok).toBe(false);
+});
+
+test("accepts ordinary real-world addresses", () => {
+  for (const email of [
+    "first.last+tag@sub.example.co.uk",
+    "o'neil@acme.io",
+    "a_b-c@x-y.com",
+  ])
+    expect(validateContact({ ...valid, email }).ok, email).toBe(true);
+});

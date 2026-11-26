@@ -52,6 +52,14 @@ test("send a message end to end", async ({ page }) => {
   await expect(page.getByLabel("Name", { exact: true })).toHaveValue("");
 });
 
+test("the sent-status live region is in the accessibility tree before sending", async ({
+  page,
+}) => {
+  await page.goto("/contact");
+  // A display:none region drops out of the tree, and screen readers may then miss it.
+  await expect(page.locator("main").getByRole("status")).toHaveCount(1);
+});
+
 test("field errors are announced and focused", async ({ page }) => {
   await stubThirdParty(page);
   await page.goto("/contact");

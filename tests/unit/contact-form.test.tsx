@@ -121,7 +121,11 @@ test("a second click while sending is ignored", async () => {
   await fillValid(user);
   const button = screen.getByRole("button", { name: "Send message" });
   await user.click(button);
-  expect(screen.getByRole("button", { name: "Sending…" })).toBeDisabled();
+  // Disabled for interaction, but still focusable (aria-disabled, not the native attribute).
+  expect(screen.getByRole("button", { name: "Sending…" })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
   await user.click(screen.getByRole("button", { name: "Sending…" }));
   expect(fetchMock).toHaveBeenCalledTimes(1);
   resolve(new Response(JSON.stringify({ ok: true })));
@@ -186,4 +190,54 @@ test("each field shows an example placeholder", () => {
     // The label, not the placeholder, names the field.
     expect(el).toHaveAccessibleName(label);
   }
+});
+
+test("waits for a Turnstile token that arrives late, then sends it", async () => {
+  let opts!: { callback: (t: string) => void };
+  turnstile.render.mockImplementationOnce((_el, o) => {
+    opts = o;
+    return "w1";
+  });
+  fetchMock.mockImplementation(() => ok());
+  const user = userEvent.setup();
+  render(<ContactForm siteKey="site" />);
+  await fillValid(user);
+  await user.click(screen.getByRole("button", { name: "Send message" }));
+  expect(fetchMock).not.toHaveBeenCalled();
+  opts.callback("late-token");
+  await screen.findByText(/Thanks, your message is on its way/);
+  expect(JSON.parse(fetchMock.mock.calls[0][1].body).token).toBe("late-token");
+});
+
+test("no token within the wait → failure line, nothing posted", async () => {
+  turnstile.render.mockImplementationOnce(() => "w1");
+  const user = userEvent.setup();
+  render(<ContactForm siteKey="site" tokenTimeoutMs={50} />);
+  await fillValid(user);
+  await user.click(screen.getByRole("button", { name: "Send message" }));
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "Something went wrong.",
+  );
+  expect(fetchMock).not.toHaveBeenCalled();
+});
+
+test("a success resets Turnstile so a second message gets a fresh token", async () => {
+  fetchMock.mockImplementation(() => ok());
+  const user = userEvent.setup();
+  render(<ContactForm siteKey="site" />);
+  await fillValid(user);
+  await user.click(screen.getByRole("button", { name: "Send message" }));
+  await screen.findByText(/Thanks, your message is on its way/);
+  expect(turnstile.reset).toHaveBeenCalledWith("w1");
+});
+
+test("the button stays focusable while sending (focus isn't dropped)", async () => {
+  fetchMock.mockImplementation(() => new Promise(() => {}));
+  const user = userEvent.setup();
+  render(<ContactForm siteKey="site" />);
+  await fillValid(user);
+  await user.click(screen.getByRole("button", { name: "Send message" }));
+  const button = screen.getByRole("button", { name: "Sending…" });
+  expect(button).not.toHaveAttribute("disabled");
+  expect(button).toHaveAttribute("aria-disabled", "true");
 });

@@ -14,6 +14,7 @@ export async function sendEmail(
         "Content-Type": "application/json",
       },
       body: JSON.stringify(email),
+      signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) return { ok: false };
     const json = (await res.json()) as { id?: unknown };

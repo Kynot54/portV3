@@ -48,6 +48,7 @@ export function Booking({
     "idle",
   );
   const region = useRef<HTMLDivElement>(null);
+  const fallback = useRef<HTMLAnchorElement>(null);
   const { resolvedTheme } = useTheme();
   const theme = resolvedTheme === "light" ? "light" : "dark";
 
@@ -60,8 +61,7 @@ export function Booking({
     Cal("inline", {
       elementOrSelector: el,
       calLink,
-      layout: "month_view",
-      config: { theme },
+      config: { layout: "month_view", theme },
     });
     Cal("ui", { theme });
     el.focus({ preventScroll: true });
@@ -87,8 +87,15 @@ export function Booking({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase === "loading"]);
 
-  const target =
-    phase !== "idle" ? document.getElementById("booking-calendar") : null;
+  // On failure the empty calendar goes away and the direct link takes focus.
+  useEffect(() => {
+    if (phase === "failed") fallback.current?.focus();
+  }, [phase]);
+
+  const showCalendar = phase === "loading" || phase === "ready";
+  const target = showCalendar
+    ? document.getElementById("booking-calendar")
+    : null;
   const calendar = (
     <div
       ref={region}
@@ -117,6 +124,7 @@ export function Booking({
       )}
       {calLink && phase === "failed" && (
         <a
+          ref={fallback}
           href={`https://cal.com/${calLink}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -125,7 +133,7 @@ export function Booking({
           Open the booking page
         </a>
       )}
-      {phase !== "idle" &&
+      {showCalendar &&
         calLink &&
         (target ? createPortal(calendar, target) : calendar)}
     </div>

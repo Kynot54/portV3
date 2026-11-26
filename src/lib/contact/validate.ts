@@ -24,8 +24,12 @@ const REQUIRED: Partial<Record<ContactField, string>> = {
   message: "Write a message of at least 10 characters.",
 };
 
-// No whitespace anywhere (blocks CR/LF header injection), one @, a dot in the domain.
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Conservative address check (RFC 5322 "dot-atom" local part, hostname labels):
+// no whitespace, quotes, brackets, commas or empty dot segments, so anything that
+// passes is safe as Reply-To and won't be refused by Resend.
+const ATOM = "[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+";
+const LABEL = "[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?";
+const EMAIL = new RegExp(`^${ATOM}(?:\\.${ATOM})*@${LABEL}(?:\\.${LABEL})+$`);
 
 /** Shared by the form (before sending) and /api/contact (always). */
 export function validateContact(
