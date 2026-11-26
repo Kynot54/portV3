@@ -18,7 +18,7 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 3 (Work): the design is approved (Kyle, 2026-11-26) and the plan is written** (`docs/plans/slice-03.md`, 6 tasks). Next: build it Native with `superpowers:executing-plans` (ledger in `.superpowers/sdd/slice-03/`), then the PR, the review, and this checkpoint.
+1. **Slice 3 (Work) is built, and PR #5 is open:** https://github.com/Kynot54/portV3/pull/5. Tasks 1–5 are done. Task 6: the PR is open, and the **whole-branch review was dispatched** when this was written. If it's lost, run it again from `.superpowers/sdd/slice-03/review-*.diff`. Then fix the Critical and Important findings, each with a test that fails first, in one pass. List the minors in the PR and update this checkpoint. **Merging deploys to production** (including Home's 10+ → 50+ change).
 2. Kyle merges PR #4 and closes #2. Dependabot should then open a safe-only PR. Review it once its CI is green.
 
 ## Notes on the live site
