@@ -5,8 +5,19 @@ updates:
     schedule:
       interval: monthly
     groups:
-      npm:
-        patterns: ["*"]
+      # Safe updates arrive together; majors come one by one for a deliberate upgrade.
+      npm-minor-patch:
+        update-types: ["minor", "patch"]
+    ignore:
+      # TypeScript majors wait for typescript-eslint support (TS 7 broke CI).
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # ESLint majors wait for eslint-config-next support.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      # Types must match the Node 24 runtime (.nvmrc).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
