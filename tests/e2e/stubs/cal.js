@@ -10,6 +10,9 @@
         : opts.elementOrSelector;
     const frame = document.createElement("iframe");
     frame.title = "Cal stub";
+    // A real (tiny) document: Firefox crashes when axe injects into an empty about:blank frame.
+    frame.srcdoc =
+      "<!doctype html><html lang=en><title>Cal stub</title><p>Calendar</p></html>";
     frame.style.width = "100%";
     frame.style.height = "480px";
     el.append(frame);

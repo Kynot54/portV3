@@ -24,7 +24,7 @@ const hydrated = (page: Page) =>
       ?.startsWith("Theme:"),
   );
 
-async function scan(page: Page) {
+async function scan(page: Page, exclude?: string) {
   // Let open/close animations settle so axe reads final colours.
   await page.evaluate(() =>
     Promise.all(
@@ -32,12 +32,14 @@ async function scan(page: Page) {
         .getAnimations()
         // Infinite animations (the hero visual) never finish; only wait for finite ones.
         .filter((a) => a.effect?.getTiming().iterations !== Infinity)
-        .map((a) => a.finished),
+        // A transition cancelled by a state change rejects; that still counts as settled.
+        .map((a) => a.finished.catch(() => undefined)),
     ),
   );
-  const { violations } = await new AxeBuilder({ page })
-    .withTags(TAGS)
-    .analyze();
+  let axe = new AxeBuilder({ page }).withTags(TAGS);
+  // Third-party frames: skip them entirely (axe entering an empty stub frame crashes Firefox).
+  if (exclude) axe = axe.exclude(exclude).options({ iframes: false });
+  const { violations } = await axe.analyze();
   return violations;
 }
 
@@ -60,6 +62,49 @@ for (const theme of ["dark", "light"] as const) {
     );
     await expect(page.locator(".blog-entry-body").first()).toBeVisible();
     expect(await scan(page)).toEqual([]);
+  });
+
+  test(`axe: contact form states in ${theme}`, async ({
+    page,
+    browserName,
+  }) => {
+    test.skip(
+      browserName === "firefox",
+      "axe crashes Firefox ('Page crashed') once any form field has had focus; the page itself works there (contact.spec passes). Chromium and WebKit scan these states.",
+    );
+    await page.route("https://challenges.cloudflare.com/**", (r) =>
+      r.fulfill({
+        path: "tests/e2e/stubs/turnstile.js",
+        contentType: "text/javascript",
+      }),
+    );
+    await page.route("https://app.cal.com/**", (r) =>
+      r.fulfill({
+        path: "tests/e2e/stubs/cal.js",
+        contentType: "text/javascript",
+      }),
+    );
+    await storeTheme(page, theme);
+    await page.goto("/contact");
+    await hydrated(page);
+    // Third-party iframes (Turnstile, Cal.com) are content we can't fix.
+    const own = "iframe";
+    await page.getByRole("button", { name: "Send message" }).click();
+    await expect(page.getByLabel("Name", { exact: true })).toBeFocused();
+    expect(await scan(page, own), "error state").toEqual([]);
+    await page.getByLabel("Name", { exact: true }).fill("Ada");
+    await page.getByLabel("Email", { exact: true }).fill("ada@example.com");
+    await page
+      .getByLabel("Message", { exact: true })
+      .fill("Hello there, Kyle.");
+    await page.getByRole("button", { name: "Send message" }).click();
+    await expect(page.locator("main").getByRole("status")).not.toBeEmpty();
+    expect(await scan(page, own), "sent state").toEqual([]);
+    await page.getByRole("button", { name: "Book a call" }).click();
+    await expect(
+      page.getByRole("region", { name: "Booking calendar" }).locator("iframe"),
+    ).toBeVisible();
+    expect(await scan(page, own), "calendar open").toEqual([]);
   });
 
   test(`axe: mobile menu open in ${theme}`, async ({ page }) => {

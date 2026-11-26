@@ -18,26 +18,9 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 5 (Contact) is mid-brainstorm. No design doc and no code yet.** Agreed so far, with Kyle:
-   - **Tools: whatever is cheapest and gets the job done.** All on free plans:
-     - **Cal.com** for booking (Calendly's free plan allows only one meeting type)
-     - **Resend** for email (about 3,000 a month, 100 a day; test sender `onboarding@resend.dev`, which can only send to the account's own email)
-     - **Cloudflare Turnstile** for bot protection
-   - **The booking calendar loads on click** (Kyle chose A). A "Book a call" button loads the Cal.com embed in place, so there's no third-party script or cookies until then, and Lighthouse stays at 100.
-   - **The form** posts to a route handler; Turnstile then Resend; the message lands in Kyle's inbox with the sender's address as reply-to.
-   - **Reply time in the copy: "2–3 business days"** (Kyle).
-   - **My proposals, which Kyle hasn't approved or corrected yet** (he paused before answering "what's wrong or missing?"):
-     - **Layout:** form and booking side by side on desktop, stacked on phones (form first).
-     - **Fields:** name, email, company (optional), message, with server-side length limits.
-     - **States:** inline sent / field errors / failure ("Something went wrong. Try again, or book a call instead.").
-     - **Turnstile** in managed mode, its script loaded when someone starts filling in the form.
-     - **Accent:** "Send message" gets the accent; "Book a call" is the outline style.
-     - **No JavaScript:** a plain link to the Cal.com page, plus "turn on JavaScript to send a message". Turnstile needs JS.
-     - **Intro draft:** "I'm looking for my next role as an AI or software engineer. Send a message or book a call. I reply within 2–3 business days."
-     - **Tests:** Cloudflare's test keys plus a fake mailer.
-   - **Kyle's setup:** `docs/plans/slice-05-setup.md`, covering the accounts and five Vercel env vars. He may do it from his phone. Otherwise he'll do it tomorrow on the laptop.
-   - **On resume:** ask Kyle whether the playback above is right, then lay out any remaining approach choice, write the design doc to `docs/superpowers/specs/`, run the builder check, get his approval, then writing-plans → `docs/plans/slice-05.md`.
-2. **After Slice 5:** Slice 6 (launch polish). Its notes are in the Slice 4 PR, `docs/plans/slice-04-pr.md`.
+1. **Slice 5 (Contact) is built; its PR is open.** The whole-branch review runs next, then fixes, then Kyle tests on the preview (he sends himself a message) and merges. Plan: `docs/plans/slice-05.md`. Ledger: `.superpowers/sdd/slice-05/progress.md`.
+2. **PR #8 (first blog post)** is ready for Kyle to merge.
+3. **After Slice 5:** Slice 6 (launch polish). Its notes are in `docs/plans/slice-04-pr.md` and `docs/plans/slice-05-pr.md`.
 
 ## Done
 
