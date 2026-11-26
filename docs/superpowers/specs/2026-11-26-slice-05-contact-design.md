@@ -40,7 +40,8 @@ Home's "Get in touch" button and the nav's Contact pill already link here.
    - **Not configured:** if any required env var is missing at runtime, the API returns a clear error. The page then shows the failure message, and the server logs exactly which variable is missing (by name, never its value). It never fails silently.
 3. **Book a call.**
    - The text "A 30-minute intro call." and a **"Book a call"** button (outline style).
-   - Pressing it loads Cal.com's embed **inline, in place** (Kyle chose load-on-click): no Cal.com script or cookies before that click. The embed shows `NEXT_PUBLIC_CAL_LINK` (for example `kyle/30min`).
+   - Pressing it loads Cal.com's embed (Kyle chose load-on-click): no Cal.com script or cookies before that click.
+   - **Once loaded, the calendar spans the full content width, below the form** (Kyle, 2026-11-26). Cal.com's month-and-times view needs about 700 px, which the desktop half column doesn't have. On phones it's already full width. Focus moves to the calendar region (`aria-label="Booking calendar"`), and it scrolls into view. The embed shows `NEXT_PUBLIC_CAL_LINK` (for example `kyle/30min`).
    - While loading, the button reads "Loading calendar…". If the embed fails to load, show a direct link: "Open the booking page" (`https://cal.com/<link>`).
 4. **No JavaScript.**
    - The form can't pass Turnstile, so it's replaced by the line "Turn on JavaScript to send a message, or book a call below."
