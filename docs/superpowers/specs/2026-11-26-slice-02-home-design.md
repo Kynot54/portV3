@@ -28,7 +28,7 @@ Home is the page a hiring manager lands on. Within seconds it has to say "AI / s
 - **The word "Zillennial", or any generational label.** The idea is hinted at through experience only.
 - **A visual that looks cheap.** The first dither mockup was rejected for chunky full-brightness pixels. The visual is restrained: dim grain, hairlines, and accent only on tiny moving points.
 - **Motion for visitors who asked for less.** Under `prefers-reduced-motion: reduce`, the visual is completely still.
-- **The visual competing with the text.** It sits low in the hero, behind or below the copy, and never reduces the text's contrast.
+- **The visual competing with the text.** It sits in its own band below the copy and never reduces the text's contrast.
 
 ## Constraints
 
@@ -86,6 +86,7 @@ Hero → Selected work (`id="work"`) → About → Contact call to action. The S
   - The light drifts on a slow transform loop of 9–13 s.
   - Only `transform`, `opacity` and `offset-distance` are animated.
 - **Reduced motion:** under `prefers-reduced-motion: reduce`, every animation stops on a well-composed still frame. Pulses stay visible in sensible positions.
+- **Placement (Kyle, after the builder check):** the visual and its grain live in a **full-width band below the buttons and proof line**. No text ever sits over the grain, so all hero text keeps its token contrast.
 - **Accessibility:** it's decorative (`aria-hidden="true"`, no focusable parts). It never sits under body text at a contrast that would fail.
 - **Theming:** colours come from CSS variables, so dark and light just work.
 
@@ -107,11 +108,15 @@ Hero → Selected work (`id="work"`) → About → Contact call to action. The S
 - **Fields beyond the card** (builder's call, from the builder check): each entry's `summary` is its approved card line. The MDX body is a `TODO(kyle)` stub until Slice 3; no unapproved copy is written.
 
 ### About
+Heading (`<h2>`): **About**.
+
 > I grew up with analog, came of age with digital, and adapted and evolved with AI. I've lived with all three, so I can explain each one plainly and connect them. I designed and taught a machine learning course to 40+ students at Cal State Fullerton, and I've taught C++ from object-oriented design up to data structures.
 
 The first sentence is Kyle's own wording, used verbatim.
 
 ### Contact call to action
+Heading (`<h2>`): **Contact**.
+
 > I'm looking for my next role as an AI or software engineer. Let's talk.
 
 It's followed by **Get in touch →** (the accent `Button`, linking to `/contact`).
@@ -134,7 +139,7 @@ Kotlin Multiplatform, Swift, Rust/Tower, GitHub Actions and Fly.io are removed (
 
 - Component and file names, and the work frontmatter additions (for example `featured: boolean`, `order: number`, `label: string`). Extend the Slice 1 loader with tests, without breaking its current contract.
 - The exact SVG geometry, animation durations within the spirit above, and the grain technique (an SVG `<pattern>` or a tiled data-URI image), plus the drifting light (a radial gradient layer moved with `transform`).
-- How the visual scales: full width, with height about 160–220 px, scaling with the viewport. At 320 px it may simplify (for example, fewer network nodes), but it must not overflow.
+- How the visual's band scales: full width, with height about 160–220 px, scaling with the viewport. At 320 px it may simplify (for example, fewer network nodes), but it must not overflow.
 - Section spacing (the `py-section` / `px-gutter` tokens) and the card styling within the design system: bordered cards, mono label, `text-h3` title, muted line, a hover state that brightens the border, and the global focus ring.
 - Tests: unit tests for the loader additions and the content order; e2e tests for the hero copy, CTA targets, the `#work` anchor and focus, all three cards and their links, About and the contact CTA, plus a check that the visual is `aria-hidden` and that under reduced motion every animation is `none` or paused. axe, responsive and Lighthouse runs, with screenshots of the visual in both themes for Kyle.
 

@@ -20,10 +20,7 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Builder check: done.** Two questions are waiting for Kyle's answers. Then update the design doc and ask Kyle to approve it.
-   - **Q1:** does the grain sit behind the hero text, or only in a band below the CTAs and proof line? Recommended: **a band below**. The grain behind muted text fails contrast in light mode (#6B6B6B on #d4d4d4 is about 3.6:1).
-   - **Q2:** what are the `<h2>` headings for the About and closing contact sections? Recommended: **"About"** and **"Contact"**.
-   - Q3 is settled and recorded in the doc: `summary` = the card line, and each body is a `TODO(kyle)` stub.
+1. **Builder check: done, and Kyle answered** (grain in a band below the copy; `<h2>`s "About" and "Contact"). The design doc is updated. **Waiting for Kyle to approve the design doc.**
 2. **Once Kyle approves the design**, use the `superpowers:writing-plans` skill to write `docs/plans/slice-02.md`. Then ask how to run it (Native or subagent-driven). Kyle used Native for Slice 1.
 3. **Build**, with `superpowers:executing-plans`. Follow the Slice 1 pattern:
    - a progress ledger in `.superpowers/sdd/`
