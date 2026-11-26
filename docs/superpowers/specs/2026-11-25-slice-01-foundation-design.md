@@ -145,6 +145,21 @@ Open:   [ Kyle Whynott   (█Contact█)  ✕ ]
 ### Placeholder pages
 - `/`, `/work`, `/blog` and `/contact` each have one `<h1>` and one obviously-placeholder line, marked `TODO(kyle): replaced in Slice NN`.
 
+## Decisions from the grilling round (Kyle, 2026-11-25)
+
+1. **Commit Kyle's tooling.** `.mcp.json`, `skills-lock.json`, `.agents/`, `.claude/skills/` and `.claude/settings.json` are committed. `.claude/settings.local.json` and `.claude/.cc-writes` stay ignored. `AGENTS.md` (written by Next) is committed.
+2. **Keep the scaffold's Next features.** `cacheComponents` and `partialPrefetching` stay on.
+3. **Lighthouse gate.** Accessibility must be **1.0**. Performance, best practices and SEO must be **≥ 0.95**.
+4. **E2E browsers.** Chromium (mobile, tablet, desktop), WebKit desktop and **Firefox desktop**.
+5. **Security headers and CSP wait for Slice 6.** The `next-themes` inline script will need a nonce or hash then.
+6. **Pin Node 24.** Add `.nvmrc` (`24`) and `"engines": { "node": ">=24" }`.
+7. **Footer.** It reads "© Kyle Whynott · GitHub", linking to `https://github.com/Kynot54`. LinkedIn is `TODO(kyle)`.
+8. **Favicon.** An SVG "KW" favicon: neon green on black for dark, magenta on white for light. It's listed under "Needs Kyle's call".
+9. **Accent states.** Hover is slightly brighter, with a stronger glow in dark mode. Press is slightly dimmer. No movement or scaling, and the focus ring stays blue.
+10. **Licence.** MIT for the code, © 2026 Kyle Whynott. Writing, images and personal content under `content/` and `public/images/` are all rights reserved. A note in `LICENSE` and the README says so.
+11. **README.** A short README for hiring managers: what the site is, the stack, how to run it, and the quality bar. Kyle approves the copy in the PR.
+12. **Dependabot.** Monthly updates for npm and GitHub Actions, grouped into one PR per ecosystem.
+
 ## Left to the builder
 
 - File layout (`src/` dir, `src/components`, `src/lib`, `content/`), test file names, and the exact Playwright projects. The earlier draft plan in `docs/plans/slice-01.md` is a fine starting point, but it's out of date: it assumed a hand-written theme and no shadcn.

@@ -104,9 +104,9 @@ The current state: the scaffold, `vitest.config.mts`, `vitest.setup.ts` and `con
 
 - [ ] **Step 1:** Set `@types/node` to `^24`. Then run `npm i -D vitest jsdom @testing-library/react @testing-library/dom @testing-library/jest-dom @testing-library/user-event`. Expected: exit 0 with no ERESOLVE.
 - [ ] **Step 2:** In `vitest.setup.ts`, add a `matchMedia` stub that tests can drive. Export it from `tests/support/match-media.ts` as `setPrefersDark(dark: boolean): void`. It must notify `change` listeners on `(prefers-color-scheme: dark)`. Keep the existing cleanup.
-- [ ] **Step 3:** Confirm the scripts are set (`typecheck`, `test`, `test:e2e` and `lhci` are already added).
+- [ ] **Step 3:** Confirm the scripts are set (`typecheck`, `test`, `test:e2e` and `lhci` are already added). Add `.nvmrc` containing `24`, and `"engines": { "node": ">=24" }` in `package.json`.
 - [ ] **Step 4: Verify.** Run `npx next typegen && npm run lint && npm run typecheck && npm test && npm run build`. Allow network access to the font hosts. Expected: all exit 0. Vitest reports no test files and passes.
-- [ ] **Step 5: Commit.** Stage only the scaffold and project files: `src/ public/ content/ package.json package-lock.json tsconfig.json next.config.ts eslint.config.mjs vitest.* tests/ .gitignore AGENTS.md`. Leave Kyle's tooling files untracked (`.agents/`, `.claude/`, `.mcp.json`, `skills-lock.json`). Message: `chore: scaffold Next.js 16 app with unit-test tooling`.
+- [ ] **Step 5: Commit.** Stage only the scaffold and project files: `src/ public/ content/ package.json package-lock.json tsconfig.json next.config.ts eslint.config.mjs vitest.* tests/ .gitignore AGENTS.md`. Also stage `.nvmrc` and Kyle's tooling: `.mcp.json`, `skills-lock.json`, `.agents/`, `.claude/skills/` and `.claude/settings.json`. Never stage `.claude/settings.local.json` or `.claude/.cc-writes`. Message: `chore: scaffold Next.js 16 app with unit-test tooling`.
 
 ---
 
@@ -156,13 +156,17 @@ test('palette values match the spec exactly', () => {
 
 `tests/unit/keyword.test.tsx`: `<Keyword>LLMs</Keyword>` renders a `span` with text `LLMs` and class `text-keyword`, and it is not a link.
 
+`tests/unit/button.test.tsx`: the `default` Button's class list contains no `scale-`, `translate-` or `-translate-` utilities, and does contain `hover:brightness-110` and `active:brightness-95`.
+
 - [ ] **Step 3:** Run `npm test`. Expected: FAIL. The tokens are still shadcn defaults (oklch, not our hexes), and `keyword` is missing.
 - [ ] **Step 4: Implement.**
   - **Tokens:** replace the token values in `globals.css` with the Global Constraints palette, as hex. Light goes under `:root`, dark under `.dark`. Grey values for card, popover, secondary, accent (shadcn's hover token), border and input follow the spec's rules.
   - **Keyword:** add `--keyword` and `--color-keyword` in `@theme inline`.
   - **Rules:** add `.accent-glow`, the fluid type utilities, a global `:focus-visible` ring (2px `var(--ring)`, offset 2px), and the reduced-motion rule (no animations or transitions).
   - **Components:** set the Button `default` variant to the accent with `accent-glow`, and write `Keyword`.
-- [ ] **Step 5:** Run `npm test`. Expected: PASS (11 tests). Then run `npm run build`. Expected: exit 0.
+  - **Accent states:** hover is `brightness-110`, with a stronger glow in dark mode (`.accent-glow:hover`, about 1.3× the spread and alpha). Active is `brightness-95`. No transform, translate or scale.
+  - **Favicon:** delete `src/app/favicon.ico`. Add `src/app/icon.svg`: bold "KW" in `#39FF14` on `#000000`, with an embedded `@media (prefers-color-scheme: light)` that switches it to `#FF0080` on `#FFFFFF`. Add a `// TODO(kyle)` comment in it.
+- [ ] **Step 5:** Run `npm test`. Expected: PASS (12 tests). Then run `npm run build`. Expected: exit 0.
 - [ ] **Step 6: Commit.** `feat: shadcn (Base UI) with isolation palette and Keyword`
 
 ---
@@ -248,7 +252,8 @@ test('choosing System again follows the OS', async () => {
   - `type NavItem = { href: '/work' | '/blog' | '/contact'; label: string }`
   - `siteConfig: { name: 'Kyle Whynott'; url: string /* NEXT_PUBLIC_SITE_URL ?? 'https://kwhynott.dev' */; nav: NavItem[]; contact: NavItem }`. `nav` is Work and Blog; `contact` is separate, because it renders as the accent pill.
   - `Header(): JSX.Element` (client), with menu panel id `mobile-menu`.
-  - `Footer(): JSX.Element`, rendering `© Kyle Whynott` and nothing else (no year, because of `cacheComponents`; social links are `TODO(kyle)`).
+  - `Footer(): JSX.Element`, rendering `© Kyle Whynott · GitHub`. The GitHub link goes to `https://github.com/Kynot54`, with a `{/* TODO(kyle): LinkedIn */}` comment. No year, because of `cacheComponents`.
+  - `siteConfig.social: { github: 'https://github.com/Kynot54' }`.
 
 - [ ] **Step 1: Write the failing tests** in `tests/unit/header.test.tsx`. Mock `next/navigation` `usePathname`.
 
@@ -262,6 +267,7 @@ test('Escape closes the menu and returns focus to the button', ...)
 test('clicking a menu link closes the menu', ...)
 test('route change closes the menu', ...)                                          // rerender with new pathname
 test('menu closes when viewport crosses to desktop', ...)                          // matchMedia('(min-width: 640px)') change → closed
+test('footer shows © Kyle Whynott and a GitHub link to github.com/Kynot54', ...)
 ```
 
 - [ ] **Step 2:** Run `npm test`. Expected: FAIL, because `Header` is not found.
@@ -279,7 +285,7 @@ test('menu closes when viewport crosses to desktop', ...)                       
   - **Body:** `Header`, then `<main id="main" tabIndex={-1}>` with top padding that clears the floating pill, then `Footer`.
   - **Pages:** each route renders `<h1 className="text-hero">` (Kyle Whynott / Work / Blog / Contact) and one line, `Placeholder. This page arrives in Slice NN.` with `{/* TODO(kyle) */}`. Each sets `metadata.title`, except Home.
   - **404:** `not-found.tsx` renders `<h1>Page not found</h1>` and a link home.
-- [ ] **Step 5:** Run `npm test`. Expected: PASS (9 new tests). Then run `npm run build`. Expected: exit 0, listing the routes `/`, `/work`, `/blog`, `/contact` and `/_not-found`.
+- [ ] **Step 5:** Run `npm test`. Expected: PASS (10 new tests). Then run `npm run build`. Expected: exit 0, listing the routes `/`, `/work`, `/blog`, `/contact` and `/_not-found`.
 - [ ] **Step 6: Commit.** `feat: responsive pill nav with mobile menu, shell and placeholder routes`
 
 ---
@@ -293,12 +299,13 @@ test('menu closes when viewport crosses to desktop', ...)                       
 - Consumes: the routes (Task 4), the `.dark`/`.light` classes, `.theme-toggle`, `#mobile-menu`, the button names "Menu" and `Theme: …` (Tasks 3–4).
 
 - [ ] **Step 1: Install and configure.**
-  - Run `npm i -D @playwright/test @axe-core/playwright && npx playwright install chromium webkit`.
+  - Run `npm i -D @playwright/test @axe-core/playwright && npx playwright install chromium webkit firefox`.
   - `webServer: { command: 'npm run build && npm run start', url: 'http://localhost:3000', reuseExistingServer: !process.env.CI, timeout: 180_000 }`.
-  - Projects: `mobile` (375×667), `tablet` (768×1024), `desktop` (1440×900) on Chromium, plus `webkit-desktop`.
+  - Projects: `mobile` (375×667), `tablet` (768×1024), `desktop` (1440×900) on Chromium, plus `webkit-desktop` and `firefox-desktop`.
   - `fixtures.ts` extends `test` to collect `console` errors and `pageerror` events, and fails the test if any were seen.
 - [ ] **Step 2: `shell.spec.ts`.**
   - Each of the 4 routes returns 200 and has exactly one h1.
+  - `link[rel=icon]` points to an SVG that returns 200.
   - `/nope` returns 404 with the h1 "Page not found".
   - Desktop tab order: skip link → logo → Work → Blog → theme toggle → Contact. Each stop has a non-`none` `outline-style`.
   - Mobile tab order: skip link → logo → Contact → Menu.
@@ -319,7 +326,7 @@ test('menu closes when viewport crosses to desktop', ...)                       
   - At 639 px the Menu button shows; at 640 px the full pill shows.
   - `resize from mobile to desktop with menu open`: the panel isn't visible and focus is on the body or a visible element.
   - The hero h1's computed font size is under 32 px at 375 and over 40 px at 1440.
-- [ ] **Step 6:** Run `npm run test:e2e`. Expected: all pass on all 4 projects. If axe or the responsive checks fail, fix the code, not the assertions.
+- [ ] **Step 6:** Run `npm run test:e2e`. Expected: all pass on all 5 projects. If axe or the responsive checks fail, fix the code, not the assertions.
 - [ ] **Step 7: Commit.** `test: e2e, theme, axe and responsive coverage`
 
 ---
@@ -332,15 +339,16 @@ test('menu closes when viewport crosses to desktop', ...)                       
 - [ ] **Step 1: Lighthouse config.**
   - Run `npm i -D @lhci/cli`.
   - `lighthouserc.json`: `collect.startServerCommand: "npm run start"`, `url` set to the 4 routes on `http://localhost:3000`, `numberOfRuns: 3`.
-  - Assertions: `categories:performance`, `categories:accessibility`, `categories:best-practices` and `categories:seo`, each `["error", {"minScore": 0.95}]`.
+  - Assertions: `categories:accessibility` is `["error", {"minScore": 1}]`. `categories:performance`, `categories:best-practices` and `categories:seo` are each `["error", {"minScore": 0.95}]`.
   - `upload.target: "filesystem"`, `outputDir: ".lighthouseci"`.
 - [ ] **Step 2:** Run `npm run build && npm run lhci`. Expected: all assertions pass. Note the median scores per route for the PR.
 - [ ] **Step 3: Write `ci.yml`.**
   - It runs on `pull_request` and on `push` to `slice/**`, on `ubuntu-latest`, with `actions/setup-node` (Node 24, npm cache).
-  - Steps: `npm ci` → lint → typecheck → `npm test` → `npx playwright install --with-deps chromium webkit` → `npm run test:e2e` → `npm run lhci`. Upload `playwright-report/` and `.lighthouseci/` as artifacts, always.
+  - Steps: `npm ci` → lint → typecheck → `npm test` → `npx playwright install --with-deps chromium webkit firefox` → `npm run test:e2e` → `npm run lhci`. Upload `playwright-report/` and `.lighthouseci/` as artifacts, always.
   - One job, named `quality`, so Kyle can mark it as the required check.
 - [ ] **Step 4: Validate.** Run `npx --yes @action-validator/cli .github/workflows/ci.yml`. Expected: no errors. If that package isn't available, check that the YAML parses with `node -e "require('yaml')…"` (no new dependency), and note in the PR that the first real run happens once the repo exists.
-- [ ] **Step 5: Commit.** `ci: quality job (lint, types, unit, e2e, axe, Lighthouse)`
+- [ ] **Step 5: Dependabot.** Add `.github/dependabot.yml` with `npm` (directory `/`) and `github-actions`, both on a `monthly` schedule. Each has one group: `patterns: ["*"]`. Validate it the same way as Step 4.
+- [ ] **Step 6: Commit.** `ci: quality job (lint, types, unit, e2e, axe, Lighthouse) and Dependabot`
 
 ---
 
@@ -348,15 +356,24 @@ test('menu closes when viewport crosses to desktop', ...)                       
 
 - [ ] **Step 1:** Run the full local suite: `npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run lhci`. Expected: all green. Save the tail of each output for the PR.
 - [ ] **Step 2: Manual keyboard pass.** At 375 px and 1440 px, in each theme state: tab through, open and close the menu with Enter and Esc, and cycle the toggle. Record the result.
-- [ ] **Step 3: Write the PR body** to `docs/plans/slice-01-pr.md`. It holds:
+- [ ] **Step 3: Licence and README.**
+  - `LICENSE`: the standard MIT text, `Copyright (c) 2026 Kyle Whynott`, followed by a "Content" note: writing, images and other personal content under `content/` and `public/images/` are © Kyle Whynott, all rights reserved, and not covered by the MIT licence.
+  - `README.md`, about 30 lines in the brief's voice:
+    - what kwhynott.dev is
+    - the stack
+    - `npm` scripts
+    - the quality bar (axe zero, Lighthouse a11y 1.0 and the rest ≥ 0.95, in CI)
+    - the licence split
+  - No invented claims. The copy goes under "Needs Kyle's call".
+- [ ] **Step 4: Write the PR body** to `docs/plans/slice-01-pr.md`. It holds:
   - **Summary.**
   - **Test evidence:** command tails, and the Lighthouse medians with the `.lighthouseci/` report paths.
   - **Preview URL:** pending Kyle's Vercel setup.
-  - **Needs Kyle's call:** grey values (tuned after the preview), meta description, footer links.
-  - **TODO(kyle):** `resume.md`, page copy, social links.
+  - **Needs Kyle's call:** grey values (tuned after the preview), meta description, the favicon, README copy.
+  - **TODO(kyle):** `resume.md`, page copy, the LinkedIn link.
   - **Conflicts flagged:** the 4 from the spec (including the logo's label-in-name).
   - **Kyle's checklist:** connect a **new** Vercel project to `Kynot54/portV3` without touching V2 or the domain; make `quality` a required check on `main`; review and merge.
-- [ ] **Step 4: Commit and push**, then open the PR: `gh pr create --base main --head slice/01-foundation --title "Slice 01: Foundation" --body-file docs/plans/slice-01-pr.md`. Expected: a PR URL. The first CI run on the PR proves the `quality` job for real.
+- [ ] **Step 5: Commit and push**, then open the PR: `gh pr create --base main --head slice/01-foundation --title "Slice 01: Foundation" --body-file docs/plans/slice-01-pr.md`. Expected: a PR URL. The first CI run on the PR proves the `quality` job for real.
 
 ## Self-review notes
 
