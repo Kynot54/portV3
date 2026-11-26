@@ -1,1 +1,1 @@
-resume.md goes here. It is the only source for facts on the site. TODO(kyle)
+`resume.md` is the web-safe resume and the only source of facts for site copy. Edit it there; never add a phone number or personal email. Work entries live in `content/work/`, blog posts in `content/blog/`. Both are `.mdx` with frontmatter, read by `src/lib/content/load.ts`.
