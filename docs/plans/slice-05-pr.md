@@ -60,6 +60,7 @@ https://portv3-git-slice-05-contact-kynot54s-projects.vercel.app/contact (sign i
 
 ## Needs Kyle's call
 
+- **Placeholder examples** (your request): Name "Jane Smith", Email "jane@company.com", Company "Acme Inc.", Your role "Engineering Manager", Message "Hi Kyle, we're hiring a software engineer and I'd like to talk about the role." They're in muted grey, and the labels still name every field.
 - **Copy:**
   - "Send a message", "Book a call", "A 30-minute intro call."
   - the labels, "Send message", "Sending…"

@@ -35,6 +35,15 @@ const LABELS: Record<ContactField, string> = {
   role: "Your role (optional)",
   message: "Message",
 };
+// Examples only; the labels above each field name it (Kyle, 2026-11-26).
+const PLACEHOLDERS: Record<ContactField, string> = {
+  name: "Jane Smith",
+  email: "jane@company.com",
+  company: "Acme Inc.",
+  role: "Engineering Manager",
+  message:
+    "Hi Kyle, we're hiring a software engineer and I'd like to talk about the role.",
+};
 const AUTOCOMPLETE: Record<ContactField, string> = {
   name: "name",
   email: "email",
@@ -44,7 +53,7 @@ const AUTOCOMPLETE: Record<ContactField, string> = {
 };
 
 const field =
-  "mt-2 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base text-foreground aria-[invalid=true]:border-destructive";
+  "mt-2 block w-full rounded-md border border-input bg-background px-3 py-2.5 text-base text-foreground placeholder:text-muted-foreground aria-[invalid=true]:border-destructive";
 
 /*
  * The message form. Turnstile (managed, invisible unless Cloudflare needs a
@@ -164,6 +173,7 @@ export function ContactForm({ siteKey }: { siteKey: string | undefined }) {
                 f === "email" ? "email" : f === "message" ? undefined : "text"
               }
               autoComplete={AUTOCOMPLETE[f]}
+              placeholder={PLACEHOLDERS[f]}
               rows={f === "message" ? 6 : undefined}
               value={values[f]}
               onChange={(e) =>

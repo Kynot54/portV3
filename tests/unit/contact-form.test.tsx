@@ -169,3 +169,21 @@ test("missing siteKey → failure line, no fetch", async () => {
   expect(fetchMock).not.toHaveBeenCalled();
   expect(loadScript).not.toHaveBeenCalled();
 });
+
+test("each field shows an example placeholder", () => {
+  render(<ContactForm siteKey="site" />);
+  const expected: Record<string, string> = {
+    Name: "Jane Smith",
+    Email: "jane@company.com",
+    "Company (optional)": "Acme Inc.",
+    "Your role (optional)": "Engineering Manager",
+    Message:
+      "Hi Kyle, we're hiring a software engineer and I'd like to talk about the role.",
+  };
+  for (const [label, placeholder] of Object.entries(expected)) {
+    const el = screen.getByLabelText(label);
+    expect(el).toHaveAttribute("placeholder", placeholder);
+    // The label, not the placeholder, names the field.
+    expect(el).toHaveAccessibleName(label);
+  }
+});
