@@ -2,6 +2,15 @@ import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { test, expect, ROUTES, isMobile, storeTheme } from "./fixtures";
 
+const A11Y_ROUTES = [
+  ...ROUTES,
+  "/work/ai-document-pipelines",
+  "/work/control-bh",
+  "/work/ulti-health",
+  "/work/video-interview-plugin",
+  "/work/ai-mind-companion",
+];
+
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 /** The theme toggle gets its real label only after hydration. */
@@ -31,7 +40,7 @@ async function scan(page: Page) {
 }
 
 for (const theme of ["dark", "light"] as const) {
-  for (const route of ROUTES) {
+  for (const route of A11Y_ROUTES) {
     test(`axe: ${route} in ${theme}`, async ({ page }) => {
       await storeTheme(page, theme);
       await page.goto(route);
