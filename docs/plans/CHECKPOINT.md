@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-26 · **Branch:** `slice/04-blog` (from `main` @ `b393100`, which includes merged PRs #4 and #5). Everything below is committed and pushed.
+**Updated:** 2026-11-26 (paused for the night) · **Branch:** `slice/05-contact` (from `main` @ `857b247`, which includes merged PR #7). Everything below is committed and pushed.
 
 ## To resume
 
@@ -18,9 +18,30 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 4 (Blog) is complete; PR #7 is waiting for Kyle.** The review fixes and coloured tag categories are in. Lighthouse is 100 on all 11 URLs. Design: `docs/superpowers/specs/2026-11-26-slice-04-blog-design.md`. Plan: `docs/plans/slice-04.md`. Ledger: `.superpowers/sdd/slice-04/progress.md`. **Merging deploys to production,** and the live nav becomes Work, Contact until Kyle's first post (option B).
-2. **After the merge:** Slice 5 (Contact: form + booking) starts with brainstorming.
-3. **Slice 3 (Work)** is merged (PR #5). **Dependabot PR #2** should be closed unmerged if it's still open.
+1. **Slice 5 (Contact) is mid-brainstorm. No design doc and no code yet.** Agreed so far, with Kyle:
+   - **Tools: whatever is cheapest and gets the job done.** All on free plans:
+     - **Cal.com** for booking (Calendly's free plan allows only one meeting type)
+     - **Resend** for email (about 3,000 a month, 100 a day; test sender `onboarding@resend.dev`, which can only send to the account's own email)
+     - **Cloudflare Turnstile** for bot protection
+   - **The booking calendar loads on click** (Kyle chose A). A "Book a call" button loads the Cal.com embed in place, so there's no third-party script or cookies until then, and Lighthouse stays at 100.
+   - **The form** posts to a route handler; Turnstile then Resend; the message lands in Kyle's inbox with the sender's address as reply-to.
+   - **Reply time in the copy: "2–3 business days"** (Kyle).
+   - **My proposals, which Kyle hasn't approved or corrected yet** (he paused before answering "what's wrong or missing?"):
+     - **Layout:** form and booking side by side on desktop, stacked on phones (form first).
+     - **Fields:** name, email, company (optional), message, with server-side length limits.
+     - **States:** inline sent / field errors / failure ("Something went wrong. Try again, or book a call instead.").
+     - **Turnstile** in managed mode, its script loaded when someone starts filling in the form.
+     - **Accent:** "Send message" gets the accent; "Book a call" is the outline style.
+     - **No JavaScript:** a plain link to the Cal.com page, plus "turn on JavaScript to send a message". Turnstile needs JS.
+     - **Intro draft:** "I'm looking for my next role as an AI or software engineer. Send a message or book a call. I reply within 2–3 business days."
+     - **Tests:** Cloudflare's test keys plus a fake mailer.
+   - **Kyle's setup:** `docs/plans/slice-05-setup.md`, covering the accounts and five Vercel env vars. He may do it from his phone. Otherwise he'll do it tomorrow on the laptop.
+   - **On resume:** ask Kyle whether the playback above is right, then lay out any remaining approach choice, write the design doc to `docs/superpowers/specs/`, run the builder check, get his approval, then writing-plans → `docs/plans/slice-05.md`.
+2. **After Slice 5:** Slice 6 (launch polish). Its notes are in the Slice 4 PR, `docs/plans/slice-04-pr.md`.
+
+## Done
+
+- **Slices 1–4** are merged (PRs #1, #3, #5, #7) and live. The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
 
 ## Notes on the live site
 
