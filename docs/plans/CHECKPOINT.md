@@ -20,7 +20,10 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Builder check.** A fresh reviewer was reading the Slice 2 design doc when this checkpoint was written. If its result is lost, run it again: dispatch a subagent with the prompt in the brainstorming skill's `builder-check-prompt.md`, pointing at the Slice 2 design doc. Sort its questions into three piles: answered already, minor (settle it yourself), or Kyle's. Bring Kyle's in one message, update the doc, and hand it over for **Kyle's approval**.
+1. **Builder check: done.** Two questions are waiting for Kyle's answers. Then update the design doc and ask Kyle to approve it.
+   - **Q1:** does the grain sit behind the hero text, or only in a band below the CTAs and proof line? Recommended: **a band below**. The grain behind muted text fails contrast in light mode (#6B6B6B on #d4d4d4 is about 3.6:1).
+   - **Q2:** what are the `<h2>` headings for the About and closing contact sections? Recommended: **"About"** and **"Contact"**.
+   - Q3 is settled and recorded in the doc: `summary` = the card line, and each body is a `TODO(kyle)` stub.
 2. **Once Kyle approves the design**, use the `superpowers:writing-plans` skill to write `docs/plans/slice-02.md`. Then ask how to run it (Native or subagent-driven). Kyle used Native for Slice 1.
 3. **Build**, with `superpowers:executing-plans`. Follow the Slice 1 pattern:
    - a progress ledger in `.superpowers/sdd/`

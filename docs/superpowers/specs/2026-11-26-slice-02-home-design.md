@@ -104,6 +104,7 @@ Hero → Selected work (`id="work"`) → About → Contact call to action. The S
   - Ulti-Health, Jul 2025 – May 2026.
 - **Cards:** each is one link (the whole card) to `/work`, until Slice 3 adds `/work/[slug]`. The section heading is "Selected work".
 - **The placeholder entry** (`content/work/placeholder-project.mdx`) is never shown on Home.
+- **Fields beyond the card** (builder's call, from the builder check): each entry's `summary` is its approved card line. The MDX body is a `TODO(kyle)` stub until Slice 3; no unapproved copy is written.
 
 ### About
 > I grew up with analog, came of age with digital, and adapted and evolved with AI. I've lived with all three, so I can explain each one plainly and connect them. I designed and taught a machine learning course to 40+ students at Cal State Fullerton, and I've taught C++ from object-oriented design up to data structures.
