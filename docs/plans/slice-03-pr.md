@@ -61,12 +61,32 @@ https://portv3-git-slice-03-work-kynot54s-projects.vercel.app (sign in to Vercel
 
 ## Conflicts flagged
 
-1. **Unknown `/work/...` addresses** show the "Page not found" page with `noindex`, but HTTP status **200**, not 404. Next 16 with Cache Components sends the prerendered page shell before the existence check (documented behaviour). A true 404 status would need a Proxy running on every request. Visitors see the same not-found page, and search engines won't index it.
+None. An unknown `/work/...` address now returns a **real HTTP 404**, via Next 16's `ensureStatic = "navigation"`, which resolves the address before the response starts. The review caught my earlier "200 + noindex" workaround.
+
+## Independent review
+
+A fresh reviewer read the whole branch: no critical findings, four important ones, eight minor ones. Fixed here, each with a test that failed first:
+
+- **Unknown project addresses return a real 404** instead of 200 + noindex.
+- **Stronger facts test.** Each quantity is now bound to its full sentence and its exact resume phrase. Spelled-out numbers ("two weeks", "hundreds", "a year") are checked, and every period and card label is checked against the resume. A dedicated test proves swapped claims (60% to 50%, two weeks to three) now fail.
+- **"← All work" back link:** a 44 px tap target, and screen readers no longer read the arrow.
+- **Card label required:** every project must have a card label, so a missing one can't render an empty gap.
+
+**Deferred minor findings (new in this slice):**
+
+- MDX runs repo content only. A comment or guard should make sure database or user content never reaches it (relevant for the V3.1 admin).
+- Headings or images written into a project's "What I built" text aren't mapped. A `#` heading would break heading order.
+- The 320 px placeholder test's name says "contrast", but contrast is covered by axe at the default size only.
+- Focus position after going back to `/work` isn't asserted.
+- The cached content reader is duplicated in three pages.
+- `getWorkEntry` is unused and doesn't filter placeholders.
+- A missing content folder returns an empty list instead of failing.
+- Copy for projects 4 and 5 isn't pinned by a test that's independent of the content files.
 
 ## Test-only notes
 
-- **WebKit:** it logs a Next.js link prefetch cancelled by a reload or navigation as a console error. The "no console errors" check now ignores **only** that exact message, in WebKit only.
-- **Mis-cased addresses** such as `/work/Control-BH` are checked on Linux (CI) only. macOS's case-insensitive disk serves the real page locally.
+- **WebKit:** it logs a Next.js link prefetch cancelled by a reload or navigation as a console error or page error. The "no errors" check now ignores **only** that exact message, in WebKit only.
+- **Mis-cased addresses** such as `/work/Control-BH` are checked for a 404 on Linux (CI) only. macOS's case-insensitive disk serves the real page locally.
 
 ## Deferred minor findings (carried, still open)
 

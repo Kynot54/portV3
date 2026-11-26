@@ -6,6 +6,10 @@ import { MediaPlaceholder } from "@/components/work/media-placeholder";
 import { getWorkList } from "@/lib/content/load";
 import { renderMdx } from "@/lib/mdx";
 
+// Every /work page is fully static. An unknown slug is resolved before the
+// response starts, so notFound() returns a real HTTP 404 (Next 16 ensureStatic).
+export const ensureStatic = "navigation";
+
 // Content only changes on deploy.
 async function workList() {
   "use cache";
@@ -56,8 +60,11 @@ export default async function WorkDetailPage({
 
   return (
     <article className="mx-auto w-full max-w-3xl px-gutter py-section">
-      <Link href="/work" className="link text-sm">
-        ← All work
+      <Link
+        href="/work"
+        className="link inline-flex min-h-11 items-center text-sm"
+      >
+        <span aria-hidden="true">←&nbsp;</span>All work
       </Link>
       <p className="micro-label mt-8 text-muted-foreground">{entry.label}</p>
       <h1 className="mt-3 text-hero font-bold tracking-tight">{entry.title}</h1>

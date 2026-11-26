@@ -20,7 +20,11 @@ export const test = base.extend<{
           return;
         errors.push(text);
       });
-      page.on("pageerror", (e) => errors.push(e.message));
+      page.on("pageerror", (e) => {
+        if (browserName === "webkit" && webkitCancelledPrefetch.test(e.message))
+          return;
+        errors.push(e.message);
+      });
       await use(errors);
       expect(errors, "console errors").toEqual([]);
     },

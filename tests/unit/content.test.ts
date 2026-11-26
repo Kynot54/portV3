@@ -26,7 +26,7 @@ test("getWork parses frontmatter, slugs from filename, newest first", async () =
     placeholder: false,
     featured: false,
     order: 1,
-    label: null,
+    label: "Web · 2026",
     role: "Engineer",
     location: "Remote",
     period: "Jan 2025 – Feb 2025",
@@ -121,7 +121,11 @@ test("non-featured entries default featured=false, order=null, label=null", asyn
   const plain = (await getWork(`${F}/work-featured`)).find(
     (e) => e.slug === "plain",
   )!;
-  expect(plain).toMatchObject({ featured: false, order: 9, label: null });
+  expect(plain).toMatchObject({
+    featured: false,
+    order: 9,
+    label: "Web · 2026",
+  });
 });
 
 test("real featured work matches the approved cards", async () => {
@@ -146,29 +150,89 @@ test("real featured work matches the approved cards", async () => {
 });
 
 /**
- * Every numeric claim on Home, paired with the exact resume phrase it comes from.
- * A number in Home copy that isn't inside one of these copy phrases fails the test.
+ * Every quantity on Home and the work pages, bound to its FULL copy fragment and
+ * the exact resume phrase(s) it comes from. Remove the mapped fragments from a
+ * text; any quantity left (a digit or a number word) is unmapped and fails.
  */
-const CLAIMS: [copyPhrase: string, resumePhrase: string][] = [
-  ["50+ clients", "over 50 clients"],
-  ["Manual review dropped 50%", "manual review down by 50%"],
-  ["1,000+ users", "1,000+ users"],
-  ["Donations rose 40%", "donation volume by 40%"],
-  ["40+ students", "40+ students"],
-  ["over 60%", "accuracy by over 60%"],
-  ["40% faster", "process by 40%"],
-  ["Lighthouse score of 98", "Lighthouse score of 98%"],
-  ["under two weeks", "under 2 weeks"],
-  ["100+ applicants", "100+ applicants"],
-  ["over 50%", "hiring efficiency by over 50%"],
+const CLAIMS: [copyFragment: string, resumePhrases: string[]][] = [
+  ["AI pipelines for 50+ clients", ["over 50 clients"]],
+  [
+    "I built AI pipelines for 50+ clients. Manual review dropped 50%.",
+    ["over 50 clients", "manual review down by 50%"],
+  ],
+  ["Used by 50+ clients.", ["over 50 clients"]],
+  ["Manual review dropped 50%.", ["manual review down by 50%"]],
+  ["Accuracy improved by over 60%.", ["accuracy by over 60%"]],
+  ["The process runs 40% faster.", ["process by 40%"]],
+  [
+    "AI chat automations bring in recurring revenue in the thousands of dollars.",
+    ["$1,000s in recurring revenue"],
+  ],
+  [
+    "handled hundreds of financial applications a day",
+    ["hundreds of daily financial applications"],
+  ],
+  [
+    "handle hundreds of financial applications a day",
+    ["hundreds of daily financial applications"],
+  ],
+  [
+    "I built and maintained a nonprofit web app for 1,000+ users. Donations rose 40%.",
+    ["1,000+ users", "donation volume by 40%"],
+  ],
+  ["1,000+ users.", ["1,000+ users"]],
+  ["Donations rose 40%.", ["donation volume by 40%"]],
+  ["Lighthouse score of 98.", ["Lighthouse score of 98%"]],
+  ["live in under two weeks", ["under 2 weeks"]],
+  [
+    "Shipped in under two weeks, then maintained for a year.",
+    ["under 2 weeks", "continual maintenance for a year"],
+  ],
+  [
+    "I built a video-interview plugin that screened 100+ applicants. Hiring efficiency rose over 50%.",
+    ["100+ applicants", "hiring efficiency by over 50%"],
+  ],
+  [
+    "had 100+ applicants to screen, and screening took management hundreds of hours",
+    ["100+ applicants", "100s of working hours"],
+  ],
+  ["100+ applicants screened.", ["100+ applicants"]],
+  ["Hiring efficiency up over 50%.", ["hiring efficiency by over 50%"]],
+  ["Hundreds of management hours saved.", ["100s of working hours"]],
+  ["40+ students", ["40+ students"]],
 ];
 /** Tool and degree names that contain digits but aren't claims. */
-const EXEMPT = /GPT-\d(\.\d)?|PHP 8\.2|HTML5|CSS3|C\+\+|M\.S\./g;
+const EXEMPT =
+  /GPT-\d(\.\d)?|PHP 8\.2|HTML5|CSS3|C\+\+|M\.S\.|one-time|one place|all three|each one/gi;
+const QUANTITY =
+  /\d|\b(one|two|three|four|five|six|seven|eight|nine|ten|twelve|dozens?|hundreds?|thousands?|millions?|a (year|day|week|month))\b/i;
 
-test("every number on Home and work pages traces to its exact resume phrase", async () => {
+/** Quantities left in `text` after removing exempt names and mapped fragments. */
+function unmappedQuantities(text: string): string | null {
+  let rest = text.replace(EXEMPT, " ");
+  for (const [fragment] of CLAIMS) rest = rest.split(fragment).join(" ");
+  return rest.match(QUANTITY)?.[0] ?? null;
+}
+
+test("the facts check catches swapped and spelled-out quantities", () => {
+  expect(unmappedQuantities("Accuracy improved by over 60%.")).toBeNull();
+  expect(unmappedQuantities("Accuracy improved by over 50%.")).not.toBeNull(); // swapped claim
+  expect(
+    unmappedQuantities(
+      "Shipped in under three weeks, then maintained for a year.",
+    ),
+  ).not.toBeNull();
+  expect(
+    unmappedQuantities(
+      "Shipped in under two weeks, then maintained for two years.",
+    ),
+  ).not.toBeNull();
+});
+
+test("every quantity on Home and work pages traces to its exact resume phrase", async () => {
   const resume = await readFile("content/source/resume.md", "utf8");
-  for (const [, source] of CLAIMS)
-    expect(resume, `resume lacks "${source}"`).toContain(source);
+  for (const [, phrases] of CLAIMS)
+    for (const p of phrases) expect(resume, `resume lacks "${p}"`).toContain(p);
   const copy = [
     ...(await getWorkList()).flatMap((e) => [
       e.summary,
@@ -180,10 +244,42 @@ test("every number on Home and work pages traces to its exact resume phrase", as
     HERO_PROOF.join(" · "),
     ABOUT_TEXT,
   ];
-  for (const text of copy) {
-    let rest = text.replace(EXEMPT, " ");
-    for (const [phrase] of CLAIMS) rest = rest.split(phrase).join(" ");
-    expect(rest.match(/\d/), `unmapped number in: ${text}`).toBeNull();
+  for (const text of copy)
+    expect(
+      unmappedQuantities(text),
+      `unmapped quantity in: ${text}`,
+    ).toBeNull();
+});
+
+const MONTHS: Record<string, string> = {
+  Jan: "January",
+  Feb: "February",
+  Mar: "March",
+  Apr: "April",
+  May: "May",
+  Jun: "June",
+  Jul: "July",
+  Aug: "August",
+  Sep: "September",
+  Oct: "October",
+  Nov: "November",
+  Dec: "December",
+};
+
+test("each work period matches the resume and the card label's years match the period", async () => {
+  const resume = await readFile("content/source/resume.md", "utf8");
+  for (const e of await getWorkList()) {
+    const full = e.period.replace(
+      /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/g,
+      (m) => MONTHS[m],
+    );
+    expect(resume, `${e.slug}: period "${full}"`).toContain(full);
+    const [, y1, y2] = e.period.match(/(\d{4}).*?(\d{4})/)!;
+    const years = y1 === y2 ? y1 : `${y1}–${y2.slice(2)}`;
+    expect(
+      e.label!.endsWith(years),
+      `${e.slug}: label "${e.label}" vs ${years}`,
+    ).toBe(true);
   }
 });
 
@@ -249,4 +345,10 @@ test("resume says over 50 clients and AI Mind Companion's new facts", async () =
     "native mobile app",
   ])
     expect(amc, f).toContain(f);
+});
+
+test("non-placeholder entry without a label fails loudly", async () => {
+  await expect(getWork(`${F}/work-no-label`)).rejects.toMatchObject({
+    field: "label",
+  });
 });

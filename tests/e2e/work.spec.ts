@@ -45,10 +45,7 @@ test.describe("work detail pages", () => {
 
   test.describe("unknown slugs", () => {
     test.use({ allowedConsole: [/status of 404/] });
-    // With Cache Components, Next 16 streams a prerendered shell (200) before the
-    // request-time check, so an unknown slug renders the not-found page with
-    // robots noindex rather than an HTTP 404 (documented; a true 404 needs Proxy).
-    test("unknown and mis-cased slugs show the not-found page and are noindex", async ({
+    test("unknown and mis-cased slugs return 404 with the not-found page", async ({
       page,
     }) => {
       // macOS's case-insensitive filesystem serves control-bh.html for Control-BH
@@ -58,14 +55,11 @@ test.describe("work detail pages", () => {
           ? ["/work/nope"]
           : ["/work/nope", "/work/Control-BH"];
       for (const path of paths) {
-        await page.goto(path);
+        const res = await page.goto(path);
+        expect(res?.status(), path).toBe(404);
         await expect(page.getByRole("heading", { level: 1 }), path).toHaveText(
           "Page not found",
         );
-        await expect(
-          page.locator('meta[name="robots"][content*="noindex"]').first(),
-          path,
-        ).toBeAttached();
       }
     });
   });
@@ -87,11 +81,15 @@ test.describe("work detail pages", () => {
   }) => {
     test.skip(browserName === "webkit", "WebKit skips links on Tab by default");
     await page.goto("/work/control-bh");
-    const back = page.getByRole("link", { name: "← All work" });
+    const back = page.getByRole("link", { name: "All work", exact: true });
     await back.focus();
     expect(
       await back.evaluate((el) => getComputedStyle(el).outlineStyle),
     ).not.toBe("none");
+    expect(
+      (await back.boundingBox())!.height,
+      "44px tap target",
+    ).toBeGreaterThanOrEqual(44);
     await back.click();
     await expect(page).toHaveURL(/\/work$/);
   });

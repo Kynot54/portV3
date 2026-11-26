@@ -177,6 +177,8 @@ function toWork(r: Raw): WorkEntry {
   }
   if (order === null)
     throw new ContentError(r.file, "order", "is required (list position)");
+  if (label === null)
+    throw new ContentError(r.file, "label", "is required (card micro-label)");
   return {
     ...base,
     role: str(r, "role"),
