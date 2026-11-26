@@ -7,6 +7,8 @@ Changes from the PDF:
 - the ZIP code is removed
 - per Kyle, Teaching Associate ended May 2026
 - Ulti-Health rewritten to its real MVP stack (Expo + Supabase), per Kyle, 2026-11-26
+- Working Entrepreneurs: over 50 clients (was "over 10"), per Kyle, 2026-11-26
+- AI Mind Companion: voice-assistant, dementia-flagging, FastAPI, Cloud Functions, JSONL vector store facts, per Kyle, 2026-11-26
 Never add a phone number or personal email here.
 -->
 
@@ -36,7 +38,7 @@ Fullerton, CA · August 2024 – May 2026
 
 Remote · October 2025 – January 2026
 
-- Engineered AI-powered data ingestion and document processing pipelines in TypeScript and Python for over 10 clients; integrated AI into chat models to automate website interactions and generate $1,000s in recurring revenue
+- Engineered AI-powered data ingestion and document processing pipelines in TypeScript and Python for over 50 clients; integrated AI into chat models to automate website interactions and generate $1,000s in recurring revenue
 - Constructed production Extract, Transform, Load (ETL) workflows to automate hundreds of daily financial applications, cutting manual review down by 50%, improving accuracy by over 60%, and accelerating the overall process by 40%
 
 ### Software Engineer (Freelance), C.O.N.T.R.O.L. BH
@@ -69,6 +71,8 @@ July 2025 – May 2026
 August 2023 – May 2024
 
 - Developed AI companion app integrating GPT-4 for conversation and GPT-3.5 for self-supervised classification, leveraging medical datasets; deployed database services to Firestore on Google Firebase, and hosted an application programming interface (API) gateway service on Google Cloud Run with Cloud Storage for persistent data storage
+- Voice assistant: speech-to-text input and text-to-speech replies; GPT-3.5 classification flags possible early signs of dementia
+- Native mobile app with a FastAPI backend on Google Cloud Run and Cloud Functions; vector store in JSONL
 
 ## Education
 

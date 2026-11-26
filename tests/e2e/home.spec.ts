@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
 
 const PROOF =
-  "Taught ML at Cal State Fullerton · AI pipelines for 10+ clients · M.S. Software Engineering";
+  "Taught ML at Cal State Fullerton · AI pipelines for 50+ clients · M.S. Software Engineering";
 
 /** Animations whose target (or pseudo-element host) is inside the visual band. */
 const bandAnimations = (page: Page) =>
@@ -196,14 +196,15 @@ test.describe("home sections", () => {
     expect(h!.y).toBeGreaterThanOrEqual(nav!.y + nav!.height);
   });
 
-  test("all three cards link to /work and show the approved titles", async ({
+  test("all three cards link to their project pages and show the approved titles", async ({
     page,
   }) => {
     await page.goto("/");
     const cards = page.locator("#work a");
     await expect(cards).toHaveCount(3);
-    for (const c of await cards.all())
-      await expect(c).toHaveAttribute("href", "/work");
+    const slugs = ["ai-document-pipelines", "control-bh", "ulti-health"];
+    for (const [i, c] of (await cards.all()).entries())
+      await expect(c).toHaveAttribute("href", `/work/${slugs[i]}`);
     await expect(cards.nth(0)).toContainText("AI document pipelines");
     await expect(cards.nth(1)).toContainText("C.O.N.T.R.O.L. BH");
     await expect(cards.nth(2)).toContainText("Ulti-Health");

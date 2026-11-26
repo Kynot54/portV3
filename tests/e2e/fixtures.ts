@@ -7,16 +7,24 @@ export const test = base.extend<{
 }>({
   allowedConsole: [[], { option: true }],
   consoleErrors: [
-    async ({ page, allowedConsole }, use) => {
+    async ({ page, allowedConsole, browserName }, use) => {
       const errors: string[] = [];
+      // WebKit logs a Next.js link prefetch (?_rsc=) that a navigation or reload
+      // cancelled as "…due to access control checks". Harmless; nothing else is ignored.
+      const webkitCancelledPrefetch = /_rsc=.*due to access control checks/;
       page.on("console", (m) => {
-        if (
-          m.type() === "error" &&
-          !allowedConsole.some((re) => re.test(m.text()))
-        )
-          errors.push(m.text());
+        const text = m.text();
+        if (m.type() !== "error") return;
+        if (allowedConsole.some((re) => re.test(text))) return;
+        if (browserName === "webkit" && webkitCancelledPrefetch.test(text))
+          return;
+        errors.push(text);
       });
-      page.on("pageerror", (e) => errors.push(e.message));
+      page.on("pageerror", (e) => {
+        if (browserName === "webkit" && webkitCancelledPrefetch.test(e.message))
+          return;
+        errors.push(e.message);
+      });
       await use(errors);
       expect(errors, "console errors").toEqual([]);
     },

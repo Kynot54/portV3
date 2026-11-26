@@ -12,7 +12,7 @@ const byFullText = (text: string) => (_: string, el: Element | null) =>
 export const LEAD =
   "I understand AI systems end to end. I fit them into how a business actually works. I design the system first, then build the automations and software around it.";
 export const PROOF =
-  "Taught ML at Cal State Fullerton · AI pipelines for 10+ clients · M.S. Software Engineering";
+  "Taught ML at Cal State Fullerton · AI pipelines for 50+ clients · M.S. Software Engineering";
 
 test("hero: label, h1, lead, proof line verbatim", () => {
   render(<Hero />);
@@ -65,6 +65,14 @@ const entry = (
   featured: true,
   order: n,
   label,
+  role: "Role",
+  location: "Remote",
+  period: "Jan 2025 – Feb 2025",
+  context: "Context.",
+  impactHeading: "Result",
+  impact: ["Result."],
+  learned: "Learned.",
+  tools: ["Tool"],
   body: "",
 });
 const FIXTURE_THREE = [
@@ -72,7 +80,7 @@ const FIXTURE_THREE = [
     1,
     "AI · 2025–26",
     "AI document pipelines",
-    "I built AI pipelines for 10+ clients. Manual review dropped 50%.",
+    "I built AI pipelines for 50+ clients. Manual review dropped 50%.",
   ),
   entry(
     2,
@@ -99,7 +107,7 @@ test("SelectedWork renders one linked card per entry with label, title, summary"
   ).toBeInTheDocument();
   const cards = screen.getAllByRole("link");
   expect(cards).toHaveLength(3);
-  cards.forEach((c) => expect(c).toHaveAttribute("href", "/work"));
+  cards.forEach((c, i) => expect(c).toHaveAttribute("href", `/work/e${i + 1}`));
   expect(cards[0]).toHaveTextContent("AI · 2025–26");
   expect(cards[0]).toHaveTextContent("AI document pipelines");
   expect(cards[1]).toHaveTextContent(FIXTURE_THREE[1].summary);

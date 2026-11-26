@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export const HERO_PROOF = [
   "Taught ML at Cal State Fullerton",
-  "AI pipelines for 10+ clients",
+  "AI pipelines for 50+ clients",
   "M.S. Software Engineering",
 ];
 
