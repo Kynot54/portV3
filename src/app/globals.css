@@ -35,6 +35,17 @@
   --radius: 0.625rem;
   --glow: 0 0 #0000;
   --glow-strong: 0 0 #0000;
+  /* Blog tag categories: deep text on a pastel fill (src/lib/tag-categories.ts). */
+  --tag-ai: #155e75;
+  --tag-ai-fill: #cffafe;
+  --tag-engineering: #854d0e;
+  --tag-engineering-fill: #fef9c3;
+  --tag-career: #6b21a8;
+  --tag-career-fill: #f3e8ff;
+  --tag-business: #9a3412;
+  --tag-business-fill: #ffedd5;
+  --tag-notes: #9f1239;
+  --tag-notes-fill: #ffe4e6;
 }
 
 .dark {
@@ -59,6 +70,17 @@
   --keyword: #60a5fa;
   --glow: 0 0 22px rgba(57, 255, 20, 0.55), 0 0 2px rgba(57, 255, 20, 0.9);
   --glow-strong: 0 0 30px rgba(57, 255, 20, 0.72), 0 0 3px rgba(57, 255, 20, 1);
+  /* Blog tag categories: neon text and border on black, no fill, no glow. */
+  --tag-ai: #22d3ee;
+  --tag-ai-fill: #000000;
+  --tag-engineering: #fde047;
+  --tag-engineering-fill: #000000;
+  --tag-career: #c084fc;
+  --tag-career-fill: #000000;
+  --tag-business: #fb923c;
+  --tag-business-fill: #000000;
+  --tag-notes: #fb7185;
+  --tag-notes-fill: #000000;
 }
 
 @theme inline {
@@ -200,6 +222,32 @@
   }
   .blog-entry:has(> details[data-entry][open]) .blog-entry-hint-open {
     display: inline;
+  }
+  /* Category colours for tag chips; tags without a category stay grey. */
+  .tag-chip[data-category] {
+    color: var(--tag-color);
+    background-color: var(--tag-fill);
+    border-color: color-mix(in srgb, var(--tag-color) 45%, transparent);
+  }
+  .tag-chip[data-category="ai"] {
+    --tag-color: var(--tag-ai);
+    --tag-fill: var(--tag-ai-fill);
+  }
+  .tag-chip[data-category="engineering"] {
+    --tag-color: var(--tag-engineering);
+    --tag-fill: var(--tag-engineering-fill);
+  }
+  .tag-chip[data-category="career"] {
+    --tag-color: var(--tag-career);
+    --tag-fill: var(--tag-career-fill);
+  }
+  .tag-chip[data-category="business"] {
+    --tag-color: var(--tag-business);
+    --tag-fill: var(--tag-business-fill);
+  }
+  .tag-chip[data-category="notes"] {
+    --tag-color: var(--tag-notes);
+    --tag-fill: var(--tag-notes-fill);
   }
   /* Phones: the post shows only at level 2. 640px+: whenever the entry is open. */
   .blog-entry-body {

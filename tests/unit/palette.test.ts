@@ -35,3 +35,33 @@ test("palette values match the spec exactly", () => {
   expect(token("light", "ring")).toBe("#1D4ED8");
   expect(token("light", "keyword")).toBe("#1D4ED8");
 });
+
+const TAG_CATEGORIES = ["ai", "engineering", "career", "business", "notes"];
+
+test.each(TAG_CATEGORIES)("tag %s: neon text on black ≥ 4.5:1 (dark)", (c) => {
+  expect(
+    contrastRatio(token("dark", `tag-${c}`), token("dark", "background")),
+  ).toBeGreaterThanOrEqual(4.5);
+});
+
+test.each(TAG_CATEGORIES)(
+  "tag %s: deep text on its pastel fill ≥ 4.5:1 (light)",
+  (c) => {
+    expect(
+      contrastRatio(
+        token("light", `tag-${c}`),
+        token("light", `tag-${c}-fill`),
+      ),
+    ).toBeGreaterThanOrEqual(4.5);
+  },
+);
+
+test("tag colours never reuse the accent, keyword or error colours", () => {
+  const reserved = ["primary", "keyword", "destructive"].flatMap((t) => [
+    token("dark", t),
+    token("light", t),
+  ]);
+  for (const c of TAG_CATEGORIES)
+    for (const theme of ["dark", "light"] as const)
+      expect(reserved).not.toContain(token(theme, `tag-${c}`));
+});
