@@ -211,11 +211,15 @@ test.describe("list behaviour", () => {
     await expect(body(page, "sample-short-note")).toBeVisible();
     await tapTitle(page, "sample-short-note");
     await expect(outer(page, "sample-short-note")).not.toHaveAttribute("open");
+    // The reset runs on the toggle event, just after the close; wait for it, so a
+    // reopen within the same millisecond can't race it (flaked ~1 in 5).
+    const inner = entry(page, "sample-short-note").locator(
+      "details[data-inner]",
+    );
+    await expect(inner).not.toHaveAttribute("open");
     await tapTitle(page, "sample-short-note");
     await expect(body(page, "sample-short-note")).toBeHidden();
-    await expect(
-      entry(page, "sample-short-note").locator("details[data-inner]"),
-    ).not.toHaveAttribute("open");
+    await expect(inner).not.toHaveAttribute("open");
   });
 
   test("Collapse returns to the row", async ({ page }) => {
