@@ -249,3 +249,36 @@ export async function getPost(
   if (!SLUG.test(slug)) return null;
   return (await getPosts(opts)).find((p) => p.slug === slug) ?? null;
 }
+
+/** Slugs that would collide with ids the layout already uses, or the empty-blog sentinel. */
+export const RESERVED_SLUGS = ["main", "mobile-menu", "none"];
+
+export type BlogEnv = { BLOG_SAMPLES?: string; VERCEL_ENV?: string };
+
+const published = (posts: BlogPost[]) =>
+  posts.filter((p) => !p.draft && !p.placeholder);
+
+/**
+ * The posts the site shows, newest first. The one entry point for pages, the
+ * layout and the nav, so a later admin only has to change this loader.
+ * - BLOG_SAMPLES=1: the sample posts only (e2e, Lighthouse, local).
+ * - Vercel preview: the samples while no real post is published.
+ * - Otherwise (production): real published posts only.
+ */
+export async function getBlogPosts(
+  env: BlogEnv = process.env,
+  dirs: { real?: string; samples?: string } = {},
+): Promise<BlogPost[]> {
+  const load = async (dir: string) => {
+    const posts = published(await getPosts({ dir }));
+    for (const p of posts)
+      if (RESERVED_SLUGS.includes(p.slug))
+        throw new ContentError(`${p.slug}.mdx`, "filename", "is reserved");
+    return posts;
+  };
+  const samples = () => load(dirs.samples ?? "content/samples/blog");
+  if (env.BLOG_SAMPLES === "1") return samples();
+  const real = await load(dirs.real ?? "content/blog");
+  if (real.length === 0 && env.VERCEL_ENV === "preview") return samples();
+  return real;
+}
