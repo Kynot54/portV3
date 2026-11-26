@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-26 (paused for the night) · **Branch:** `slice/05-contact` (from `main` @ `857b247`, which includes merged PR #7). Everything below is committed and pushed.
+**Updated:** 2026-11-26 (end of day) · **Branch:** `slice/06-launch` (from `main` @ `f1ebff2`). Everything below is committed and pushed.
 
 ## To resume
 
@@ -18,12 +18,27 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 6 (launch polish) is built; its PR is open.** The whole-branch review is next, then fixes, then Kyle merges and runs the live checklist (in the PR and README). Plan: `docs/plans/slice-06.md`.
-2. **After Slice 6:** V3 is complete. Later (V3.1+): admin, cross-posting, consulting. Open `TODO(kyle)` items: favicon, project screenshots.
+1. **Slice 6 (launch polish): PR #10 is open, and the whole-branch review was still running at shutdown.**
+   - All 5 tasks are done. Unit 231, e2e 433 (with headers), Lighthouse 100 ×11.
+   - **On resume:**
+     - Check whether the review result is in the conversation. If not, **re-run the final review**: `.superpowers/sdd/slice-06/review-f1ebff2..f6203b6.diff` is the package, with its ledger (and `Ruling:` lines) in `progress.md`. Use an opus reviewer with the plan's Review Focus.
+     - Then do one fix pass (Critical and Important, test-first), update the PR body, and delete the workspace.
+   - **Kyle then:** approves the copy and the cards, merges, and runs the live checklist (PR #10 and the README): LinkedIn Post Inspector, a Search Console sitemap submit, and the console on live `/contact`.
+2. **Open `TODO(kyle)`:** the favicon sign-off and the five project screenshots.
+3. **After Slice 6:** V3 is complete. V3.1+ covers the admin, cross-posting and consulting.
+
+## Live-site facts (2026-11-26)
+
+- **Cloudflare:**
+  - It proxies in front of Vercel, deliberately.
+  - Web Analytics is ON (beacon `static.cloudflareinsights.com`), Rocket Loader is OFF, and Cloudflare sends no HSTS.
+  - The `www` redirect rule is `https://www.kwhynott.dev/*` → `https://kwhynott.dev/${1}` (301, query kept). Verified.
+- **Vercel's challenge** answers curl and headless browsers with 429. Real browsers pass. LinkedInBot reached the site (Post Inspector), and Google Search Console is verified by TXT. So live checks are manual.
+- **Contact (Slice 5)** is live and verified by Kyle: email arrives, Cal.com loads, Turnstile has no `localhost`, and `portv3` previews keep Vercel Authentication.
 
 ## Done
 
-- **Slices 1–5** are merged (PRs #1, #3, #5, #7, #9) and live, along with the first post (PR #8). The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
+- **Slices 1–5** are merged (PRs #1, #3, #5, #7, #9) and live, along with the first post (PR #8). Blog is in the nav. The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
 
 ## Notes on the live site
 
