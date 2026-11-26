@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-26 (end of session) · **Branch:** `slice/02-home` (from `main` @ `04bac7b`, which includes merged PR #1). Everything below is committed and pushed.
+**Updated:** 2026-11-26 (end of session) · **Branch:** `slice/03-work` (from `main` @ `9ecb6fc`, which includes merged PRs #1 and #3). Everything below is committed and pushed.
 
 ## To resume
 
@@ -10,21 +10,16 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Where we are
 
-**Slice 1 (Foundation) is merged** (PR #1, all checks green). Its design is in `docs/superpowers/specs/2026-11-25-slice-01-foundation-design.md`.
-
-**Slice 2 (Home) is in brainstorming, with the design written.** Every decision has Kyle's approval, and the design doc records them all: **`docs/superpowers/specs/2026-11-26-slice-02-home-design.md`**.
-
-- The copy is approved: hero, proof line, the three work cards, About, the contact CTA, and the `resume.md` Ulti-Health rewrite.
-- The hero visual is **B, "three eras"** (analog wave → digital square wave → AI network), built as **option D: SVG + CSS, no JavaScript**. It animates, and holds still under `prefers-reduced-motion`.
-- The approved v2 mockup is in `.superpowers/brainstorm/41338-1795658600/content/hero-visual-v2.html` (git-ignored, local only).
+- **Slice 1 (Foundation)** is merged (PR #1).
+- **Slice 2 (Home)** is merged (PR #3) and live on `kwhynott.dev`. Kyle merged without changing the PR's "Needs Kyle's call" items, so those defaults stand. Revisit them only if he raises them: section spacing, the visual's size on phones, card labels, hairline joints, two wave points, inset band, grain density.
+- **Dependabot:**
+  - PR #2 bundles breaking majors (TS 7 fails CI, ESLint 10, `@types/node` 26). Recommended: close it unmerged.
+  - PR #4 (`chore/dependabot-safe-updates`) groups minor and patch updates and holds those majors. Kyle merges it.
 
 ## Next steps, in order
 
-1. **Slice 2 is complete; PR #3 is open and waiting for Kyle:** https://github.com/Kynot54/portV3/pull/3. All tasks and the whole-branch review are done, and the Critical/Important fixes are in (`9f9c769`).
-   - **Kyle reviews:** the preview (`portv3-git-slice-02-home-kynot54s-projects.vercel.app`), the screenshots in the PR, and the "Needs Kyle's call" and "For your call" items. Then he merges. **Merging deploys to production.**
-   - If Kyle asks for changes, make them on `slice/02-home` with tests, and push.
-2. **Dependabot PR #2** ("Bump the npm group with 7 updates") is open. Review it separately: let CI run, check for breaking majors, and Kyle merges.
-3. **After the merge:** Slice 3 (Work: list and detail pages using the three entries) starts with brainstorming.
+1. **Slice 3 (Work):** list and detail pages for the work entries (the three featured ones exist in `content/work/`, with `TODO(kyle)` bodies). Start with `superpowers:brainstorming`, then the design doc, then Kyle's approval, then the plan, then the build. Same process as Slices 1–2.
+2. Kyle merges PR #4 and closes #2. Dependabot should then open a safe-only PR. Review it once its CI is green.
 
 ## Notes on the live site
 
