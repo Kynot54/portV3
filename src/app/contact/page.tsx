@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Booking } from "@/components/contact/booking";
 import { ContactForm } from "@/components/contact/contact-form";
+import { PAGE_DESCRIPTIONS, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
-  description: "Send Kyle Whynott a message or book a 30-minute intro call.",
-};
+  description: PAGE_DESCRIPTIONS.contact,
+  path: "/contact",
+});
 
 // Public values, baked in at build time (production builds fail without them).
 const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || undefined;

@@ -73,3 +73,53 @@ test("every live description is 100–160", async () => {
     expect(d.length, d).toBeLessThanOrEqual(160);
   }
 });
+
+import { pageMetadata } from "@/lib/seo";
+
+test("pageMetadata builds canonical, openGraph and twitter", () => {
+  const m = pageMetadata({
+    title: "Work",
+    description: "D".repeat(120),
+    path: "/work",
+  });
+  expect(m.title).toBe("Work");
+  expect(m.description).toBe("D".repeat(120));
+  expect(m.alternates?.canonical).toBe("https://kwhynott.dev/work");
+  expect(m.openGraph).toMatchObject({
+    title: "Work",
+    description: "D".repeat(120),
+    url: "https://kwhynott.dev/work",
+    siteName: "Kyle Whynott",
+    type: "website",
+    locale: "en_US",
+  });
+  expect(m.twitter).toMatchObject({ card: "summary_large_image" });
+});
+
+test("canonical is absolute on kwhynott.dev", () => {
+  const before = process.env.NEXT_PUBLIC_SITE_URL;
+  process.env.NEXT_PUBLIC_SITE_URL = "https://portv3-git-x.vercel.app";
+  try {
+    const m = pageMetadata({ description: "d", path: "/" });
+    expect(m.alternates?.canonical).toBe("https://kwhynott.dev/");
+    expect((m.openGraph as { url: string }).url).toBe("https://kwhynott.dev/");
+    expect(m.title).toBeUndefined();
+    expect((m.openGraph as { title: string }).title).toBe("Kyle Whynott");
+  } finally {
+    process.env.NEXT_PUBLIC_SITE_URL = before;
+  }
+});
+
+test("article type carries publishedTime", () => {
+  const m = pageMetadata({
+    title: "Post",
+    description: "d",
+    path: "/blog/p",
+    type: "article",
+    publishedTime: "2026-11-26",
+  });
+  expect(m.openGraph).toMatchObject({
+    type: "article",
+    publishedTime: "2026-11-26",
+  });
+});

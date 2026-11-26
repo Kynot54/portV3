@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import type { BlogPost, WorkEntry } from "@/lib/content/types";
 
 /** The site's description: Home, link previews, search results (Kyle signs off). */
@@ -49,4 +50,37 @@ function firstParagraph(body: string): string {
 export function describePost(p: BlogPost): string {
   if (p.summary.length >= MIN) return trimTo(p.summary, MAX);
   return trimTo(`${p.summary} ${firstParagraph(p.body)}`.trim(), MAX);
+}
+
+/** Canonical host for every URL we advertise, whatever host serves the build. */
+export const SITE_ORIGIN = "https://kwhynott.dev";
+
+/**
+ * Full metadata for one page. Next replaces (doesn't merge) a nested page's
+ * openGraph object, so every page builds the whole thing here.
+ */
+export function pageMetadata(o: {
+  title?: string;
+  description: string;
+  path: string;
+  type?: "website" | "article";
+  publishedTime?: string;
+}): Metadata {
+  const url = new URL(o.path, SITE_ORIGIN).toString();
+  return {
+    ...(o.title ? { title: o.title } : {}),
+    description: o.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: o.title ?? "Kyle Whynott",
+      description: o.description,
+      url,
+      siteName: "Kyle Whynott",
+      locale: "en_US",
+      ...(o.type === "article"
+        ? { type: "article", publishedTime: o.publishedTime }
+        : { type: "website" }),
+    },
+    twitter: { card: "summary_large_image" },
+  };
 }

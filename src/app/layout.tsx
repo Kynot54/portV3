@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { hasBlog } from "@/lib/blog";
 import { siteConfig } from "@/lib/site";
+import { SITE_DESCRIPTION, pageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -21,8 +22,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: { default: "Kyle Whynott", template: "%s · Kyle Whynott" },
-  // TODO(kyle): final meta description copy
-  description: "Kyle Whynott, AI and software engineer.",
+  // Home's tags; every other page sets its own through pageMetadata().
+  ...pageMetadata({ description: SITE_DESCRIPTION, path: "/" }),
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
