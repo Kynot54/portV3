@@ -137,3 +137,13 @@ test("footer shows © Kyle Whynott with GitHub and LinkedIn links", () => {
     "https://www.linkedin.com/in/kyle-whynott",
   );
 });
+
+test("menu theme toggle shows a visible label inside the accessible name", async () => {
+  renderHeader();
+  await userEvent.click(screen.getByRole("button", { name: "Menu" }));
+  const panel = document.getElementById("mobile-menu")!;
+  const toggle = await within(panel).findByRole("button", {
+    name: /^Theme: System/,
+  });
+  expect(toggle).toHaveTextContent("Theme: System");
+});

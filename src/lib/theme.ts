@@ -12,6 +12,11 @@ export function nextTheme(current: ThemeChoice): ThemeChoice {
   return ORDER[(ORDER.indexOf(current) + 1) % ORDER.length];
 }
 
+/** Display name of a theme choice, e.g. "System". */
+export function themeName(current: ThemeChoice): string {
+  return NAME[current];
+}
+
 /** Accessible name: the current state and what a click does. */
 export function themeLabel(current: ThemeChoice): string {
   return `Theme: ${NAME[current]}. Switch to ${nextTheme(current)}`;

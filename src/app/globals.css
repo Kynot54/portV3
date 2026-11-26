@@ -142,6 +142,8 @@
 @layer base {
   * {
     @apply border-border;
+    /* Start every outline blue so colour transitions never fade the focus ring in from grey. */
+    outline-color: var(--ring);
   }
   html {
     @apply font-sans;

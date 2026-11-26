@@ -110,7 +110,7 @@ export function Header() {
           className="absolute inset-x-0 top-full mt-2 rounded-3xl border bg-background p-2 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150 sm:hidden"
         >
           <ul className="flex flex-col">{links(() => setOpen(false))}</ul>
-          <ThemeToggle className="mt-1" />
+          <ThemeToggle showLabel className="mt-1 w-full" />
         </div>
       </nav>
     </header>

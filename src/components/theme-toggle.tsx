@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { nextTheme, themeLabel, toThemeChoice } from "@/lib/theme";
+import { nextTheme, themeLabel, themeName, toThemeChoice } from "@/lib/theme";
 
 const ICONS = { system: Monitor, light: Sun, dark: Moon } as const;
 
@@ -19,7 +19,14 @@ function useMounted() {
   );
 }
 
-export function ThemeToggle({ className }: { className?: string }) {
+/** `showLabel` adds visible "Theme: System" text (used in the mobile menu). */
+export function ThemeToggle({
+  className,
+  showLabel = false,
+}: {
+  className?: string;
+  showLabel?: boolean;
+}) {
   const { theme, setTheme } = useTheme();
   const mounted = useMounted();
   const current = toThemeChoice(theme);
@@ -29,8 +36,12 @@ export function ThemeToggle({ className }: { className?: string }) {
     <Button
       type="button"
       variant="ghost"
-      size="icon"
-      className={cn("theme-toggle size-11 rounded-full", className)}
+      size={showLabel ? "default" : "icon"}
+      className={cn(
+        "theme-toggle rounded-full",
+        showLabel ? "h-11 justify-start gap-2 px-3" : "size-11",
+        className,
+      )}
       aria-label={mounted ? themeLabel(current) : "Theme"}
       onClick={() => setTheme(nextTheme(current))}
     >
@@ -38,6 +49,11 @@ export function ThemeToggle({ className }: { className?: string }) {
         <Icon aria-hidden="true" />
       ) : (
         <span className="size-4" aria-hidden="true" />
+      )}
+      {showLabel && (
+        <span className="text-sm text-muted-foreground">
+          Theme: {mounted ? themeName(current) : "…"}
+        </span>
       )}
     </Button>
   );

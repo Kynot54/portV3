@@ -56,10 +56,19 @@ test("tab order and visible focus", async ({ page, browserName }) => {
     const name = await focusedName(page);
     if (want instanceof RegExp) expect(name).toMatch(want);
     else expect(name).toBe(want);
-    const outline = await page.evaluate(
-      () => getComputedStyle(document.activeElement!).outlineStyle,
-    );
-    expect(outline, `focus ring on ${name}`).not.toBe("none");
+    // Read the ring the instant focus lands: it must already be blue (no fade from grey).
+    const ring = await page.evaluate(() => {
+      const el = document.activeElement!;
+      const probe = document.createElement("span");
+      probe.style.color = "var(--ring)";
+      document.body.append(probe);
+      const want = getComputedStyle(probe).color;
+      probe.remove();
+      const cs = getComputedStyle(el);
+      return { style: cs.outlineStyle, color: cs.outlineColor, want };
+    });
+    expect(ring.style, `focus ring on ${name}`).not.toBe("none");
+    expect(ring.color, `focus ring colour on ${name}`).toBe(ring.want);
   }
 });
 
