@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               // No JS: hide the controls that need it and show the desktop links at
               // every width. In @layer base so the !important outranks Tailwind's
               // layered `hidden` / [hidden] rules.
-              "@layer base{.theme-toggle,.menu-button,#mobile-menu{display:none!important}" +
+              "@layer base{.theme-toggle,.menu-button,#mobile-menu,.js-only{display:none!important}" +
                 'nav[aria-label="Main"]>ul{display:flex!important}}'
             }
           </style>

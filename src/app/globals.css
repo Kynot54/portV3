@@ -169,3 +169,41 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Blog list entries (src/components/blog/blog-entry.tsx). */
+@layer components {
+  /* The row toggle's overlay makes the whole entry clickable. */
+  .blog-entry-toggle {
+    cursor: pointer;
+  }
+  .blog-entry-toggle::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+  }
+  .blog-entry-toggle:focus-visible {
+    outline: none;
+  }
+  .blog-entry-toggle:focus-visible::after {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  /* Open content sits above the overlay, so clicks inside it don't toggle. */
+  .blog-entry-content {
+    position: relative;
+    z-index: 1;
+  }
+  /* Phones: the post shows only at level 2. 640px+: whenever the entry is open. */
+  .blog-entry-body {
+    display: none;
+  }
+  .blog-entry:has(details[data-inner][open]) .blog-entry-body {
+    display: block;
+  }
+  @media (min-width: 40rem) {
+    .blog-entry-body {
+      display: block;
+    }
+  }
+}

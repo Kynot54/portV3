@@ -1,4 +1,5 @@
-import { test, expect } from "./fixtures";
+import type { Page } from "@playwright/test";
+import { test, expect, isMobile } from "./fixtures";
 import { getBlogPosts } from "../../src/lib/content/load";
 import { formatDate } from "../../src/lib/format-date";
 
@@ -53,5 +54,151 @@ test.describe("post page", () => {
     expect((await back.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     await back.click();
     await expect(page).toHaveURL(/\/blog$/);
+  });
+});
+
+const entry = (page: Page, slug: string) => page.locator(`li#${slug}`);
+const outer = (page: Page, slug: string) =>
+  entry(page, slug).locator("details[data-entry]");
+const body = (page: Page, slug: string) =>
+  entry(page, slug).locator(".blog-entry-body p").first();
+/** The summary text is rendered once per breakpoint; only one copy shows. */
+const summaryText = (page: Page, slug: string, text: string) =>
+  entry(page, slug).getByText(text, { exact: true }).locator("visible=true");
+const readFull = (page: Page, slug: string) =>
+  entry(page, slug).locator("details[data-inner] > summary");
+/** A real click at the title's position; the row overlay takes it, as for a user. */
+const tapTitle = (page: Page, slug: string) =>
+  entry(page, slug).getByRole("heading", { level: 2 }).click({ force: true });
+
+test.describe("blog list", () => {
+  test("lists published samples newest first", async ({ page }) => {
+    await page.goto("/blog");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Blog");
+    const titles = (await samples()).map((p) => p.title);
+    await expect(page.locator("main h2")).toHaveText(titles);
+  });
+
+  test("desktop: collapsed row shows title, date, summary, tags; one click opens the full post", async ({
+    page,
+  }) => {
+    test.skip(isMobile(page), "desktop and tablet");
+    const [p] = (await samples()).filter((s) => s.slug === "sample-short-note");
+    await page.goto("/blog");
+    const li = entry(page, p.slug);
+    await expect(summaryText(page, p.slug, p.summary)).toHaveCount(1);
+    await expect(
+      li.locator(`time[datetime="${p.date}"]`).locator("visible=true"),
+    ).toHaveCount(1);
+    await expect(
+      li
+        .getByRole("list", { name: "Tags" })
+        .locator("visible=true")
+        .getByRole("listitem"),
+    ).toHaveText(p.tags);
+    await expect(body(page, p.slug)).toBeHidden();
+    await summaryText(page, p.slug, p.summary).click({ force: true });
+    await expect(body(page, p.slug)).toBeVisible();
+    await tapTitle(page, p.slug);
+    await expect(body(page, p.slug)).toBeHidden();
+    await expect(outer(page, p.slug)).not.toHaveAttribute("open");
+  });
+
+  test("mobile: first tap shows details, second shows the post", async ({
+    page,
+  }) => {
+    test.skip(!isMobile(page), "phones only");
+    const [p] = (await samples()).filter((s) => s.slug === "sample-short-note");
+    await page.goto("/blog");
+    const li = entry(page, p.slug);
+    await expect(summaryText(page, p.slug, p.summary)).toHaveCount(0);
+    await tapTitle(page, p.slug);
+    await expect(summaryText(page, p.slug, p.summary)).toHaveCount(1);
+    await expect(body(page, p.slug)).toBeHidden();
+    await readFull(page, p.slug).click();
+    await expect(body(page, p.slug)).toBeVisible();
+    await tapTitle(page, p.slug);
+    await expect(outer(page, p.slug)).not.toHaveAttribute("open");
+    await expect(summaryText(page, p.slug, p.summary)).toHaveCount(0);
+  });
+
+  test("entries open independently", async ({ page }) => {
+    await page.goto("/blog");
+    await tapTitle(page, "sample-short-note");
+    await tapTitle(page, "sample-formatting");
+    await expect(outer(page, "sample-short-note")).toHaveAttribute("open", "");
+    await expect(outer(page, "sample-formatting")).toHaveAttribute("open", "");
+  });
+
+  test("row toggle is named by the title and announces state", async ({
+    page,
+  }) => {
+    await page.goto("/blog");
+    const toggle = entry(page, "sample-short-note").locator("summary").first();
+    await expect(toggle).toHaveAccessibleName("Sample: A short note");
+    await toggle.focus();
+    await page.keyboard.press("Enter");
+    await expect(outer(page, "sample-short-note")).toHaveAttribute("open", "");
+    await page.keyboard.press("Space");
+    await expect(outer(page, "sample-short-note")).not.toHaveAttribute("open");
+  });
+
+  test("inline post headings sit under the entry title", async ({ page }) => {
+    await page.goto("/blog");
+    await tapTitle(page, "sample-formatting");
+    if (isMobile(page)) await readFull(page, "sample-formatting").click();
+    await expect(
+      entry(page, "sample-formatting").getByRole("heading", {
+        level: 3,
+        name: "A second-level heading",
+      }),
+    ).toBeVisible();
+  });
+
+  test("no-JS: rows open natively and Collapse is hidden", async ({
+    browser,
+  }, info) => {
+    const viewport = info.project.use.viewport ?? { width: 1440, height: 900 };
+    const ctx = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport,
+    });
+    const page = await ctx.newPage();
+    await page.goto("/blog");
+    await tapTitle(page, "sample-short-note");
+    if (viewport.width < 640) await readFull(page, "sample-short-note").click();
+    await expect(body(page, "sample-short-note")).toBeVisible();
+    await expect(
+      entry(page, "sample-short-note").getByRole("button", {
+        name: "Collapse",
+      }),
+    ).toBeHidden();
+    await ctx.close();
+  });
+
+  test("320px: no page overflow with a wide code block", async ({
+    browser,
+  }, info) => {
+    test.skip(info.project.name !== "desktop", "viewport set explicitly");
+    const ctx = await browser.newContext({
+      viewport: { width: 320, height: 700 },
+    });
+    const page = await ctx.newPage();
+    await page.goto("/blog");
+    await tapTitle(page, "sample-formatting");
+    await readFull(page, "sample-formatting").click();
+    const pre = entry(page, "sample-formatting").locator("pre");
+    await expect(pre).toBeVisible();
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+    expect(await pre.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(
+      true,
+    );
+    await ctx.close();
   });
 });

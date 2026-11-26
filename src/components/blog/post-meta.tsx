@@ -17,18 +17,23 @@ export function PostMeta({
       <time dateTime={post.date} className="text-sm text-muted-foreground">
         {formatDate(post.date)}
       </time>
-      {post.tags.length > 0 && (
-        <ul role="list" aria-label="Tags" className="flex flex-wrap gap-2">
-          {post.tags.map((t) => (
-            <li
-              key={t}
-              className="micro-label rounded-full border px-3 py-1 text-muted-foreground"
-            >
-              {t}
-            </li>
-          ))}
-        </ul>
-      )}
+      <TagList tags={post.tags} />
     </div>
+  );
+}
+
+export function TagList({ tags }: { tags: string[] }) {
+  if (tags.length === 0) return null;
+  return (
+    <ul role="list" aria-label="Tags" className="flex flex-wrap gap-2">
+      {tags.map((t) => (
+        <li
+          key={t}
+          className="micro-label rounded-full border px-3 py-1 text-muted-foreground"
+        >
+          {t}
+        </li>
+      ))}
+    </ul>
   );
 }
