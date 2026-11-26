@@ -196,7 +196,7 @@ test.describe("home sections", () => {
     expect(h!.y).toBeGreaterThanOrEqual(nav!.y + nav!.height);
   });
 
-  test("all three cards link to /work and show the approved titles", async ({
+  test("all three cards link to their project pages and show the approved titles", async ({
     page,
   }) => {
     await page.goto("/");

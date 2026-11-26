@@ -107,7 +107,7 @@ test("SelectedWork renders one linked card per entry with label, title, summary"
   ).toBeInTheDocument();
   const cards = screen.getAllByRole("link");
   expect(cards).toHaveLength(3);
-  cards.forEach((c) => expect(c).toHaveAttribute("href", "/work"));
+  cards.forEach((c, i) => expect(c).toHaveAttribute("href", `/work/e${i + 1}`));
   expect(cards[0]).toHaveTextContent("AI · 2025–26");
   expect(cards[0]).toHaveTextContent("AI document pipelines");
   expect(cards[1]).toHaveTextContent(FIXTURE_THREE[1].summary);
