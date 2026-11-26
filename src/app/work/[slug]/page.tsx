@@ -5,6 +5,7 @@ import { cacheLife } from "next/cache";
 import { MediaPlaceholder } from "@/components/work/media-placeholder";
 import { getWorkList } from "@/lib/content/load";
 import { renderMdx } from "@/lib/mdx";
+import { describeWork, pageMetadata } from "@/lib/seo";
 
 // Every /work page is fully static. An unknown slug is resolved before the
 // response starts, so notFound() returns a real HTTP 404 (Next 16 ensureStatic).
@@ -29,7 +30,13 @@ export async function generateMetadata({
   params,
 }: PageProps<"/work/[slug]">): Promise<Metadata> {
   const entry = await entryFor((await params).slug);
-  return entry ? { title: entry.title, description: entry.summary } : {};
+  return entry
+    ? pageMetadata({
+        title: entry.title,
+        description: describeWork(entry),
+        path: `/work/${entry.slug}`,
+      })
+    : {};
 }
 
 function Section({

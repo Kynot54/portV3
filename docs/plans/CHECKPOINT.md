@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-26 (paused for the night) · **Branch:** `slice/05-contact` (from `main` @ `857b247`, which includes merged PR #7). Everything below is committed and pushed.
+**Updated:** 2026-11-26 (end of day) · **Branch:** `slice/06-launch` (from `main` @ `f1ebff2`). Everything below is committed and pushed.
 
 ## To resume
 
@@ -18,13 +18,24 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 5 (Contact) is complete; PR #9 is waiting for Kyle.** The review fixes are in. Kyle's steps: remove `localhost` from the production Turnstile widget, confirm Vercel Authentication on `portv3` previews, send himself a message from the preview, try Book a call, do the VoiceOver check, then merge. Plan: `docs/plans/slice-05.md`. Ledger: `.superpowers/sdd/slice-05/progress.md`.
-2. **PR #8 (first blog post)** is ready for Kyle to merge.
-3. **After Slice 5:** Slice 6 (launch polish). Its notes are in `docs/plans/slice-04-pr.md` and `docs/plans/slice-05-pr.md`.
+1. **Slice 6 (launch polish): PR #10 is ready for Kyle.** Review and fix pass done: the full Vercel toolbar policy on previews, and `font-src https://cal.com` (found with a local check of the real embeds in WebKit). `browsing-topics` is dropped, no build allows eval (Kyle), and `.env.development` holds public test values. Optional `description` field on projects and posts, and the new Home description. Unit 238, e2e 433. Kyle approved the descriptions, the cards and the alt text (2026-11-27).
+   - **Kyle:** merge, then run the live checklist in PR #10.
+   - **Env vars are Production-only**, so check real embeds locally (README), never on a preview.
+2. **Open `TODO(kyle)`:** the favicon sign-off and the five project screenshots.
+3. **After Slice 6:** V3 is complete. V3.1+ covers the admin, cross-posting and consulting.
+
+## Live-site facts (2026-11-26)
+
+- **Cloudflare:**
+  - It proxies in front of Vercel, deliberately.
+  - Web Analytics is ON (beacon `static.cloudflareinsights.com`), Rocket Loader is OFF, and Cloudflare sends no HSTS.
+  - The `www` redirect rule is `https://www.kwhynott.dev/*` → `https://kwhynott.dev/${1}` (301, query kept). Verified.
+- **Vercel's challenge** answers curl and headless browsers with 429. Real browsers pass. LinkedInBot reached the site (Post Inspector), and Google Search Console is verified by TXT. So live checks are manual.
+- **Contact (Slice 5)** is live and verified by Kyle: email arrives, Cal.com loads, Turnstile has no `localhost`, and `portv3` previews keep Vercel Authentication.
 
 ## Done
 
-- **Slices 1–4** are merged (PRs #1, #3, #5, #7) and live. The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
+- **Slices 1–5** are merged (PRs #1, #3, #5, #7, #9) and live, along with the first post (PR #8). Blog is in the nav. The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
 
 ## Notes on the live site
 

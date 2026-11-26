@@ -59,6 +59,7 @@ const entry = (
   slug: `e${n}`,
   title,
   summary,
+  description: null,
   date: "2026-01",
   tags: [],
   placeholder: false,

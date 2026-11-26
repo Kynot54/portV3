@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogList } from "@/components/blog/blog-list";
 import { blogPosts } from "@/lib/blog";
+import { PAGE_DESCRIPTIONS, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Blog" };
+export const metadata: Metadata = pageMetadata({
+  title: "Blog",
+  description: PAGE_DESCRIPTIONS.blog,
+  path: "/blog",
+});
 
 export default async function BlogPage() {
   const posts = await blogPosts();

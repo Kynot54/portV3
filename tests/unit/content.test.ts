@@ -12,6 +12,7 @@ import {
 } from "@/lib/content/load";
 import { HERO_PROOF } from "@/components/home/hero";
 import { ABOUT_TEXT } from "@/components/home/about";
+import { SITE_DESCRIPTION } from "@/lib/seo";
 
 const F = resolve("tests/fixtures/content");
 
@@ -22,6 +23,7 @@ test("getWork parses frontmatter, slugs from filename, newest first", async () =
     slug: "beta",
     title: "Beta",
     summary: "Newer project.",
+    description: null,
     date: "2026-01",
     tags: ["typescript", "nextjs"],
     placeholder: false,
@@ -39,6 +41,19 @@ test("getWork parses frontmatter, slugs from filename, newest first", async () =
     body: "Beta body.\n",
   });
   expect(work[1].placeholder).toBe(false); // default
+  expect(work[1].description).toBe(
+    "A description written for search results and link previews, long enough for LinkedIn and short enough for Google's cut.",
+  );
+});
+
+test("a description outside 100–160 characters fails the build", async () => {
+  await expect(getWork(`${F}/work-bad-description`)).rejects.toMatchObject({
+    file: "x.mdx",
+    field: "description",
+  });
+  await expect(
+    getPosts({ dir: `${F}/blog-bad-description` }),
+  ).rejects.toMatchObject({ file: "x.mdx", field: "description" });
 });
 
 test("missing title throws ContentError naming file and field", async () => {
@@ -201,6 +216,25 @@ const CLAIMS: [copyFragment: string, resumePhrases: string[]][] = [
   ["Hiring efficiency up over 50%.", ["hiring efficiency by over 50%"]],
   ["Hundreds of management hours saved.", ["100s of working hours"]],
   ["40+ students", ["40+ students"]],
+  ["built AI document pipelines for 50+ clients", ["over 50 clients"]],
+  ["AI document pipelines for 50+ clients", ["over 50 clients"]],
+  [
+    "in TypeScript and Python for 50+ clients. They cut manual review of financial applications by 50% and raised accuracy over 60%.",
+    ["over 50 clients", "manual review down by 50%", "accuracy by over 60%"],
+  ],
+  [
+    "in under two weeks, then maintained it for a year. It served 1,000+ users; donations rose 40%.",
+    [
+      "under 2 weeks",
+      "continual maintenance for a year",
+      "1,000+ users",
+      "donation volume by 40%",
+    ],
+  ],
+  [
+    "It screened 100+ applicants and raised hiring efficiency by over 50%.",
+    ["100+ applicants", "hiring efficiency by over 50%"],
+  ],
 ];
 /** Tool and degree names that contain digits but aren't claims. */
 const EXEMPT =
@@ -237,6 +271,7 @@ test("every quantity on Home and work pages traces to its exact resume phrase", 
   const copy = [
     ...(await getWorkList()).flatMap((e) => [
       e.summary,
+      e.description ?? "",
       e.context,
       ...e.impact,
       e.learned,
@@ -244,6 +279,7 @@ test("every quantity on Home and work pages traces to its exact resume phrase", 
     ]),
     HERO_PROOF.join(" · "),
     ABOUT_TEXT,
+    SITE_DESCRIPTION,
   ];
   for (const text of copy)
     expect(

@@ -1,4 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
+import { DESCRIPTION_MAX, DESCRIPTION_MIN } from "@/lib/description-limits";
 import { isAbsolute, join } from "node:path";
 import matter from "gray-matter";
 import type { BlogPost, WorkEntry } from "./types";
@@ -127,6 +128,18 @@ function strList(r: Raw, field: string): string[] {
   return v;
 }
 
+/** Optional search and link-preview text; must fit LinkedIn's minimum and Google's cut-off. */
+function description(r: Raw): string | null {
+  const v = optStr(r, "description");
+  if (v !== null && (v.length < DESCRIPTION_MIN || v.length > DESCRIPTION_MAX))
+    throw new ContentError(
+      r.file,
+      "description",
+      `must be ${DESCRIPTION_MIN}–${DESCRIPTION_MAX} characters (is ${v.length})`,
+    );
+  return v;
+}
+
 const HEADINGS = ["Result", "What it does"] as const;
 
 function heading(r: Raw): WorkEntry["impactHeading"] {
@@ -153,6 +166,7 @@ function toWork(r: Raw): WorkEntry {
     slug: r.slug,
     title: str(r, "title"),
     summary: str(r, "summary"),
+    description: description(r),
     date: date(r, MONTH, "YYYY-MM"),
     tags: tags(r),
     placeholder,
@@ -197,6 +211,7 @@ function toPost(r: Raw): BlogPost {
     slug: r.slug,
     title: str(r, "title"),
     summary: str(r, "summary"),
+    description: description(r),
     date: date(r, DAY, "YYYY-MM-DD"),
     tags: tags(r),
     placeholder: bool(r, "placeholder"),
