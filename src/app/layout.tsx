@@ -41,9 +41,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <noscript>
           <style>
             {
-              // In @layer base so it outranks Tailwind's layered [hidden]{display:none!important}.
-              "@layer base{.theme-toggle,.menu-button{display:none!important}" +
-                "@media (max-width:639.98px){#mobile-menu{display:block!important;position:static;margin-top:.5rem}}}"
+              // No JS: hide the controls that need it and show the desktop links at
+              // every width. In @layer base so the !important outranks Tailwind's
+              // layered `hidden` / [hidden] rules.
+              "@layer base{.theme-toggle,.menu-button,#mobile-menu{display:none!important}" +
+                'nav[aria-label="Main"]>ul{display:flex!important}}'
             }
           </style>
         </noscript>

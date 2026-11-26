@@ -147,3 +147,39 @@ test("menu theme toggle shows a visible label inside the accessible name", async
   });
   expect(toggle).toHaveTextContent("Theme: System");
 });
+
+test("pointer down outside the nav closes the menu", async () => {
+  renderHeader();
+  const btn = screen.getByRole("button", { name: "Menu" });
+  await userEvent.click(btn);
+  const outside = document.createElement("div");
+  document.body.append(outside);
+  await userEvent.click(outside);
+  expect(btn).toHaveAttribute("aria-expanded", "false");
+  outside.remove();
+});
+
+test("focus leaving the nav closes the menu", async () => {
+  render(
+    <ThemeProvider>
+      <Header />
+      <main>
+        <a href="#x">page link</a>
+      </main>
+    </ThemeProvider>,
+  );
+  const btn = screen.getByRole("button", { name: "Menu" });
+  await userEvent.click(btn);
+  act(() => screen.getByRole("link", { name: "page link" }).focus());
+  expect(btn).toHaveAttribute("aria-expanded", "false");
+});
+
+test("tapping the logo closes the menu", async () => {
+  renderHeader();
+  const btn = screen.getByRole("button", { name: "Menu" });
+  await userEvent.click(btn);
+  await userEvent.click(
+    screen.getByRole("link", { name: "Kyle Whynott, home" }),
+  );
+  expect(btn).toHaveAttribute("aria-expanded", "false");
+});

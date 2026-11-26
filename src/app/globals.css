@@ -147,6 +147,8 @@
   }
   html {
     @apply font-sans;
+    /* Keep focused/scrolled-to elements clear of the fixed nav pill (WCAG 2.4.11). */
+    scroll-padding-top: 6rem;
   }
   body {
     @apply bg-background text-foreground;

@@ -23,9 +23,12 @@ function useMounted() {
 export function ThemeToggle({
   className,
   showLabel = false,
+  navKey,
 }: {
   className?: string;
   showLabel?: boolean;
+  /** Matches equivalent controls across the desktop and mobile layouts. */
+  navKey?: string;
 }) {
   const { theme, setTheme } = useTheme();
   const mounted = useMounted();
@@ -44,6 +47,7 @@ export function ThemeToggle({
       )}
       aria-label={mounted ? themeLabel(current) : "Theme"}
       onClick={() => setTheme(nextTheme(current))}
+      data-nav={navKey}
     >
       {mounted ? (
         <Icon aria-hidden="true" />

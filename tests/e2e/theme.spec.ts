@@ -98,6 +98,23 @@ test("no-JS renders dark, hides toggle and menu button, links reachable", async 
   await expect(
     page.getByRole("link", { name: "Blog" }).locator("visible=true"),
   ).toHaveCount(1);
+  // Nothing may cover the page heading.
+  const h1Uncovered = await page.locator("h1").evaluate((h) => {
+    const r = h.getBoundingClientRect();
+    const hit = document.elementFromPoint(
+      r.left + r.width / 2,
+      r.top + r.height / 2,
+    );
+    return !!hit && (hit === h || h.contains(hit));
+  });
+  expect(h1Uncovered, "h1 covered by the nav without JS").toBe(true);
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth <=
+        document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
   await ctx.close();
 });
 

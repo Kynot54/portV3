@@ -73,3 +73,10 @@ test("real content dirs load and every placeholder is marked", async () => {
     }
   }
 });
+
+test("an .mdx file whose name isn't a valid slug fails loudly", async () => {
+  await expect(getWork(`${F}/work-bad-name`)).rejects.toMatchObject({
+    file: "My-Post.mdx",
+    field: "filename",
+  });
+});

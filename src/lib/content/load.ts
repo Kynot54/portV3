@@ -39,9 +39,16 @@ async function readEntries(dir: string): Promise<Raw[]> {
     if ((e as NodeJS.ErrnoException).code === "ENOENT") return [];
     throw e;
   }
-  const files = names.filter(
-    (n) => n.endsWith(".mdx") && SLUG.test(n.slice(0, -4)),
-  );
+  const files = names.filter((n) => n.endsWith(".mdx"));
+  // A misnamed file would otherwise vanish from the site silently.
+  for (const n of files) {
+    if (!SLUG.test(n.slice(0, -4)))
+      throw new ContentError(
+        n,
+        "filename",
+        "must be lowercase letters, digits and hyphens",
+      );
+  }
   return Promise.all(
     files.map(async (file) => {
       const { data, content } = matter(

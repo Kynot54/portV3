@@ -57,18 +57,93 @@ test("menu button below 640px, full pill from 640px", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("resize from mobile to desktop with menu open", async ({ page }) => {
+const hydrated = (page: import("@playwright/test").Page) =>
+  page.waitForFunction(() =>
+    document
+      .querySelector(".theme-toggle")
+      ?.getAttribute("aria-label")
+      ?.startsWith("Theme:"),
+  );
+
+const focused = (page: import("@playwright/test").Page) =>
+  page.evaluate(() => {
+    const el = document.activeElement as HTMLElement | null;
+    return {
+      name: el?.getAttribute("aria-label") ?? el?.textContent?.trim() ?? "",
+      isBody: el === document.body,
+      visible: !!el && el.checkVisibility(),
+    };
+  });
+
+test("resize mobile → desktop with focus in the open menu keeps focus on the same item", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto("/");
+  await hydrated(page);
   await page.getByRole("button", { name: "Menu" }).click();
-  await expect(page.locator("#mobile-menu")).toBeVisible();
+  await page
+    .locator("#mobile-menu")
+    .getByRole("link", { name: "Blog" })
+    .focus();
   await page.setViewportSize({ width: 1024, height: 768 });
   await expect(page.locator("#mobile-menu")).toBeHidden();
-  const focusVisible = await page.evaluate(() => {
-    const el = document.activeElement as HTMLElement | null;
-    return !el || el === document.body || el.offsetParent !== null;
+  await expect
+    .poll(() => focused(page))
+    .toEqual({ name: "Blog", isBody: false, visible: true });
+});
+
+test("resize mobile → desktop with focus on Menu moves focus to a visible nav item", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto("/");
+  await hydrated(page);
+  await page.getByRole("button", { name: "Menu" }).focus();
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await expect
+    .poll(async () => {
+      const f = await focused(page);
+      return !f.isBody && f.visible;
+    })
+    .toBe(true);
+});
+
+test("resize desktop → mobile with focus on a nav link moves focus to Menu", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("/");
+  await hydrated(page);
+  await page
+    .getByRole("navigation", { name: "Main" })
+    .getByRole("link", { name: "Work" })
+    .focus();
+  await page.setViewportSize({ width: 375, height: 667 });
+  await expect
+    .poll(() => focused(page))
+    .toEqual({ name: "Menu", isBody: false, visible: true });
+});
+
+test("focused elements are never hidden under the fixed nav (WCAG 2.4.11)", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("/");
+  const ok = await page.evaluate(() => {
+    const spacer = document.createElement("div");
+    spacer.style.height = "3000px";
+    const btn = document.createElement("button");
+    btn.textContent = "probe";
+    document.querySelector("main")!.append(btn, spacer);
+    window.scrollTo(0, document.body.scrollHeight);
+    btn.focus();
+    const nav = document
+      .querySelector('nav[aria-label="Main"]')!
+      .getBoundingClientRect();
+    return btn.getBoundingClientRect().top >= nav.bottom;
   });
-  expect(focusVisible).toBe(true);
+  expect(ok).toBe(true);
 });
 
 test("hero type scales: <32px at 375, >40px at 1440", async ({ page }) => {
