@@ -158,7 +158,11 @@ Role · Location · Period                        muted meta line
 
 ### `/work` list
 - **Heading:** h1 "Work".
-- **Cards:** the five projects in the order above, in the same style as Home: label, h3 title, summary. Each links to `/work/[slug]`. The page keeps its own `<title>` ("Work").
+- **Cards:** the five projects in the order above, in the same style as Home: label, title, summary. Each links to `/work/[slug]`. The page keeps its own `<title>` ("Work").
+- **Heading levels (builder check, my call):** card titles are **h2** on `/work` (directly under the h1) and **h3** on Home (under "Selected work"). They look identical. The shared card component takes a heading-level prop, which keeps heading order correct (Lighthouse `heading-order`, accessibility 1.0).
+
+### One-item "What it does" (builder check, my call)
+- An `impact` list with **one** item renders as a paragraph, not a one-bullet list. The approved copy is unchanged.
 
 ## Left to the builder
 
