@@ -3,7 +3,7 @@ import { ThreeEras } from "@/components/home/three-eras";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const PROOF = [
+export const HERO_PROOF = [
   "Taught ML at Cal State Fullerton",
   "AI pipelines for 10+ clients",
   "M.S. Software Engineering",
@@ -57,13 +57,13 @@ export function Hero() {
       </div>
 
       <p className="micro-label mx-auto mt-8 max-w-5xl text-balance text-muted-foreground">
-        {PROOF.map((item, i) => (
+        {HERO_PROOF.map((item, i) => (
           <span key={item}>
             {i > 0 && " "}
             {/* The separator ends a line rather than starting one. */}
-            <span data-proof-item className="whitespace-nowrap">
+            <span data-proof-item className="sm:whitespace-nowrap">
               {item}
-              {i < PROOF.length - 1 && " ·"}
+              {i < HERO_PROOF.length - 1 && " ·"}
             </span>
           </span>
         ))}

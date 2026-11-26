@@ -26,13 +26,22 @@ Also included:
 
 - **`resume.md`:** the Ulti-Health entry is rewritten to its real MVP stack (Expo + Supabase).
 - **Work loader:** gains `featured`, `order` and `label`, and a missing field fails the build.
-- **Facts test:** fails if any number on a card isn't in the resume.
+- **Facts test:** every number on Home maps to its exact source phrase in the resume.
 
 The design is in `docs/superpowers/specs/2026-11-26-slice-02-home-design.md` and the plan in `docs/plans/slice-02.md`.
 
 ## Preview URL
 
 https://portv3-git-slice-02-home-kynot54s-projects.vercel.app (sign in to Vercel to view the preview)
+
+## Screenshots
+
+|      | Dark                                                                                                                            | Light                                                                                                                             | Reduced motion (still)                                                                                                                      |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1440 | ![hero-1440-dark](https://github.com/Kynot54/portV3/blob/slice/02-home/docs/plans/slice-02-screens/hero-1440-dark.png?raw=true) | ![hero-1440-light](https://github.com/Kynot54/portV3/blob/slice/02-home/docs/plans/slice-02-screens/hero-1440-light.png?raw=true) | ![hero-1440-dark-still](https://github.com/Kynot54/portV3/blob/slice/02-home/docs/plans/slice-02-screens/hero-1440-dark-still.png?raw=true) |
+| 375  | ![hero-375-dark](https://github.com/Kynot54/portV3/blob/slice/02-home/docs/plans/slice-02-screens/hero-375-dark.png?raw=true)   | ![hero-375-light](https://github.com/Kynot54/portV3/blob/slice/02-home/docs/plans/slice-02-screens/hero-375-light.png?raw=true)   | ![hero-375-dark-still](https://github.com/Kynot54/portV3/blob/slice/02-home/docs/plans/slice-02-screens/hero-375-dark-still.png?raw=true)   |
+
+**Lighthouse HTML reports and the Playwright report** are attached to every CI run as the `reports` artifact (Actions → the run → Artifacts).
 
 ## Test evidence
 
@@ -55,7 +64,7 @@ New tests cover:
 - a fixed band height (no layout shift)
 - accent used only on the points
 - hero text wrapping (the dot stays with its label, and proof items stay whole)
-- the facts check against the resume
+- the facts check: every number on Home (cards, proof line, About) must sit inside a claim mapped to its exact resume phrase (for example "Manual review dropped 50%" maps to "manual review down by 50%"), so a changed number fails
 
 ## TODO(kyle) placeholders
 
@@ -72,6 +81,31 @@ New tests cover:
 
 1. **Accent uses on Home:** the Contact pill, both **Get in touch** buttons, the open-to-work dot, and the travelling points in the visual. Slice 01's rule was "three uses only". Kyle approved the repeated main call to action and the points in the design.
 2. **The site's one continuous animation** is the hero visual. It's slow, never flashes, and stops completely under reduced motion.
+
+## Independent review
+
+A fresh reviewer read the whole branch: no critical findings, three important ones, and eleven minor ones. Fixed here, each with a test that failed first:
+
+- At 320 px the proof line overflowed its box into the gutter. Measured in Chromium (`overflow: true` on the old code). Items now wrap inside themselves below 640 px.
+- The facts test only checked that "50" appeared somewhere in the resume. It now checks exact source phrases, across the cards, proof line and About.
+- Missing PR evidence: the screenshots and report link above.
+- Re-graded from minor: project titles weren't headings, so screen-reader heading navigation skipped the projects. They're now `<h3>`, and the list keeps its list role in Safari.
+
+**For your call (design details from the approved concept):**
+
+- The hairline has small breaks where the wave meets the square wave, and where the square wave meets the network. Should those be tied into one continuous line?
+- Two points ride the analog wave at once, where the spec said one.
+- The band is inset by the page gutter (with soft faded edges) rather than truly edge to edge.
+- On white, the grain may read as a flat light-grey tint. A sparser grid is easy if so.
+
+**Deferred minor findings (new in this slice):**
+
+- No explicit `cacheLife("max")` on the Home data, so Next re-renders every 15 minutes even though content only changes on deploy. If content tracing ever broke, Selected work would show empty instead of failing.
+- "Get in touch →" is read aloud as "…right arrow".
+- The SVG clip-path ids are hardcoded (harmless with one instance).
+- The 200% zoom test uses CSS zoom; the real reflow check is the 320 px test.
+- The animation repaints each frame and keeps running off-screen. The dark-mode glow filter adds cost. No score impact today.
+- The `#work` jump is checked for scroll position, not focus position.
 
 ## Deferred minor findings (carried from Slice 01, still open)
 

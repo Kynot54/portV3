@@ -139,3 +139,11 @@ test("no generational label anywhere on Home", () => {
     /zillennial|millennial|gen ?z|generation/i,
   );
 });
+
+test("project titles are h3 headings inside a list", () => {
+  render(<SelectedWork entries={FIXTURE_THREE} />);
+  expect(
+    screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent),
+  ).toEqual(["AI document pipelines", "C.O.N.T.R.O.L. BH", "Ulti-Health"]);
+  expect(screen.getByRole("list")).toHaveAttribute("role", "list");
+});

@@ -217,3 +217,30 @@ test.describe("home sections", () => {
       await expect(c).toHaveAttribute("href", "/contact");
   });
 });
+
+test("proof line fits its box at 320px (no overflow into the gutter)", async ({
+  page,
+}, info) => {
+  test.skip(info.project.name !== "desktop", "viewport set explicitly");
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto("/");
+  const r = await page
+    .locator("[data-proof-item]")
+    .first()
+    .evaluate((item) => {
+      const p = item.closest("p")!;
+      const items = [...p.querySelectorAll("[data-proof-item]")].map((e) =>
+        e.getBoundingClientRect(),
+      );
+      const box = p.getBoundingClientRect();
+      const cs = getComputedStyle(p);
+      const right = box.right - parseFloat(cs.paddingRight);
+      return {
+        overflow: p.scrollWidth > p.clientWidth,
+        maxRight: Math.max(...items.map((i) => i.right)),
+        right,
+      };
+    });
+  expect(r.overflow).toBe(false);
+  expect(r.maxRight).toBeLessThanOrEqual(r.right + 0.5);
+});

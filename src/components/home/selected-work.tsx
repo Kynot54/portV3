@@ -11,7 +11,7 @@ export function SelectedWork({ entries }: { entries: WorkEntry[] }) {
       <h2 id="work-title" className="text-h2 font-bold tracking-tight">
         Selected work
       </h2>
-      <ul className="mt-8 grid gap-4 md:grid-cols-3">
+      <ul role="list" className="mt-8 grid gap-4 md:grid-cols-3">
         {entries.map((e) => (
           <li key={e.slug}>
             {/* TODO(slice-03): link to /work/[slug] */}
@@ -22,9 +22,9 @@ export function SelectedWork({ entries }: { entries: WorkEntry[] }) {
               <span className="micro-label text-muted-foreground">
                 {e.label}
               </span>
-              <span className="text-h3 font-semibold tracking-tight">
+              <h3 className="text-h3 font-semibold tracking-tight">
                 {e.title}
-              </span>
+              </h3>
               <span className="text-sm text-muted-foreground">{e.summary}</span>
             </Link>
           </li>

@@ -7,6 +7,8 @@ import {
   getWork,
   getWorkEntry,
 } from "@/lib/content/load";
+import { HERO_PROOF } from "@/components/home/hero";
+import { ABOUT_TEXT } from "@/components/home/about";
 
 const F = "tests/fixtures/content";
 
@@ -133,17 +135,36 @@ test("real featured work matches the approved cards", async () => {
   ]);
 });
 
-test("every number in featured summaries appears in resume.md", async () => {
+/**
+ * Every numeric claim on Home, paired with the exact resume phrase it comes from.
+ * A number in Home copy that isn't inside one of these copy phrases fails the test.
+ */
+const CLAIMS: [copyPhrase: string, resumePhrase: string][] = [
+  ["10+ clients", "over 10 clients"],
+  ["Manual review dropped 50%", "manual review down by 50%"],
+  ["1,000+ users", "1,000+ users"],
+  ["Donations rose 40%", "donation volume by 40%"],
+  ["40+ students", "40+ students"],
+];
+
+test("every number on Home traces to its exact resume phrase", async () => {
   const resume = await readFile("content/source/resume.md", "utf8");
-  for (const e of await getFeaturedWork())
-    for (const n of e.summary.match(/\d[\d,]*\+?%?/g) ?? []) {
-      // "10+" on a card matches "10+" or "over 10" in the resume.
-      const base = n.replace(/[+%]$/, "");
-      const found =
-        resume.includes(n.replace(/%$/, "")) ||
-        (n.endsWith("+") && resume.includes(`over ${base}`));
-      expect(found, `${e.slug}: ${n} not in resume`).toBe(true);
-    }
+  for (const [, source] of CLAIMS)
+    expect(resume, `resume lacks "${source}"`).toContain(source);
+  const copy = [
+    ...(await getFeaturedWork()).map((e) => e.summary),
+    HERO_PROOF.join(" · "),
+    ABOUT_TEXT,
+  ];
+  for (const text of copy) {
+    let rest = text;
+    for (const [phrase] of CLAIMS) rest = rest.split(phrase).join(" ");
+    // M.S. and C++ aren't claims; anything else numeric must have been covered above.
+    expect(
+      rest.replace(/C\+\+/g, "").match(/\d/),
+      `unmapped number in: ${text}`,
+    ).toBeNull();
+  }
 });
 
 test("resume Ulti-Health entry uses the approved stack", async () => {
