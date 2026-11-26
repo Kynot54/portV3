@@ -1,0 +1,96 @@
+## Summary
+
+Slice 01 builds the foundation for kwhynott.dev V3: an empty but polished, responsive shell that later slices build on. It has no hero and no real page content yet.
+
+- **Stack:** Next.js 16.4 (App Router, Cache Components), strict TypeScript, Tailwind 4, ESLint and Prettier. Node 24 is pinned.
+- **Visual system:** shadcn/ui on Base UI with the "isolation" palette, where neon green (dark) or hot magenta (light) is the only loud colour. Fluid type and spacing, radii, a static accent glow, and a blue focus ring. Everything is documented in `docs/design-tokens.md`, and a test keeps the doc in sync with the CSS.
+- **Theme:** next-themes with a three-state toggle (System → Light → Dark). System is the default, there's no flash of the wrong theme, and without JavaScript the site renders dark.
+- **Layout:**
+  - A floating pill nav (KW, Work, Blog, theme toggle, then Contact as the accent pill). Below 640 px it becomes KW, Contact and a Menu disclosure holding Work, Blog and the theme.
+  - A skip link, a footer (GitHub and LinkedIn), and a 404 page.
+  - It honours `prefers-reduced-motion`, with no horizontal scroll from 320 px up.
+- **Content:**
+  - `content/source/resume.md`, the web-safe transcription of the resume PDF. The ZIP code is removed, and Teaching Associate and Ulti-Health end May 2026, per Kyle.
+  - `content/work/` and `content/blog/` with marked placeholder entries.
+  - Typed loaders built on `gray-matter`, which reject bad frontmatter and path-traversal slugs.
+- **`SERVICES_ENABLED`:** `/services` returns 404 unless the flag is exactly `true`. It's never in the nav and is `noindex`.
+- **Placeholder pages:** `/`, `/work`, `/blog` and `/contact`, each using the real layout.
+- **CI:** a `quality` job runs lint, format, typecheck, unit tests, e2e on Chromium, WebKit and Firefox (including axe), then Lighthouse. Dependabot runs monthly, grouped.
+- **Repo:** MIT for the code. Writing and images are all rights reserved (`LICENSE`). There's a short README.
+
+The design is in `docs/superpowers/specs/2026-11-25-slice-01-foundation-design.md` and the plan in `docs/plans/slice-01.md`.
+
+## Preview URL
+
+**Pending.** Vercel isn't connected yet (see "Kyle's checklist").
+
+## Test evidence
+
+All of these were run locally against a production build:
+
+| Check                                                                                                         | Result                                                          |
+| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `npm run lint` · `format:check` · `typecheck`                                                                 | pass                                                            |
+| `npm test` (Vitest)                                                                                           | **58 passed** (10 files)                                        |
+| `npm run test:e2e` (Playwright: mobile 375, tablet 768, desktop 1440 on Chromium; WebKit and Firefox desktop) | **128 passed**, 57 skipped by design*, run twice with no flakes |
+| axe (WCAG 2.0/2.1/2.2 A+AA), every route, light and dark, mobile menu open                                    | 0 violations (one waiver, see "Conflicts flagged" #4)           |
+| Lighthouse (median of 3 runs, mobile emulation)                                                               | 100 / 100 / 100 / 100 on `/`, `/work`, `/blog` and `/contact`   |
+
+\* The skips are tests that don't apply to a project: mobile-only and desktop-only cases, the viewport sweep (desktop Chromium only), and Tab-order checks in WebKit, where macOS skips links on Tab by default.
+
+```
+/          performance 100, accessibility 100, best-practices 100, seo 100
+/work      performance 100, accessibility 100, best-practices 100, seo 100
+/blog      performance 100, accessibility 100, best-practices 100, seo 100
+/contact   performance 100, accessibility 100, best-practices 100, seo 100
+All scores ≥ 0.99.
+```
+
+CI uploads the Lighthouse HTML reports and the Playwright report as the `reports` artifact. Locally they're in `.lighthouseci/` and `playwright-report/`.
+
+**Keyboard pass:** done with Playwright driving real Chromium at 375 px and 1440 px, in light and dark.
+
+- Tab order matches the spec on mobile and desktop.
+- Enter cycles the toggle, and System follows the OS again.
+- The menu opens with Enter, Tab moves into it, and Esc closes it and returns focus to Menu.
+- There were no console errors.
+
+The pass found two issues, both fixed with tests:
+
+- The focus ring faded in from grey.
+- The mobile-menu theme row had no visible label.
+
+A hands-on pass on a real phone is still worth a minute before merging.
+
+## TODO(kyle) placeholders
+
+- `src/app/layout.tsx`: final meta description copy
+- `src/app/icon.svg`: the placeholder KW favicon
+- `src/app/page.tsx` (Slice 02), `work/page.tsx` (03), `blog/page.tsx` (04), `contact/page.tsx` (05): placeholder pages
+- `content/work/placeholder-project.mdx` (Slice 03), `content/blog/placeholder-post.mdx` (Slice 04)
+- `src/app/services/page.tsx` and `docs/plans/services.md`: the Services copy
+
+## Needs Kyle's call
+
+- **Greys** (card, secondary, muted, border, input): first-pass values in `docs/design-tokens.md`, to tune after the preview.
+- **Meta description:** currently "Kyle Whynott, AI and software engineer."
+- **Favicon:** a bold "KW", green on black, or magenta on white in light mode.
+- **README copy.**
+- **Packages added** beyond the brief's named stack, all approved during design:
+  - `next-themes` and `gray-matter`.
+  - `prettier`.
+  - What `shadcn init` installs: `@base-ui/react`, `class-variance-authority`, `lucide-react`, `tw-animate-css`, and **`cn`**. `cn` is shadcn's own package, from `github.com/shadcn-ui/cn`, and it replaces `clsx` + `tailwind-merge`.
+
+## Conflicts flagged
+
+1. **next-themes instead of the Next 16 docs' inline-script method.** It logs a React "script tag" warning in dev only, and production is clean. It treats "no colour preference" as light. Its last release was March 2025.
+2. **No-JS visitors always get dark,** even if their OS is light.
+3. **Blue is quieter than "blue in different shades" might suggest.** It's used only for the focus ring, link underlines and `<Keyword>`, so the accent isn't diluted.
+4. **The logo's accessible name doesn't contain its visible text** (WCAG 2.5.3 Label in Name, Level A). It shows "KW" but is named "Kyle Whynott, home", as directed. axe reports it, so the e2e suite waives that one rule for the logo only. Lighthouse accessibility is still 100. The consequence: voice-control users saying "click KW" may miss it. A name of "KW, Kyle Whynott, home" would fix it while keeping your wording.
+
+## Kyle's checklist
+
+1. **Give `gh` the `workflow` permission** so `.github/workflows/ci.yml` can be pushed: `gh auth refresh -h github.com -s workflow`.
+2. **Connect a new Vercel project** to `Kynot54/portV3`. Don't touch the V2 project or the domain. Add the preview URL here.
+3. **Make `quality` a required status check** on `main` (Settings → Branches → branch protection).
+4. **Review and merge.** Slice 02 branches from the updated `main`.
