@@ -30,14 +30,15 @@ Reading should be quick. On the list, a reader can open a post **in place**, wit
    - **Closing takes one action** at any level (Kyle: "one action to minimize it"):
      - Activating the row again closes the entry completely. On phones that includes the inner level, so reopening starts at level 1 again.
      - A **"Collapse"** button at the end of an open post does the same. It also returns the reader to the entry's row (scroll and focus).
-3. **`/blog/[slug]` post page:** a "← All posts" back link, the title, the date, the tags, then the post body. Unknown slugs return a real 404 (the Work fix: `ensureStatic = "navigation"`).
-4. **Post formatting** (MDX, the renderer from Slice 3, `src/lib/mdx.tsx`), in the existing type and colour tokens:
+3. **Deep links:** `/blog#<slug>` opens that entry in place (see Decided details).
+4. **`/blog/[slug]` post page:** a "← All posts" back link, the title, the date, the tags, then the post body. Unknown slugs return a real 404 (the Work fix: `ensureStatic = "navigation"`).
+5. **Post formatting** (MDX, the renderer from Slice 3, `src/lib/mdx.tsx`), in the existing type and colour tokens:
    - headings (`##`–`####`)
    - paragraphs, links, bulleted and numbered lists
    - blockquotes
    - inline code and fenced code blocks (monospace, scrolling sideways when wide, **no syntax colours**)
    - horizontal rules
-5. **Sample posts for tests and previews.** A sample folder holds 2–3 obviously-sample posts. Together they cover every formatting element above, plus a long post that makes the Collapse button matter.
+6. **Sample posts for tests and previews.** A sample folder holds 2–3 obviously-sample posts. Together they cover every formatting element above, plus a long post that makes the Collapse button matter.
    - Every sample title starts with "Sample:".
    - The body says it is a sample.
    - No claims about Kyle.
@@ -47,7 +48,7 @@ Reading should be quick. On the list, a reader can open a post **in place**, wit
    - an explicit env flag is set (e2e, Lighthouse CI, local).
 
    **They never show on production.** No Vercel settings change is needed.
-6. **The quality bar from Slices 1–3:**
+7. **The quality bar from Slices 1–3:**
    - axe zero, in both themes, collapsed and expanded
    - Lighthouse 0.99–1.0 with accessibility 1.0, on `/blog` and one post page (samples on)
    - responsive at 320 px up
@@ -79,6 +80,7 @@ Reading should be quick. On the list, a reader can open a post **in place**, wit
 - **No new dependencies** without Kyle's approval. Expanding uses the browser's native `<details>`/`<summary>` (Kyle chose this over shadcn Collapsible). Small client JS is allowed only to:
   - reset the inner level when an entry closes
   - run the Collapse button (hidden when JS is off)
+  - sync the URL hash (deep links)
 - Next 16 rules already learned:
   - fs reads under `"use cache"` + `cacheLife("max")`
   - `ensureStatic = "navigation"` for real 404s
@@ -109,10 +111,16 @@ Reading should be quick. On the list, a reader can open a post **in place**, wit
 - **Visible text copy** (Kyle to approve in the PR):
   - "Read full post"
   - "Collapse"
-  - "Open as page →"
   - "← All posts"
 - **Breakpoint:** 640 px (`sm`), the same as the nav.
-- **Link to the post page (my call, from the builder check).** An open entry shows an **"Open as page →"** link next to Collapse, at the end of the post. That way every post's own URL can be reached from `/blog`. A link can't sit inside `<summary>`, because nested interactive content fails axe.
+- **No "open as page" link; the address bar links to the open post (Kyle, 2026-11-26).**
+  - Each entry has `id="<slug>"`.
+  - **Opening an entry** replaces the URL with `/blog#<slug>`, using `history.replaceState` so no history entry is added.
+  - **Closing it** puts the URL back to `/blog`. If several entries are open, the URL follows the one most recently opened, and closing that one clears the hash.
+  - **Loading `/blog#<slug>`** opens that entry fully (both levels on phones) and scrolls it into view, below the nav (`scroll-padding-top`).
+  - **An unknown hash** does nothing.
+  - **Without JS,** the hash still scrolls to the entry, which stays closed.
+  - Shared and cross-posted links still go to `/blog/<slug>`.
 - **The click target is the whole row, with a short accessible name (my call).**
   - The entry title is a real `h2` **outside** `<summary>`, so it stays in the heading outline. Chromium and WebKit drop headings that sit inside `<summary>`.
   - `<summary>` holds only the toggle. Its accessible name is the post title. A stretched overlay (a positioned pseudo-element) makes the whole row clickable.
