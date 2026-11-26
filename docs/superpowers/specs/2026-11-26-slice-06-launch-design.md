@@ -54,11 +54,11 @@ Both are fixed here.
 6. **Security headers** on every response (Kyle chose a fixed policy, "A"):
    - **`Content-Security-Policy`:**
      - `default-src 'self'`
-     - `script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://app.cal.com`
+     - `script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://app.cal.com https://static.cloudflareinsights.com`
      - `style-src 'self' 'unsafe-inline'`
      - `img-src 'self' data: https:`
      - `font-src 'self'`
-     - `connect-src 'self' https://challenges.cloudflare.com https://app.cal.com https://cal.com`
+     - `connect-src 'self' https://challenges.cloudflare.com https://app.cal.com https://cal.com https://cloudflareinsights.com`
      - `frame-src https://challenges.cloudflare.com https://app.cal.com https://cal.com`
      - `frame-ancestors 'none'`
      - `object-src 'none'`
@@ -115,6 +115,12 @@ Both are fixed here.
 | Preview cards | **A. One card per page, built at build time** | Each shared link shows its own title | **Chosen by Kyle** |
 | | B. One site-wide card | Every link looks the same | Rejected |
 | | C. Kyle-designed images | His time, per post | Rejected |
+
+## Cloudflare facts (Kyle, 2026-11-26)
+
+- **Cloudflare Web Analytics stays on.** It injects `static.cloudflareinsights.com/beacon.min.js`, which reports to `cloudflareinsights.com`. Both are allowed in the policy above.
+- **Rocket Loader is off.**
+- **Cloudflare sets no HSTS or header transforms,** so the site's own headers are the only ones sent.
 
 ## Calls from the builder check (mine; Kyle can overrule in the PR)
 
