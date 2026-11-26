@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npm run start -- -p 3200",
+      "startServerCommand": "BLOG_SAMPLES=1 npm run build && BLOG_SAMPLES=1 npm run start -- -p 3200",
       "startServerReadyPattern": "Ready",
       "url": [
         "http://localhost:3200/",
@@ -12,9 +12,12 @@
         "http://localhost:3200/work/control-bh",
         "http://localhost:3200/work/ulti-health",
         "http://localhost:3200/work/video-interview-plugin",
-        "http://localhost:3200/work/ai-mind-companion"
+        "http://localhost:3200/work/ai-mind-companion",
+        "http://localhost:3200/blog/sample-formatting",
+        "http://localhost:3200/blog/sample-long-read"
       ],
-      "numberOfRuns": 3
+      "numberOfRuns": 3,
+      "startServerReadyTimeout": 300000
     },
     "assert": {
       "assertions": {

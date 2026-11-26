@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-26 (end of session) · **Branch:** `slice/03-work` (from `main` @ `9ecb6fc`, which includes merged PRs #1 and #3). Everything below is committed and pushed.
+**Updated:** 2026-11-26 · **Branch:** `slice/04-blog` (from `main` @ `b393100`, which includes merged PRs #4 and #5). Everything below is committed and pushed.
 
 ## To resume
 
@@ -18,8 +18,9 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 3 (Work) is complete; PR #5 is open and waiting for Kyle:** https://github.com/Kynot54/portV3/pull/5. The whole-branch review is done and its fixes are in (`3b05c88`): a real 404, a stricter facts test, a 44 px back link, and a required label. Lighthouse is 100 on all 9 URLs. **Merging deploys to production** (including Home's 10+ → 50+ change). After the merge: Slice 4 (Blog) starts with brainstorming. The MDX renderer (`src/lib/mdx.tsx`) is already in place.
-2. Kyle merges PR #4 and closes #2. Dependabot should then open a safe-only PR. Review it once its CI is green.
+1. **Slice 4 (Blog) is complete; PR #7 is waiting for Kyle.** The review fixes and coloured tag categories are in. Lighthouse is 100 on all 11 URLs. Design: `docs/superpowers/specs/2026-11-26-slice-04-blog-design.md`. Plan: `docs/plans/slice-04.md`. Ledger: `.superpowers/sdd/slice-04/progress.md`. **Merging deploys to production,** and the live nav becomes Work, Contact until Kyle's first post (option B).
+2. **After the merge:** Slice 5 (Contact: form + booking) starts with brainstorming.
+3. **Slice 3 (Work)** is merged (PR #5). **Dependabot PR #2** should be closed unmerged if it's still open.
 
 ## Notes on the live site
 

@@ -8,6 +8,7 @@ import {
   getPosts,
   getWork,
   getWorkEntry,
+  getBlogPosts,
 } from "@/lib/content/load";
 import { HERO_PROOF } from "@/components/home/hero";
 import { ABOUT_TEXT } from "@/components/home/about";
@@ -351,4 +352,73 @@ test("non-placeholder entry without a label fails loudly", async () => {
   await expect(getWork(`${F}/work-no-label`)).rejects.toMatchObject({
     field: "label",
   });
+});
+
+const blogDirs = {
+  real: `${F}/blog-real`,
+  samples: `${F}/blog-samples`,
+};
+const slugs = (ps: { slug: string }[]) => ps.map((p) => p.slug);
+
+test("getBlogPosts returns only published real posts by default", async () => {
+  expect(slugs(await getBlogPosts({}, blogDirs))).toEqual(["real-one"]);
+});
+
+test("BLOG_SAMPLES=1 returns samples only, even with real posts", async () => {
+  expect(slugs(await getBlogPosts({ BLOG_SAMPLES: "1" }, blogDirs))).toEqual([
+    "sample-b",
+    "sample-a",
+  ]);
+});
+
+test("preview shows samples only while no published real post exists", async () => {
+  const preview = { VERCEL_ENV: "preview" };
+  expect(
+    slugs(
+      await getBlogPosts(preview, { ...blogDirs, real: `${F}/blog-empty` }),
+    ),
+  ).toEqual(["sample-b", "sample-a"]);
+  expect(slugs(await getBlogPosts(preview, blogDirs))).toEqual(["real-one"]);
+});
+
+test("production with drafts/placeholders only → []", async () => {
+  expect(
+    await getBlogPosts(
+      { VERCEL_ENV: "production" },
+      { ...blogDirs, real: `${F}/blog-empty` },
+    ),
+  ).toEqual([]);
+  // drafts and placeholders in the real dir never count
+  const real = await getBlogPosts({}, blogDirs);
+  expect(slugs(real)).not.toContain("real-draft");
+  expect(slugs(real)).not.toContain("real-placeholder");
+});
+
+test("getBlogPosts rejects reserved slugs", async () => {
+  await expect(
+    getBlogPosts({}, { ...blogDirs, real: `${F}/blog-reserved` }),
+  ).rejects.toThrow(/reserved/);
+});
+
+test("shipped samples are labelled and published", async () => {
+  const s = await getBlogPosts({ BLOG_SAMPLES: "1" });
+  expect(s.length).toBeGreaterThanOrEqual(3);
+  for (const p of s) expect(p.title).toMatch(/^Sample: /);
+});
+
+test("content/blog never holds sample posts", async () => {
+  // Real posts can be added with no code change; samples stay in content/samples.
+  for (const p of await getBlogPosts({}))
+    expect(p.title).not.toMatch(/^Sample: /);
+});
+
+test("BLOG_SAMPLES=1 is ignored in production", async () => {
+  expect(
+    slugs(
+      await getBlogPosts(
+        { BLOG_SAMPLES: "1", VERCEL_ENV: "production" },
+        blogDirs,
+      ),
+    ),
+  ).toEqual(["real-one"]);
 });
