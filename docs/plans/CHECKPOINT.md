@@ -20,17 +20,8 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Get Kyle's approval of the Slice 2 design doc.** This is the current step. The builder check is done and Kyle's answers are in the doc: the grain sits in a band below the copy, and the `<h2>`s are "About" and "Contact". These calls were put to Kyle and are waiting for his approval:
-   - Section order: hero → Selected work → About → Contact.
-   - "Get in touch" appears twice (hero and Contact), and both are accent.
-   - The hero visual is the site's one ongoing animation: slow, never flashing, and fully still under reduced motion.
-   - The work cards link to `/work` until Slice 3, and the entry bodies are `TODO(kyle)` stubs.
-   - The card labels ("AI · 2025–26" and so on) come from the resume dates and project type.
-   - No headshot on Home this slice.
-
-   If Kyle requests changes, update the doc and commit it. Nothing is built before approval.
-
-2. **Once Kyle approves the design**, use the `superpowers:writing-plans` skill to write `docs/plans/slice-02.md`. Then ask how to run it (Native or subagent-driven). Kyle used Native for Slice 1.
+1. **The Slice 2 design is approved** (Kyle, 2026-11-26).
+2. **Current step:** use the `superpowers:writing-plans` skill to write `docs/plans/slice-02.md`. Then ask how to run it (Native or subagent-driven). Kyle used Native for Slice 1.
 3. **Build**, with `superpowers:executing-plans`. Follow the Slice 1 pattern:
    - a progress ledger in `.superpowers/sdd/`
    - a duplicate-file scan before each task
@@ -43,7 +34,7 @@ Open a session in `~/Projects/portV3` and say:
 
 - **The Vercel login wall on `kwhynott.dev` is fixed** (Kyle, 2026-11-26). Anonymous requests no longer redirect to `vercel.com/sso-api`.
 - **Vercel's "Security Checkpoint" bot challenge is active** on `kwhynott.dev`: non-browser clients get `429` plus a challenge page. Browsers pass it. Revisit in Slice 6, because it can block search crawlers and link previews (LinkedIn, Slack).
-- **To confirm with Kyle:** does `kwhynott.dev` now serve V3 (the Slice 1 shell) or still V2? The plan was for V2 to stay live until Slice 6.
+- **`kwhynott.dev` serves V3 by Kyle's choice** (V2 is scrapped). **Every merge to `main` is a production deploy.**
 
 ## Environment notes (this machine)
 
