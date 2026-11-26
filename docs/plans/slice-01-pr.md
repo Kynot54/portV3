@@ -22,19 +22,19 @@ The design is in `docs/superpowers/specs/2026-11-25-slice-01-foundation-design.m
 
 ## Preview URL
 
-**Pending.** Vercel isn't connected yet (see "Kyle's checklist").
+**https://portv3-git-slice-01-foundation-kynot54s-projects.vercel.app** (Vercel project `portv3`; previews are behind Vercel login, so sign in to view).
 
 ## Test evidence
 
-All of these were run locally against a production build:
+All of these pass locally against a production build, and the `quality` CI job passes on this PR:
 
-| Check                                                                                                         | Result                                                          |
-| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `npm run lint` · `format:check` · `typecheck`                                                                 | pass                                                            |
-| `npm test` (Vitest)                                                                                           | **58 passed** (10 files)                                        |
-| `npm run test:e2e` (Playwright: mobile 375, tablet 768, desktop 1440 on Chromium; WebKit and Firefox desktop) | **128 passed**, 57 skipped by design*, run twice with no flakes |
-| axe (WCAG 2.0/2.1/2.2 A+AA), every route, light and dark, mobile menu open                                    | 0 violations (one waiver, see "Conflicts flagged" #4)           |
-| Lighthouse (median of 3 runs, mobile emulation)                                                               | 100 / 100 / 100 / 100 on `/`, `/work`, `/blog` and `/contact`   |
+| Check                                                                                                         | Result                                                                |
+| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `npm run lint` · `format:check` · `typecheck`                                                                 | pass                                                                  |
+| `npm test` (Vitest)                                                                                           | **62 passed** (10 files)                                              |
+| `npm run test:e2e` (Playwright: mobile 375, tablet 768, desktop 1440 on Chromium; WebKit and Firefox desktop) | **141 passed**, 69 skipped by design*; resize tests 130/130 on repeat |
+| axe (WCAG 2.0/2.1/2.2 A+AA), every route, light and dark, mobile menu open                                    | 0 violations (one waiver, see "Conflicts flagged" #4)                 |
+| Lighthouse (median of 3 runs, mobile emulation)                                                               | 100 / 100 / 100 / 100 on `/`, `/work`, `/blog` and `/contact`         |
 
 \* The skips are tests that don't apply to a project: mobile-only and desktop-only cases, the viewport sweep (desktop Chromium only), and Tab-order checks in WebKit, where macOS skips links on Tab by default.
 
@@ -61,6 +61,25 @@ The pass found two issues, both fixed with tests:
 - The mobile-menu theme row had no visible label.
 
 A hands-on pass on a real phone is still worth a minute before merging.
+
+**Independent review** (a fresh reviewer read the whole branch): no critical findings, four important ones, and nine minor ones. Fixed in this PR, each with a test that failed first:
+
+- Without JS on mobile, the menu panel covered the page heading. Now the desktop links show at every width.
+- Keyboard focus was lost when the viewport crossed 640 px. It now moves to the matching visible nav item.
+- The fixed pill could hide the focused element (WCAG 2.4.11). Fixed with `scroll-padding-top`.
+- The mobile menu now also closes on a tap outside, when focus leaves it, and on a logo tap.
+- A misnamed content file (such as `My-Post.mdx`) now fails the build instead of silently disappearing.
+- The pill is now 95% opaque, so the grey nav text stays at least 4.5:1 over anything scrolled beneath it.
+
+**Deferred minor findings, your call:**
+
+- If `localStorage` is blocked and the OS is light, the page flashes dark before switching (a next-themes limit).
+- Without JS there's no `color-scheme`, so light scrollbars show on the dark page.
+- Calendar-invalid dates such as 2026-02-30 pass the loader.
+- WebKit Tab-order tests are skipped; `Alt+Tab` would cover them.
+- The unused Button `link` variant is 3.7:1 in light mode. Remove or restyle it before using it.
+- CI runs twice per PR push.
+- The menu's Escape listener is page-wide; scope it before adding dialogs.
 
 ## TODO(kyle) placeholders
 
@@ -90,7 +109,7 @@ A hands-on pass on a real phone is still worth a minute before merging.
 
 ## Kyle's checklist
 
-1. **Give `gh` the `workflow` permission** so `.github/workflows/ci.yml` can be pushed: `gh auth refresh -h github.com -s workflow`.
-2. **Connect a new Vercel project** to `Kynot54/portV3`. Don't touch the V2 project or the domain. Add the preview URL here.
-3. **Make `quality` a required status check** on `main` (Settings → Branches → branch protection).
+1. ~~Give `gh` the `workflow` permission~~ Done.
+2. ~~Connect a new Vercel project~~ Done (`portv3`). **Still to do:** reconnect the V2 `portfolio` project to `Kynot54/portfolio`; it's still building this repo and failing. Before merging, confirm `portv3` has no production domain, so merging deploys only to `portv3`'s own URL until Slice 6.
+3. ~~Make `quality` a required status check on `main`~~ Done. `main` requires `quality` and blocks force-pushes and deletion; admins can still override.
 4. **Review and merge.** Slice 02 branches from the updated `main`.
