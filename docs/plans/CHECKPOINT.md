@@ -18,7 +18,7 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 3 (Work):** list and detail pages for the work entries (the three featured ones exist in `content/work/`, with `TODO(kyle)` bodies). Start with `superpowers:brainstorming`, then the design doc, then Kyle's approval, then the plan, then the build. Same process as Slices 1–2.
+1. **Slice 3 (Work): the design is written and the builder check is running.** The design is `docs/superpowers/specs/2026-11-26-slice-03-work-design.md`, with all copy approved by Kyle: 5 projects, MDX via `@mdx-js/mdx` (approved), placeholder media, 50+ clients. Next: sort the builder-check questions, get Kyle's approval, write the plan (`docs/plans/slice-03.md`), then build (Native).
 2. Kyle merges PR #4 and closes #2. Dependabot should then open a safe-only PR. Review it once its CI is green.
 
 ## Notes on the live site
