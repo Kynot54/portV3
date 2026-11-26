@@ -15,7 +15,14 @@ export default defineConfig({
     command: `npm run build && npm run start -- -p ${PORT}`,
     url: `http://localhost:${PORT}`,
     // Sample posts on, so the Blog exists in e2e (production hides it until a real post).
-    env: { BLOG_SAMPLES: "1" },
+    env: {
+      BLOG_SAMPLES: "1",
+      // Contact: Cloudflare's always-pass test site key, a placeholder Cal link
+      // (served by stubs in contact.spec), and no real sends.
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA",
+      NEXT_PUBLIC_CAL_LINK: "test/30min",
+      CONTACT_FAKE_SEND: "1",
+    },
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
   },
