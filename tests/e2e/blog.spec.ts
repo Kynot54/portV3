@@ -110,7 +110,6 @@ test.describe("blog list", () => {
     test.skip(!isMobile(page), "phones only");
     const [p] = (await samples()).filter((s) => s.slug === "sample-short-note");
     await page.goto("/blog");
-    const li = entry(page, p.slug);
     await expect(summaryText(page, p.slug, p.summary)).toHaveCount(0);
     await tapTitle(page, p.slug);
     await expect(summaryText(page, p.slug, p.summary)).toHaveCount(1);
@@ -200,5 +199,75 @@ test.describe("blog list", () => {
       true,
     );
     await ctx.close();
+  });
+});
+
+test.describe("list behaviour", () => {
+  test("closing resets the inner level", async ({ page }) => {
+    test.skip(!isMobile(page), "phones only");
+    await page.goto("/blog");
+    await tapTitle(page, "sample-short-note");
+    await readFull(page, "sample-short-note").click();
+    await expect(body(page, "sample-short-note")).toBeVisible();
+    await tapTitle(page, "sample-short-note");
+    await expect(outer(page, "sample-short-note")).not.toHaveAttribute("open");
+    await tapTitle(page, "sample-short-note");
+    await expect(body(page, "sample-short-note")).toBeHidden();
+    await expect(
+      entry(page, "sample-short-note").locator("details[data-inner]"),
+    ).not.toHaveAttribute("open");
+  });
+
+  test("Collapse returns to the row", async ({ page }) => {
+    await page.goto("/blog");
+    await tapTitle(page, "sample-long-read");
+    if (isMobile(page)) await readFull(page, "sample-long-read").click();
+    const collapse = entry(page, "sample-long-read").getByRole("button", {
+      name: "Collapse",
+    });
+    await collapse.scrollIntoViewIfNeeded();
+    await collapse.click();
+    await expect(outer(page, "sample-long-read")).not.toHaveAttribute("open");
+    const top = await entry(page, "sample-long-read").evaluate(
+      (el) => el.getBoundingClientRect().top,
+    );
+    const height = await page.evaluate(() => innerHeight);
+    expect(top).toBeGreaterThanOrEqual(0);
+    expect(top).toBeLessThan(height);
+    expect(
+      await page.evaluate(
+        () =>
+          document.activeElement ===
+          document.querySelector("#sample-long-read summary"),
+      ),
+    ).toBe(true);
+  });
+
+  test("opening sets #slug, closing clears it", async ({ page }) => {
+    await page.goto("/blog");
+    const before = await page.evaluate(() => history.length);
+    await tapTitle(page, "sample-short-note");
+    await expect(page).toHaveURL(/\/blog#sample-short-note$/);
+    await tapTitle(page, "sample-short-note");
+    await expect(page).toHaveURL(/\/blog$/);
+    expect(await page.evaluate(() => history.length)).toBe(before);
+  });
+
+  test("/blog#sample-long-read opens that entry fully and in view", async ({
+    page,
+  }) => {
+    await page.goto("/blog#sample-long-read");
+    await expect(outer(page, "sample-long-read")).toHaveAttribute("open", "");
+    await expect(body(page, "sample-long-read")).toBeVisible();
+    await expect(
+      entry(page, "sample-long-read").getByRole("heading", { level: 2 }),
+    ).toBeInViewport();
+  });
+
+  test("unknown hash is ignored", async ({ page }) => {
+    for (const hash of ["#nope", "#%22%5Dx"]) {
+      await page.goto(`/blog${hash}`);
+      await expect(page.locator("details[data-entry][open]")).toHaveCount(0);
+    }
   });
 });
