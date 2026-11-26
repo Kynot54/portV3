@@ -1,6 +1,13 @@
 import Link from "next/link";
+import { ThreeEras } from "@/components/home/three-eras";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+const PROOF = [
+  "Taught ML at Cal State Fullerton",
+  "AI pipelines for 10+ clients",
+  "M.S. Software Engineering",
+];
 
 export function Hero() {
   return (
@@ -8,12 +15,14 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="px-gutter pt-12 pb-6 text-center sm:pt-16"
     >
-      <p className="micro-label inline-flex items-center gap-2 text-muted-foreground">
+      <p className="micro-label text-balance text-muted-foreground">
         <span
           aria-hidden="true"
-          className="accent-glow size-2 rounded-full bg-primary"
+          data-dot
+          className="accent-glow mr-2 inline-block size-2 rounded-full bg-primary align-middle"
         />
-        Open to work · AI / Software Engineer
+        <span className="whitespace-nowrap">Open to work ·</span>{" "}
+        <span className="whitespace-nowrap">AI / Software Engineer</span>
       </p>
 
       <h1 id="hero-title" className="mt-5 text-hero font-bold tracking-tight">
@@ -47,12 +56,20 @@ export function Hero() {
         </Link>
       </div>
 
-      <p className="micro-label mx-auto mt-8 max-w-3xl text-muted-foreground">
-        Taught ML at Cal State Fullerton · AI pipelines for 10+ clients · M.S.
-        Software Engineering
+      <p className="micro-label mx-auto mt-8 max-w-5xl text-balance text-muted-foreground">
+        {PROOF.map((item, i) => (
+          <span key={item}>
+            {i > 0 && " "}
+            {/* The separator ends a line rather than starting one. */}
+            <span data-proof-item className="whitespace-nowrap">
+              {item}
+              {i < PROOF.length - 1 && " ·"}
+            </span>
+          </span>
+        ))}
       </p>
 
-      {/* visual: <ThreeEras /> (Task 3) */}
+      <ThreeEras />
     </section>
   );
 }

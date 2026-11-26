@@ -1,0 +1,178 @@
+/* "Three eras" hero band. Only transform and opacity animate. */
+
+.three-eras {
+  --te-grain: #d4d4d4;
+  --te-line: #c8c8c8;
+  --te-strong: #8f8f8f;
+  position: relative;
+  height: clamp(160px, 18vw, 220px);
+  margin-top: 2.5rem;
+  overflow: hidden;
+  /* soft left/right edges */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+}
+
+.dark .three-eras {
+  --te-grain: #232323;
+  --te-line: #2e2e2e;
+  --te-strong: #5a5a5a;
+}
+
+/* Fine dot grain, fading in from the top so it never meets the copy above. */
+.three-eras::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    var(--te-grain) 0.9px,
+    transparent 1.15px
+  );
+  background-size: 3px 3px;
+  mask-image: linear-gradient(to bottom, transparent, #000 35%);
+}
+
+/* The drifting light: a page-coloured veil with a soft clear window that
+   slides across the grain, so fixed dots brighten and dim as it passes. */
+.three-eras::after {
+  content: "";
+  position: absolute;
+  inset: 0 -40%;
+  background: radial-gradient(
+    ellipse 28% 75% at 50% 70%,
+    transparent 0%,
+    color-mix(in srgb, var(--background) 82%, transparent) 100%
+  );
+  animation: te-drift 11s ease-in-out infinite alternate;
+}
+
+.three-eras svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.te-line {
+  fill: none;
+  stroke: var(--te-line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.te-wave {
+  stroke: var(--te-strong);
+  stroke-width: 1.25;
+}
+
+.te-node {
+  fill: var(--background);
+  stroke: var(--te-line);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.te-node-strong {
+  stroke: var(--te-strong);
+}
+
+.te-point {
+  fill: var(--primary);
+}
+
+.dark .te-point {
+  filter: drop-shadow(0 0 5px rgb(57 255 20 / 0.85));
+}
+
+/* Waves flow left → right toward the network; one loop = 240 user units. */
+.te-analog,
+.te-digital {
+  animation: te-flow 9s linear infinite;
+}
+
+.te-p1 {
+  animation: te-p1 2.6s ease-in-out infinite;
+}
+
+.te-p2 {
+  animation: te-p2 3.2s ease-in-out infinite 0.8s;
+}
+
+@keyframes te-flow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(240px);
+  }
+}
+
+/* hub (840,110) → mid 1 (960,90) */
+@keyframes te-p1 {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(120px, -20px);
+    opacity: 0;
+  }
+}
+
+/* mid 2 (960,130) → output 2 (1100,140) */
+@keyframes te-p2 {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(140px, 10px);
+    opacity: 0;
+  }
+}
+
+@keyframes te-drift {
+  from {
+    transform: translateX(-18%);
+  }
+  to {
+    transform: translateX(18%);
+  }
+}
+
+/* Small screens: a lighter network (two middle nodes). */
+@media (max-width: 400px) {
+  .te-mid-0,
+  .te-mid-3 {
+    display: none;
+  }
+}
+
+/* Reduced motion: a composed still frame. Points rest mid-edge. */
+@media (prefers-reduced-motion: reduce) {
+  .three-eras::after,
+  .three-eras * {
+    animation: none !important;
+  }
+  .te-p1 {
+    transform: translate(60px, -10px);
+  }
+  .te-p2 {
+    transform: translate(70px, 5px);
+  }
+}

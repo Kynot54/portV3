@@ -16,7 +16,13 @@ const hydrated = (page: Page) =>
 async function scan(page: Page) {
   // Let open/close animations settle so axe reads final colours.
   await page.evaluate(() =>
-    Promise.all(document.getAnimations().map((a) => a.finished)),
+    Promise.all(
+      document
+        .getAnimations()
+        // Infinite animations (the hero visual) never finish; only wait for finite ones.
+        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+        .map((a) => a.finished),
+    ),
   );
   const { violations } = await new AxeBuilder({ page })
     .withTags(TAGS)
