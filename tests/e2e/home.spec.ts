@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
 
 const PROOF =
-  "Taught ML at Cal State Fullerton · AI pipelines for 10+ clients · M.S. Software Engineering";
+  "Taught ML at Cal State Fullerton · AI pipelines for 50+ clients · M.S. Software Engineering";
 
 /** Animations whose target (or pseudo-element host) is inside the visual band. */
 const bandAnimations = (page: Page) =>

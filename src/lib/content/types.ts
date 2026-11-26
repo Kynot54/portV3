@@ -13,6 +13,19 @@ export type WorkEntry = {
   order: number | null;
   /** Card micro-label, e.g. "AI · 2025–26"; required when featured. */
   label: string | null;
+  /** CARL detail-page fields; required on every non-placeholder entry. */
+  role: string;
+  location: string;
+  /** Display range, e.g. "Oct 2025 – Jan 2026". */
+  period: string;
+  context: string;
+  impactHeading: "Result" | "What it does";
+  /** The Result points (one item renders as a paragraph). */
+  impact: string[];
+  learned: string;
+  /** "Built with" list. */
+  tools: string[];
+  /** MDX: the "What I built" (Action) prose. */
   body: string;
 };
 

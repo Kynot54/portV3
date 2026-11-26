@@ -108,6 +108,34 @@ function optStr(r: Raw, field: string): string | null {
   return v;
 }
 
+function strList(r: Raw, field: string): string[] {
+  const v = r.data[field];
+  if (
+    !Array.isArray(v) ||
+    v.length === 0 ||
+    !v.every((t) => typeof t === "string" && t.trim() !== "")
+  )
+    throw new ContentError(
+      r.file,
+      field,
+      "must be a non-empty list of strings",
+    );
+  return v;
+}
+
+const HEADINGS = ["Result", "What it does"] as const;
+
+function heading(r: Raw): WorkEntry["impactHeading"] {
+  const v = r.data.impactHeading;
+  if (!HEADINGS.includes(v as (typeof HEADINGS)[number]))
+    throw new ContentError(
+      r.file,
+      "impactHeading",
+      `must be one of ${HEADINGS.join(", ")}`,
+    );
+  return v as WorkEntry["impactHeading"];
+}
+
 function toWork(r: Raw): WorkEntry {
   const featured = bool(r, "featured");
   const order = optNum(r, "order");
@@ -116,17 +144,45 @@ function toWork(r: Raw): WorkEntry {
     throw new ContentError(r.file, "order", "is required when featured");
   if (featured && label === null)
     throw new ContentError(r.file, "label", "is required when featured");
-  return {
+  const placeholder = bool(r, "placeholder");
+  const base = {
     slug: r.slug,
     title: str(r, "title"),
     summary: str(r, "summary"),
     date: date(r, MONTH, "YYYY-MM"),
     tags: tags(r),
-    placeholder: bool(r, "placeholder"),
+    placeholder,
     featured,
     order,
     label,
     body: r.body,
+  };
+  if (placeholder) {
+    // Stand-in entries are never shown; CARL fields are optional for them.
+    return {
+      ...base,
+      role: "",
+      location: "",
+      period: "",
+      context: "",
+      impactHeading: "Result",
+      impact: [],
+      learned: "",
+      tools: [],
+    };
+  }
+  if (order === null)
+    throw new ContentError(r.file, "order", "is required (list position)");
+  return {
+    ...base,
+    role: str(r, "role"),
+    location: str(r, "location"),
+    period: str(r, "period"),
+    context: str(r, "context"),
+    impactHeading: heading(r),
+    impact: strList(r, "impact"),
+    learned: str(r, "learned"),
+    tools: strList(r, "tools"),
   };
 }
 
@@ -153,6 +209,13 @@ export async function getFeaturedWork(
 ): Promise<WorkEntry[]> {
   return (await getWork(dir))
     .filter((w) => w.featured && !w.placeholder)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
+
+/** Every real entry, in list order (`order` ascending). */
+export async function getWorkList(dir = "content/work"): Promise<WorkEntry[]> {
+  return (await getWork(dir))
+    .filter((w) => !w.placeholder)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
