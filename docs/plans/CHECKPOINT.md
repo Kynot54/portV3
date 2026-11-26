@@ -20,8 +20,12 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 2 build in progress (Native).** The ledger is `.superpowers/sdd/slice-02/progress.md` (git-ignored; if it's lost, trust `git log`). Tasks 1–4 are committed and pushed: content and loader, hero, three eras visual, sections. **Next: Task 5** (full quality pass: lint, typecheck, unit, e2e ×3, LHCI, keyboard pass, screenshots), then **Task 6** (PR, whole-branch review, checkpoint). The plan is `docs/plans/slice-02.md`.
-2. **Use the PR description's ⚠️ note:** merging deploys to production.
+1. **Slice 2 is built, and PR #3 is open:** https://github.com/Kynot54/portV3/pull/3. Tasks 1–5 are done; Task 6 is in progress.
+   - **Whole-branch review:** a fresh reviewer was dispatched when this was written. If its result is lost, run it again: use the review package in `.superpowers/sdd/slice-02/`, or rebuild it with `review-package docs/plans/slice-02.md <merge-base> HEAD`, plus the code-reviewer prompt.
+   - **Then:** fix the Critical and Important findings, each with a failing test first, in one pass. List the minors in the PR. Update this checkpoint.
+   - **Waiting on Kyle:** review the preview (`portv3-git-slice-02-home-kynot54s-projects.vercel.app`) and decide the PR's "Needs Kyle's call" items: section spacing, the visual's size on phones, and the card labels. **Merging deploys to production.**
+2. **Dependabot PR #2** ("Bump the npm group with 7 updates") is open. Review it separately: let CI run, check for breaking majors, and Kyle merges.
+3. **After the merge:** Slice 3 (Work: list and detail pages using the three entries) starts with brainstorming.
 
 ## Notes on the live site
 
