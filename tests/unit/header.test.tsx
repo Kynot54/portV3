@@ -9,10 +9,10 @@ import { setMinWidth640 } from "../support/match-media";
 vi.mock("next/navigation", () => ({ usePathname: vi.fn(() => "/") }));
 const pathname = vi.mocked(usePathname);
 
-function renderHeader() {
+function renderHeader(showBlog = true) {
   return render(
     <ThemeProvider>
-      <Header />
+      <Header showBlog={showBlog} />
     </ThemeProvider>,
   );
 }
@@ -106,7 +106,7 @@ test("route change closes the menu", async () => {
   pathname.mockReturnValue("/work");
   rerender(
     <ThemeProvider>
-      <Header />
+      <Header showBlog />
     </ThemeProvider>,
   );
   expect(screen.getByRole("button", { name: "Menu" })).toHaveAttribute(
@@ -162,7 +162,7 @@ test("pointer down outside the nav closes the menu", async () => {
 test("focus leaving the nav closes the menu", async () => {
   render(
     <ThemeProvider>
-      <Header />
+      <Header showBlog />
       <main>
         <a href="#x">page link</a>
       </main>
@@ -182,4 +182,24 @@ test("tapping the logo closes the menu", async () => {
     screen.getByRole("link", { name: "KW, Kyle Whynott, home" }),
   );
   expect(btn).toHaveAttribute("aria-expanded", "false");
+});
+
+test("Header without showBlog has no Blog link (desktop list or menu)", async () => {
+  renderHeader(false);
+  await userEvent.click(screen.getByRole("button", { name: "Menu" }));
+  expect(screen.queryAllByRole("link", { name: "Blog", hidden: true })).toEqual(
+    [],
+  );
+  expect(screen.getAllByRole("link", { name: "Work" }).length).toBeGreaterThan(
+    0,
+  );
+  expect(screen.getByRole("link", { name: "Contact" })).toBeInTheDocument();
+});
+
+test("Header with showBlog renders Blog between Work and the toggle", async () => {
+  renderHeader(true);
+  await screen.findByRole("button", { name: /^Theme: / });
+  const order = navOrder();
+  expect(order.slice(1, 3)).toEqual(["Work", "Blog"]);
+  expect(order[3]).toMatch(/^Theme: /);
 });

@@ -18,7 +18,8 @@ function isVisible(el: HTMLElement): boolean {
     : el.offsetParent !== null;
 }
 
-export function Header() {
+/** `showBlog` is false until a published post exists (see src/lib/blog.ts). */
+export function Header({ showBlog }: { showBlog: boolean }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [lastPath, setLastPath] = useState(pathname);
@@ -87,19 +88,21 @@ export function Header() {
   }, []);
 
   const links = (onNavigate?: () => void) =>
-    siteConfig.nav.map((item) => (
-      <li key={item.href}>
-        <Link
-          href={item.href}
-          className={navLink}
-          aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
-          onClick={onNavigate}
-          data-nav={item.label.toLowerCase()}
-        >
-          {item.label}
-        </Link>
-      </li>
-    ));
+    siteConfig.nav
+      .filter((item) => showBlog || item.href !== "/blog")
+      .map((item) => (
+        <li key={item.href}>
+          <Link
+            href={item.href}
+            className={navLink}
+            aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
+            onClick={onNavigate}
+            data-nav={item.label.toLowerCase()}
+          >
+            {item.label}
+          </Link>
+        </li>
+      ));
 
   return (
     <header className="fixed inset-x-0 top-3 z-50 px-gutter">

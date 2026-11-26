@@ -14,6 +14,8 @@ export default defineConfig({
   webServer: {
     command: `npm run build && npm run start -- -p ${PORT}`,
     url: `http://localhost:${PORT}`,
+    // Sample posts on, so the Blog exists in e2e (production hides it until a real post).
+    env: { BLOG_SAMPLES: "1" },
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
   },
