@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "BLOG_SAMPLES=1 npm run build && BLOG_SAMPLES=1 npm run start -- -p 3200",
+      "startServerCommand": "BLOG_SAMPLES=1 NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA NEXT_PUBLIC_CAL_LINK=test/30min CONTACT_FAKE_SEND=1 npm run build && BLOG_SAMPLES=1 NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA NEXT_PUBLIC_CAL_LINK=test/30min CONTACT_FAKE_SEND=1 npm run start -- -p 3200",
       "startServerReadyPattern": "Ready",
       "url": [
         "http://localhost:3200/",

@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-26 · **Branch:** `slice/04-blog` (from `main` @ `b393100`, which includes merged PRs #4 and #5). Everything below is committed and pushed.
+**Updated:** 2026-11-26 (paused for the night) · **Branch:** `slice/05-contact` (from `main` @ `857b247`, which includes merged PR #7). Everything below is committed and pushed.
 
 ## To resume
 
@@ -18,9 +18,13 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 4 (Blog) is complete; PR #7 is waiting for Kyle.** The review fixes and coloured tag categories are in. Lighthouse is 100 on all 11 URLs. Design: `docs/superpowers/specs/2026-11-26-slice-04-blog-design.md`. Plan: `docs/plans/slice-04.md`. Ledger: `.superpowers/sdd/slice-04/progress.md`. **Merging deploys to production,** and the live nav becomes Work, Contact until Kyle's first post (option B).
-2. **After the merge:** Slice 5 (Contact: form + booking) starts with brainstorming.
-3. **Slice 3 (Work)** is merged (PR #5). **Dependabot PR #2** should be closed unmerged if it's still open.
+1. **Slice 5 (Contact) is complete; PR #9 is waiting for Kyle.** The review fixes are in. Kyle's steps: remove `localhost` from the production Turnstile widget, confirm Vercel Authentication on `portv3` previews, send himself a message from the preview, try Book a call, do the VoiceOver check, then merge. Plan: `docs/plans/slice-05.md`. Ledger: `.superpowers/sdd/slice-05/progress.md`.
+2. **PR #8 (first blog post)** is ready for Kyle to merge.
+3. **After Slice 5:** Slice 6 (launch polish). Its notes are in `docs/plans/slice-04-pr.md` and `docs/plans/slice-05-pr.md`.
+
+## Done
+
+- **Slices 1–4** are merged (PRs #1, #3, #5, #7) and live. The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
 
 ## Notes on the live site
 
