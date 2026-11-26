@@ -39,9 +39,11 @@ Open a session in `~/Projects/portV3` and say:
    - an independent whole-branch review at the end
    - a PR with the description in `docs/plans/slice-02-pr.md`
 
-## Open issue that needs Kyle (not code)
+## Notes on the live site
 
-- **`kwhynott.dev` still redirects anonymous visitors to a Vercel login page** (checked 2026-11-26 from this machine, without a Vercel session: `302 → vercel.com/sso-api`). Kyle sees the site because his browser is signed in to Vercel. Check it from a **private/incognito window** or a phone on cellular. The fix is in Vercel: `portfolio` → Settings → Deployment Protection. Use Standard Protection, or check whether the production domain is excluded from protection. Verify with `curl -sI https://kwhynott.dev` (expect a 200, not a 302 to `vercel.com/sso-api`).
+- **The Vercel login wall on `kwhynott.dev` is fixed** (Kyle, 2026-11-26). Anonymous requests no longer redirect to `vercel.com/sso-api`.
+- **Vercel's "Security Checkpoint" bot challenge is active** on `kwhynott.dev`: non-browser clients get `429` plus a challenge page. Browsers pass it. Revisit in Slice 6, because it can block search crawlers and link previews (LinkedIn, Slack).
+- **To confirm with Kyle:** does `kwhynott.dev` now serve V3 (the Slice 1 shell) or still V2? The plan was for V2 to stay live until Slice 6.
 
 ## Environment notes (this machine)
 
