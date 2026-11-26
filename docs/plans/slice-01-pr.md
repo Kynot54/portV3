@@ -107,11 +107,11 @@ A hands-on pass on a real phone is still worth a minute before merging.
 3. **Blue is quieter than "blue in different shades" might suggest.** It's used only for the focus ring, link underlines and `<Keyword>`, so the accent isn't diluted.
 4. **The logo's accessible name doesn't contain its visible text** (WCAG 2.5.3 Label in Name, Level A). It shows "KW" but is named "Kyle Whynott, home", as directed. axe reports it, so the e2e suite waives that one rule for the logo only. Lighthouse accessibility is still 100. The consequence: voice-control users saying "click KW" may miss it. A name of "KW, Kyle Whynott, home" would fix it while keeping your wording.
 
-5. **The live V2 Vercel project now builds this repo.** Kyle switched the `portfolio` project, which serves `kwhynott.dev`, to build `Kynot54/portV3` with Next.js. **Consequence:** merging this PR deploys the Slice 1 placeholder shell to `kwhynott.dev` and replaces V2 (the brief planned that for Slice 6). To keep V2 live, set `portfolio`'s Production Branch to an unused branch, or reconnect it to `Kynot54/portfolio` (Vite), and use `portv3` for V3 previews.
+5. **The live V2 Vercel project now builds this repo. Resolved by Kyle.** The `portfolio` project (which serves `kwhynott.dev`) builds `Kynot54/portV3` with Next.js, but Kyle set it to build **previews only**, so merging doesn't deploy production and V2 stays live. After merging, a quick check that `kwhynott.dev` still shows V2 confirms it.
 
 ## Kyle's checklist
 
 1. ~~Give `gh` the `workflow` permission~~ Done.
-2. ~~Connect a new Vercel project~~ Done (`portv3`). **Before merging:** decide on conflict #5 (the live `portfolio` project now builds this repo).
+2. ~~Connect a new Vercel project~~ Done (`portv3`). The `portfolio` project builds previews only, per conflict #5.
 3. ~~Make `quality` a required status check on `main`~~ Done. `main` requires `quality` and blocks force-pushes and deletion; admins can still override.
 4. **Review and merge.** Slice 02 branches from the updated `main`.
