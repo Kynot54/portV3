@@ -284,7 +284,7 @@ test("choosing System again follows the OS", async () => {
 - [ ] **Step 1: Write the failing tests** in `tests/unit/header.test.tsx`. Mock `next/navigation` `usePathname`.
 
 ```tsx
-test('logo shows KW and is named "Kyle Whynott, home", linking to /', ...)
+test('logo shows KW and is named "KW, Kyle Whynott, home", linking to /', ...)
 test('desktop nav: logo, Work, Blog, theme toggle, Contact in DOM order', ...)   // within nav "Main"; Contact is last
 test('marks current section, including nested paths', ...)                       // '/blog/x' → Blog aria-current="page"
 test('Contact uses the accent button style', ...)                                 // has class from Button default variant (bg-primary)
@@ -299,7 +299,7 @@ test('footer shows © Kyle Whynott with GitHub and LinkedIn links', ...)
 - [ ] **Step 2:** Run `npm test`. Expected: FAIL, because `Header` is not found.
 - [ ] **Step 3: Implement `site.ts`, `Header` and `Footer`.**
   - **Nav markup:** `<header>` → `<nav aria-label="Main">`. It's a floating pill: fixed or sticky, centred, `rounded-full`, with a border, a `max-w` cap and fluid side margins.
-  - **Logo:** the visible text `KW` (bold), with `aria-label="Kyle Whynott, home"`, linking to `/`.
+  - **Logo:** the visible text `KW` (bold), with `aria-label="KW, Kyle Whynott, home"`, linking to `/`.
   - **From `sm` up:** logo link, Work, Blog, `ThemeToggle`, Contact (`Button` default variant, `rounded-full`).
   - **Below `sm`:** logo, Contact, Menu button (`aria-expanded`, `aria-controls="mobile-menu"`, Lucide `Menu`/`X` icons).
   - **Panel:** `#mobile-menu` holds Work, Blog and `ThemeToggle`.

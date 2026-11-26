@@ -33,7 +33,7 @@ All of these pass locally against a production build, and the `quality` CI job p
 | `npm run lint` · `format:check` · `typecheck`                                                                 | pass                                                                  |
 | `npm test` (Vitest)                                                                                           | **62 passed** (10 files)                                              |
 | `npm run test:e2e` (Playwright: mobile 375, tablet 768, desktop 1440 on Chromium; WebKit and Firefox desktop) | **141 passed**, 69 skipped by design*; resize tests 130/130 on repeat |
-| axe (WCAG 2.0/2.1/2.2 A+AA), every route, light and dark, mobile menu open                                    | 0 violations (one waiver, see "Conflicts flagged" #4)                 |
+| axe (WCAG 2.0/2.1/2.2 A+AA), every route, light and dark, mobile menu open                                    | 0 violations, no waivers                                              |
 | Lighthouse (median of 3 runs, mobile emulation)                                                               | 100 / 100 / 100 / 100 on `/`, `/work`, `/blog` and `/contact`         |
 
 \* The skips are tests that don't apply to a project: mobile-only and desktop-only cases, the viewport sweep (desktop Chromium only), and Tab-order checks in WebKit, where macOS skips links on Tab by default.
@@ -105,7 +105,7 @@ A hands-on pass on a real phone is still worth a minute before merging.
 1. **next-themes instead of the Next 16 docs' inline-script method.** It logs a React "script tag" warning in dev only, and production is clean. It treats "no colour preference" as light. Its last release was March 2025.
 2. **No-JS visitors always get dark,** even if their OS is light.
 3. **Blue is quieter than "blue in different shades" might suggest.** It's used only for the focus ring, link underlines and `<Keyword>`, so the accent isn't diluted.
-4. **The logo's accessible name doesn't contain its visible text** (WCAG 2.5.3 Label in Name, Level A). It shows "KW" but is named "Kyle Whynott, home", as directed. axe reports it, so the e2e suite waives that one rule for the logo only. Lighthouse accessibility is still 100. The consequence: voice-control users saying "click KW" may miss it. A name of "KW, Kyle Whynott, home" would fix it while keeping your wording.
+4. **Logo name: resolved.** Kyle switched it to "KW, Kyle Whynott, home". The visible "KW" is now inside the name (WCAG 2.5.3), and the axe waiver is gone.
 
 5. **The live V2 Vercel project now builds this repo. Resolved by Kyle.** The `portfolio` project (which serves `kwhynott.dev`) builds `Kynot54/portV3` with Next.js, but Kyle set it to build **previews only**, so merging doesn't deploy production and V2 stays live. After merging, a quick check that `kwhynott.dev` still shows V2 confirms it.
 

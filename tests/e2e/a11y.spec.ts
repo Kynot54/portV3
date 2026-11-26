@@ -4,13 +4,6 @@ import { test, expect, ROUTES, isMobile, storeTheme } from "./fixtures";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
-/*
- * Kyle's call (Conflicts flagged in the PR): the logo shows "KW" but is named
- * "Kyle Whynott, home", which fails WCAG 2.5.3 label-in-name. Waive that one
- * rule for the logo only; any other mismatch still fails.
- */
-const LOGO = 'a[aria-label="Kyle Whynott, home"]';
-
 /** The theme toggle gets its real label only after hydration. */
 const hydrated = (page: Page) =>
   page.waitForFunction(() =>
@@ -28,20 +21,7 @@ async function scan(page: Page) {
   const { violations } = await new AxeBuilder({ page })
     .withTags(TAGS)
     .analyze();
-  return violations
-    .map((v) =>
-      v.id === "label-content-name-mismatch"
-        ? {
-            ...v,
-            nodes: v.nodes.filter(
-              (n) =>
-                !n.target.includes(LOGO) &&
-                !String(n.html).includes('aria-label="Kyle Whynott, home"'),
-            ),
-          }
-        : v,
-    )
-    .filter((v) => v.nodes.length > 0);
+  return violations;
 }
 
 for (const theme of ["dark", "light"] as const) {

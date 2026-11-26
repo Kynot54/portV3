@@ -121,7 +121,7 @@ export function Header() {
       >
         <Link
           href="/"
-          aria-label="Kyle Whynott, home"
+          aria-label="KW, Kyle Whynott, home"
           data-nav="home"
           onClick={() => setOpen(false)}
           className="mr-auto inline-flex min-h-11 items-center rounded-full px-3 font-bold tracking-tight"

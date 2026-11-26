@@ -27,9 +27,9 @@ function navOrder() {
 
 beforeEach(() => pathname.mockReturnValue("/"));
 
-test('logo shows KW and is named "Kyle Whynott, home", linking to /', () => {
+test('logo shows KW and is named "KW, Kyle Whynott, home", linking to /', () => {
   renderHeader();
-  const logo = screen.getByRole("link", { name: "Kyle Whynott, home" });
+  const logo = screen.getByRole("link", { name: "KW, Kyle Whynott, home" });
   expect(logo).toHaveTextContent("KW");
   expect(logo).toHaveAttribute("href", "/");
 });
@@ -38,7 +38,7 @@ test("desktop nav: logo, Work, Blog, theme toggle, Contact, then Menu (mobile)",
   renderHeader();
   await screen.findByRole("button", { name: /^Theme: / });
   const order = navOrder();
-  expect(order.slice(0, 3)).toEqual(["Kyle Whynott, home", "Work", "Blog"]);
+  expect(order.slice(0, 3)).toEqual(["KW, Kyle Whynott, home", "Work", "Blog"]);
   expect(order[3]).toMatch(/^Theme: /);
   expect(order.slice(4)).toEqual(["Contact", "Menu"]);
 });
@@ -179,7 +179,7 @@ test("tapping the logo closes the menu", async () => {
   const btn = screen.getByRole("button", { name: "Menu" });
   await userEvent.click(btn);
   await userEvent.click(
-    screen.getByRole("link", { name: "Kyle Whynott, home" }),
+    screen.getByRole("link", { name: "KW, Kyle Whynott, home" }),
   );
   expect(btn).toHaveAttribute("aria-expanded", "false");
 });

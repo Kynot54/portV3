@@ -42,10 +42,10 @@ test("tab order and visible focus", async ({ page, browserName }) => {
   );
   await page.goto("/");
   const expected = isMobile(page)
-    ? ["Skip to content", "Kyle Whynott, home", "Contact", "Menu"]
+    ? ["Skip to content", "KW, Kyle Whynott, home", "Contact", "Menu"]
     : [
         "Skip to content",
-        "Kyle Whynott, home",
+        "KW, Kyle Whynott, home",
         "Work",
         "Blog",
         /^Theme: /,
