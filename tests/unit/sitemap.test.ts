@@ -62,3 +62,20 @@ test("never lists /blog/none or /api", () => {
     false,
   );
 });
+
+test("every page in src/app is in the sitemap when everything is on", async () => {
+  const { globSync } = await import("node:fs");
+  const pages = globSync("src/app/**/page.tsx").map(
+    (f) => f.replace(/^src\/app/, "").replace(/\/?page\.tsx$/, "") || "/",
+  );
+  const u = urls(
+    buildSitemap({ work, posts: [post("a", "2026-01-01")], services: true }),
+  ).map((x) => new URL(x).pathname);
+  for (const route of pages) {
+    const pattern = new RegExp(`^${route.replace(/\[[^\]]+\]/g, "[^/]+")}$`);
+    expect(
+      u.some((p) => pattern.test(p)),
+      route,
+    ).toBe(true);
+  }
+});

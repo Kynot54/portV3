@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { blogPosts } from "@/lib/blog";
-import { CARD_SIZE, CARD_TYPE, cardAlt, renderCard } from "@/lib/og-card";
+import { CARD_SIZE, CARD_TYPE, renderCard } from "@/lib/og-card";
 
 const postFor = async (slug: string) =>
   (await blogPosts()).find((p) => p.slug === slug) ?? null;
@@ -11,21 +11,10 @@ export async function generateStaticParams() {
   return slugs.length > 0 ? slugs : [{ slug: "none" }];
 }
 
-export async function generateImageMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const post = await postFor((await params).slug);
-  return [
-    {
-      id: "card",
-      alt: cardAlt(post?.title ?? "Blog"),
-      size: CARD_SIZE,
-      contentType: CARD_TYPE,
-    },
-  ];
-}
+// No generateImageMetadata: with it, Next renders the card on first request
+// instead of at build. The page sets the alt (pageMetadata's image).
+export const size = CARD_SIZE;
+export const contentType = CARD_TYPE;
 
 export default async function Image({
   params,

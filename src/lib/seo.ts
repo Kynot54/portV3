@@ -54,6 +54,10 @@ export function describePost(p: BlogPost): string {
   return trimTo(`${p.summary} ${firstParagraph(p.body)}`.trim(), MAX);
 }
 
+/** A card's alt: "<title>, Kyle Whynott", without the title's end punctuation (no ".,"). */
+export const cardAlt = (title: string) =>
+  `${title.replace(/[.!?…]+$/, "")}, Kyle Whynott`;
+
 /** Canonical host for every URL we advertise, whatever host serves the build. */
 export const SITE_ORIGIN = "https://kwhynott.dev";
 
@@ -67,6 +71,11 @@ export function pageMetadata(o: {
   path: string;
   type?: "website" | "article";
   publishedTime?: string;
+  /**
+   * This page's card, for cards whose alt depends on the page (projects,
+   * posts). Setting it replaces the file-based card's tags.
+   */
+  image?: { path: string; alt: string };
 }): Metadata {
   const url = new URL(o.path, SITE_ORIGIN).toString();
   return {
@@ -82,6 +91,19 @@ export function pageMetadata(o: {
       ...(o.type === "article"
         ? { type: "article", publishedTime: o.publishedTime }
         : { type: "website" }),
+      ...(o.image
+        ? {
+            images: [
+              {
+                url: o.image.path,
+                width: 1200,
+                height: 630,
+                type: "image/png",
+                alt: o.image.alt,
+              },
+            ],
+          }
+        : {}),
     },
     twitter: { card: "summary_large_image" },
   };
