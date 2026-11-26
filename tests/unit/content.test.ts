@@ -12,6 +12,7 @@ import {
 } from "@/lib/content/load";
 import { HERO_PROOF } from "@/components/home/hero";
 import { ABOUT_TEXT } from "@/components/home/about";
+import { SITE_DESCRIPTION } from "@/lib/seo";
 
 const F = resolve("tests/fixtures/content");
 
@@ -201,6 +202,7 @@ const CLAIMS: [copyFragment: string, resumePhrases: string[]][] = [
   ["Hiring efficiency up over 50%.", ["hiring efficiency by over 50%"]],
   ["Hundreds of management hours saved.", ["100s of working hours"]],
   ["40+ students", ["40+ students"]],
+  ["built AI document pipelines for 50+ clients", ["over 50 clients"]],
 ];
 /** Tool and degree names that contain digits but aren't claims. */
 const EXEMPT =
@@ -244,6 +246,7 @@ test("every quantity on Home and work pages traces to its exact resume phrase", 
     ]),
     HERO_PROOF.join(" · "),
     ABOUT_TEXT,
+    SITE_DESCRIPTION,
   ];
   for (const text of copy)
     expect(

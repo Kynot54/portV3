@@ -33,7 +33,7 @@
 
 - **Site description (exact):** "I'm Kyle Whynott, an AI and software engineer. I've built AI document pipelines for 50+ clients and taught machine learning at Cal State Fullerton."
 - **Page descriptions (exact; Kyle signs off in the PR):**
-  - `/work`: "Selected projects I've built and shipped, from AI document pipelines to full-stack apps. Each one covers the context, what I built, the result, and what I learned."
+  - `/work`: "Selected projects I've built and shipped, from AI document pipelines to full-stack apps, each with its context, what I built, the result, and what I learned."
   - `/blog`: "My writing on software engineering, AI and security: how software works at its foundation, and how it fails or is defended."
   - `/contact`: "Send me a message or book a 30-minute intro call. I'm looking for my next role as an AI or software engineer and reply within 2–3 business days."
   - **Project pages:** `summary + " " + context`, trimmed at a word boundary to ≤ 160 characters (with "…" when cut).
