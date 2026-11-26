@@ -21,7 +21,7 @@ Open a session in `~/Projects/portV3` and say:
 ## Next steps, in order
 
 1. **The Slice 2 design is approved** (Kyle, 2026-11-26).
-2. **Current step:** use the `superpowers:writing-plans` skill to write `docs/plans/slice-02.md`. Then ask how to run it (Native or subagent-driven). Kyle used Native for Slice 1.
+2. **Done:** the plan is written to `docs/plans/slice-02.md` (6 tasks). **Current step:** Kyle reviews the plan and confirms the execution method. Previously: use the `superpowers:writing-plans` skill to write `docs/plans/slice-02.md`. Then ask how to run it (Native or subagent-driven). Kyle used Native for Slice 1.
 3. **Build**, with `superpowers:executing-plans`. Follow the Slice 1 pattern:
    - a progress ledger in `.superpowers/sdd/`
    - a duplicate-file scan before each task
