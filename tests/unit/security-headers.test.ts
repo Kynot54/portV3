@@ -40,18 +40,55 @@ const directives = (csp: string) =>
     }),
   );
 
-test("preview adds vercel.live to script/connect/frame only", () => {
+// Vercel's documented toolbar policy (vercel.com/docs/vercel-toolbar/managing-toolbar);
+// img-src already allows https: and data:, so only blob: is new there.
+const TOOLBAR: Record<string, string[]> = {
+  "script-src": ["https://vercel.live"],
+  "style-src": ["https://vercel.live"],
+  "img-src": ["blob:"],
+  "font-src": ["https://vercel.live", "https://assets.vercel.com"],
+  "connect-src": ["https://vercel.live", "wss://ws-us3.pusher.com"],
+  "frame-src": ["https://vercel.live"],
+};
+
+test("preview adds the Vercel toolbar's origins and nothing else", () => {
   const prod = directives(PROD_CSP);
   const preview = directives(
     asMap(securityHeaders({ VERCEL: "1", VERCEL_ENV: "preview" }))[
       "Content-Security-Policy"
     ],
   );
+  expect(Object.keys(preview)).toEqual(Object.keys(prod));
   for (const name of Object.keys(prod)) {
-    const added = ["script-src", "connect-src", "frame-src"].includes(name)
-      ? ["https://vercel.live"]
-      : [];
-    expect(preview[name], name).toEqual([...prod[name], ...added]);
+    expect(preview[name], name).toEqual([
+      ...prod[name],
+      ...(TOOLBAR[name] ?? []),
+    ]);
+  }
+});
+
+test("next dev adds 'unsafe-eval' to script-src only", () => {
+  const prod = directives(PROD_CSP.replace("; upgrade-insecure-requests", ""));
+  const dev = directives(
+    asMap(securityHeaders({ NODE_ENV: "development" }))[
+      "Content-Security-Policy"
+    ],
+  );
+  expect(Object.keys(dev)).toEqual(Object.keys(prod));
+  for (const name of Object.keys(prod)) {
+    const added = name === "script-src" ? ["'unsafe-eval'"] : [];
+    expect(dev[name], name).toEqual([...prod[name], ...added]);
+  }
+});
+
+test("a production build never allows eval", () => {
+  for (const env of [
+    { NODE_ENV: "production" },
+    { VERCEL: "1", VERCEL_ENV: "production", NODE_ENV: "production" },
+  ]) {
+    expect(
+      asMap(securityHeaders(env))["Content-Security-Policy"],
+    ).not.toContain("unsafe-eval");
   }
 });
 

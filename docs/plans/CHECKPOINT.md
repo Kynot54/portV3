@@ -18,13 +18,9 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 6 (launch polish): PR #10 is open. The whole-branch review finished: ready to merge with fixes, no Critical.**
-   - All 5 tasks are done. Unit 231, e2e 433 (with headers), Lighthouse 100 ×11.
-   - **On resume:**
-     - **Do not re-run the review.** Its findings are in `.superpowers/sdd/slice-06/final-review.md` (local only, git-ignored). If that file is gone, re-run it from `review-f1ebff2..f6203b6.diff` plus `progress.md`.
-     - **Fix pass (test-first):** (1) widen the preview-only CSP for Vercel's toolbar; (2) move the real Cal.com/Turnstile CSP check to a pre-merge step on the preview; (3) add `'unsafe-eval'` to the dev CSP only.
-     - Then rule on "declined to judge", list the six deferred minors in the PR, update the PR body, and delete the workspace.
-   - **Kyle then:** approves the copy and the cards, merges, and runs the live checklist (PR #10 and the README): LinkedIn Post Inspector, a Search Console sitemap submit, and the console on live `/contact`.
+1. **Slice 6 (launch polish): PR #10 is ready for Kyle.** Final review done, and the fix pass is done: the preview toolbar policy, dev `'unsafe-eval'`, and the pre-merge preview check. Unit 233, e2e 433.
+   - **Kyle:** run the preview check in PR #10, approve the copy, cards and alt text, merge, then run the live checklist.
+   - **Deferred minors** are listed in the PR under "Final review".
 2. **Open `TODO(kyle)`:** the favicon sign-off and the five project screenshots.
 3. **After Slice 6:** V3 is complete. V3.1+ covers the admin, cross-posting and consulting.
 

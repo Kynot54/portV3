@@ -6,7 +6,7 @@ Merging puts on `kwhynott.dev`:
 - `robots.txt` and `sitemap.xml`
 - security headers on every page
 
-Then run the **live checklist** below. It's the part only a real browser and your accounts can check.
+Before merging, run the short **preview check** below; after merging, the **live checklist**. It's the part only a real browser and your accounts can check.
 
 ## Summary
 
@@ -19,7 +19,7 @@ Then run the **live checklist** below. It's the part only a real browser and you
   - canonical link (`https://kwhynott.dev/…`, even on previews)
   - Open Graph: title, description, url, site name, type, and `article` with a date for posts
   - X/Twitter large card
-- **Preview cards** (`og:image`) for every page: 1200×630, built at build time with Next's built-in generator, using Geist (OFL, committed) and no new package. LinkedIn's "add an og:image" warning is gone.
+- **Preview cards** (`og:image`) for every page: 1200×630, made with Next's built-in generator (Home, Work, Blog and Contact at build time; each project and post card on its first request, then cached), using Geist (OFL, committed) and no new package. LinkedIn's "add an og:image" warning is gone.
 - **`robots.txt`:** allows everything except `/api/` and points to the sitemap.
 - **`sitemap.xml`:**
   - **Always:** Home, Work, every project, Contact.
@@ -29,7 +29,7 @@ Then run the **live checklist** below. It's the part only a real browser and you
   - **The policy:** allows only the site itself, plus Turnstile, Cal.com and Cloudflare Web Analytics. It blocks plugins and stops other sites from framing the pages.
   - **Also sent:** HTTPS-only (HSTS), no content-type sniffing, a strict referrer policy and permissions policy.
   - **Pages stay prebuilt**, and Lighthouse is still 100.
-  - **Previews also allow Vercel's toolbar.**
+  - **Previews also allow Vercel's toolbar** (its documented origins), and `next dev` also allows eval, which React needs for error stacks. Production gets neither.
 
 Design: `docs/superpowers/specs/2026-11-26-slice-06-launch-design.md`. Plan: `docs/plans/slice-06.md`.
 
@@ -48,12 +48,46 @@ https://portv3-git-slice-06-launch-kynot54s-projects.vercel.app (sign in to Verc
 | Check                                                      | Result                                                                                                                                                                                                                                        |
 | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | lint · format · typecheck                                  | pass                                                                                                                                                                                                                                          |
-| Unit (Vitest)                                              | **231 passed**: descriptions are 100–160 and exact, trimming, metadata, sitemap gating, and the exact production policy, plus its preview and local variants                                                                                  |
+| Unit (Vitest)                                              | **233 passed**: descriptions are 100–160 and exact, trimming, metadata, sitemap gating, and the exact production policy, plus its preview and local variants                                                                                  |
 | E2E (Chromium mobile, tablet and desktop; WebKit; Firefox) | **433 passed with the headers on**. Every route's tags, every card is a real 1200×630 PNG, robots and sitemap contents, header presence. The contact (Turnstile and Cal stand-ins), theme and blog flows ran with **no "Refused to…" errors** |
 | axe, every route and state                                 | 0 violations                                                                                                                                                                                                                                  |
 | Lighthouse (11 URLs, 3 runs each, headers on)              | **100 in every category**                                                                                                                                                                                                                     |
 | Live (Cloudflare)                                          | `www.kwhynott.dev/blog` → `kwhynott.dev/blog` (path and query kept); `http` → `https`                                                                                                                                                         |
 | Keyboard                                                   | Covered by the e2e keyboard tests from Slices 1–5; nothing interactive changed in this slice                                                                                                                                                  |
+
+## Final review
+
+An independent reviewer read the whole branch. Verdict: ready to merge with fixes, no critical issues.
+
+**Fixed (each test-first):**
+- **Previews blocked Vercel's toolbar.** The preview policy allowed only part of Vercel's documented list, so a signed-in preview would log "Refused to…" errors. It now allows the full list (styles, fonts, images and the comments socket).
+- **The real Cal.com and Turnstile check came after merging**, which is production. It's now the pre-merge **preview check** above.
+- **`next dev` blocked eval**, which hides server error stacks while developing. Dev only now; a test pins that production never allows it.
+
+**Left for later (minor):**
+1. The `og:image` address comes from `NEXT_PUBLIC_SITE_URL`, while canonical is fixed to `kwhynott.dev`. Setting that variable on production would point cards at another host. It's unset today.
+2. Project and post cards are made on first request, not at build (now stated correctly above). The first crawler waits about a second once.
+3. `/services` and 404 pages reuse Home's canonical. Harmless while they 404. Services needs its own tags when it ships.
+4. The Home card's alt text reads "…an AI engineer., Kyle Whynott" (under "Needs Kyle's call").
+5. The e2e tag check lists routes by hand. A future page could miss its card unnoticed.
+6. HSTS covers subdomains for 2 years. That's sticky: a future plain-HTTP subdomain wouldn't load for past visitors.
+
+**Calls I made on what the reviewer couldn't check:**
+- **Cal.com's exact origins:** the preview check covers them with the real embed.
+- **Vercel's toolbar list:** checked against Vercel's docs and fixed.
+- **Other Cloudflare injections:** you have only Web Analytics on, and Rocket Loader is off. Cloudflare's other inline features would pass under the current policy anyway.
+- **Slack, iMessage and Discord previews:** whether their fetchers get past Vercel's bot challenge is a Vercel setting, not code. LinkedIn and Google already pass.
+
+## Before merging: preview check (about 3 minutes)
+
+Merging is the production deploy, so the real Cal.com embed and Turnstile get checked here first. Tests stub both.
+
+1. Open this PR's **preview** `/contact`, signed in to Vercel (so the toolbar loads too), with **DevTools → Console** open.
+2. Click into the message form. This loads Turnstile.
+3. Press **Book a call**.
+4. Switch the theme.
+
+There should be **no red "Refused to…" errors**. Other errors don't count here. For example, Turnstile may reject the preview address, or the calendar may be missing if the preview lacks `NEXT_PUBLIC_CAL_LINK`. Those are settings, not the security policy. If a "Refused to…" line appears, send it to me: allowing that origin is a one-line change.
 
 ## Live checklist (after merging, about 5 minutes)
 
@@ -61,14 +95,8 @@ https://portv3-git-slice-06-launch-kynot54s-projects.vercel.app (sign in to Verc
 2. **Google Search Console:**
    - **Sitemaps:** submit `https://kwhynott.dev/sitemap.xml`.
    - **URL Inspection** on `/`: Test live URL → "URL is available to Google".
-3. **On live `/contact`, open DevTools → Console**, then:
-   - send yourself a test message
-   - press **Book a call**
-   - switch the theme
-
-   There should be **no red "Refused to…" errors**. This is the one check that covers the real Cal.com embed and Cloudflare's analytics beacon, which tests can't load.
-
-4. If anything is blocked, tell me which "Refused to…" line appears. Allowing that origin is a one-line change.
+3. **On live `/contact`, open DevTools → Console**, then send yourself a test message and press **Book a call**. There should be **no "Refused to…" errors**. This is the only check of Cloudflare's analytics beacon, which runs only behind Cloudflare.
+4. If anything is blocked, tell me which "Refused to…" line appears.
 
 ## Needs Kyle's call
 
@@ -81,6 +109,7 @@ https://portv3-git-slice-06-launch-kynot54s-projects.vercel.app (sign in to Verc
   I shortened the Work line from the plan's 163 characters to 157, so it fits search results.
 
 - **Card layout** (screenshots above).
+- **Home card alt text:** now "I'm Kyle Whynott, an AI engineer., Kyle Whynott". I'd drop the period before the comma.
 - **Favicon** (`src/app/icon.svg`, still `TODO(kyle)`): keep the KW mark, or swap in a designed one.
 - **The five project screenshots:** still "Preview coming soon" (`TODO(kyle)`). The site is complete without them.
 

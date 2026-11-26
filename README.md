@@ -36,13 +36,17 @@ Every pull request runs the `quality` CI job. It fails on any of:
 
 Design tokens and the rules behind them are in [`docs/design-tokens.md`](docs/design-tokens.md).
 
+## Before merging a change to headers or third-party embeds
+
+On the PR's preview `/contact` with DevTools open: click into the form, press Book a call, toggle the theme. There should be no "Refused to…" (CSP) errors. Merging deploys to production, so this is where the real Cal.com and Turnstile scripts get checked.
+
 ## After a production deploy
 
 Vercel's bot challenge blocks automated checks against the live site, so these are manual:
 
 1. **LinkedIn Post Inspector** on `https://kwhynott.dev` and one project: no warnings, card shows.
 2. **Google Search Console:** sitemap `https://kwhynott.dev/sitemap.xml` submitted; URL Inspection on `/` passes.
-3. **Live `/contact` with DevTools open:** send a message, press Book a call, toggle the theme. There should be no "Refused to…" (CSP) errors.
+3. **Live `/contact` with DevTools open:** send a message and press Book a call. There should be no "Refused to…" (CSP) errors; this is the only check of Cloudflare's analytics beacon.
 
 ## License
 
