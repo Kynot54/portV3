@@ -18,7 +18,7 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 3 (Work) is built, and PR #5 is open:** https://github.com/Kynot54/portV3/pull/5. Tasks 1–5 are done. Task 6: the PR is open, and the **whole-branch review was dispatched** when this was written. If it's lost, run it again from `.superpowers/sdd/slice-03/review-*.diff`. Then fix the Critical and Important findings, each with a test that fails first, in one pass. List the minors in the PR and update this checkpoint. **Merging deploys to production** (including Home's 10+ → 50+ change).
+1. **Slice 3 (Work) is complete; PR #5 is open and waiting for Kyle:** https://github.com/Kynot54/portV3/pull/5. The whole-branch review is done and its fixes are in (`3b05c88`): a real 404, a stricter facts test, a 44 px back link, and a required label. Lighthouse is 100 on all 9 URLs. **Merging deploys to production** (including Home's 10+ → 50+ change). After the merge: Slice 4 (Blog) starts with brainstorming. The MDX renderer (`src/lib/mdx.tsx`) is already in place.
 2. Kyle merges PR #4 and closes #2. Dependabot should then open a safe-only PR. Review it once its CI is green.
 
 ## Notes on the live site
