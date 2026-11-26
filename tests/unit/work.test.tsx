@@ -35,3 +35,15 @@ test("/work list: h1 Work, five cards in order, h2 titles, list role", async () 
   ]);
   expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(5);
 });
+
+import { MediaPlaceholder } from "@/components/work/media-placeholder";
+
+test("MediaPlaceholder: readable label, decorative layer hidden, nothing focusable", () => {
+  const { container } = render(<MediaPlaceholder />);
+  expect(screen.getByText("Preview coming soon")).toBeInTheDocument();
+  expect(container.querySelector("[data-grain]")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+  expect(container.querySelectorAll("a,button,[tabindex]").length).toBe(0);
+});

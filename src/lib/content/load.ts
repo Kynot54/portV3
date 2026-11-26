@@ -28,8 +28,12 @@ type Raw = {
   body: string;
 };
 
+// Paths are scoped to content/ so the deploy only traces content files, not the
+// whole project. Tests pass absolute paths to their fixtures.
 const resolve = (dir: string) =>
-  isAbsolute(dir) ? dir : join(process.cwd(), dir);
+  isAbsolute(dir)
+    ? dir
+    : join(process.cwd(), "content", dir.replace(/^content\//, ""));
 
 async function readEntries(dir: string): Promise<Raw[]> {
   let names: string[];

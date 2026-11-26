@@ -202,8 +202,9 @@ test.describe("home sections", () => {
     await page.goto("/");
     const cards = page.locator("#work a");
     await expect(cards).toHaveCount(3);
-    for (const c of await cards.all())
-      await expect(c).toHaveAttribute("href", "/work");
+    const slugs = ["ai-document-pipelines", "control-bh", "ulti-health"];
+    for (const [i, c] of (await cards.all()).entries())
+      await expect(c).toHaveAttribute("href", `/work/${slugs[i]}`);
     await expect(cards.nth(0)).toContainText("AI document pipelines");
     await expect(cards.nth(1)).toContainText("C.O.N.T.R.O.L. BH");
     await expect(cards.nth(2)).toContainText("Ulti-Health");

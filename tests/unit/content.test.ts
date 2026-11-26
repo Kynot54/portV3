@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import {
   ContentError,
   getFeaturedWork,
@@ -11,7 +12,7 @@ import {
 import { HERO_PROOF } from "@/components/home/hero";
 import { ABOUT_TEXT } from "@/components/home/about";
 
-const F = "tests/fixtures/content";
+const F = resolve("tests/fixtures/content");
 
 test("getWork parses frontmatter, slugs from filename, newest first", async () => {
   const work = await getWork(`${F}/work`);
