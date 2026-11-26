@@ -1,1 +1,167 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Theme class is set on <html> by next-themes; the server renders "dark". */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design tokens. Documented in docs/design-tokens.md; a unit test keeps the
+ * doc and these values in sync. Light lives in :root, dark in .dark.
+ * "Isolation": the accent (--primary) is the only loud colour. Everything
+ * else is black, white and grey; blue is only focus, link underlines and
+ * keywords.
+ */
+:root {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #ff0080;
+  --primary-foreground: #000000;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #0a0a0a;
+  --muted: #f5f5f5;
+  --muted-foreground: #6b6b6b;
+  --accent: #f5f5f5; /* shadcn hover surface, NOT our accent */
+  --accent-foreground: #0a0a0a;
+  --destructive: #dc2626; /* errors only */
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #1d4ed8;
+  --keyword: #1d4ed8;
+  --radius: 0.625rem;
+  --glow: 0 0 #0000;
+  --glow-strong: 0 0 #0000;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #f5f5f5;
+  --card: #0a0a0a;
+  --card-foreground: #f5f5f5;
+  --popover: #0a0a0a;
+  --popover-foreground: #f5f5f5;
+  --primary: #39ff14;
+  --primary-foreground: #000000;
+  --secondary: #171717;
+  --secondary-foreground: #f5f5f5;
+  --muted: #171717;
+  --muted-foreground: #8a8a8a;
+  --accent: #171717;
+  --accent-foreground: #f5f5f5;
+  --destructive: #f87171;
+  --border: #262626;
+  --input: #262626;
+  --ring: #60a5fa;
+  --keyword: #60a5fa;
+  --glow: 0 0 22px rgba(57, 255, 20, 0.55), 0 0 2px rgba(57, 255, 20, 0.9);
+  --glow-strong: 0 0 30px rgba(57, 255, 20, 0.72), 0 0 3px rgba(57, 255, 20, 1);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-heading: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-keyword: var(--keyword);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+
+  /* Fluid type scale */
+  --text-micro: 0.75rem;
+  --text-micro--line-height: 1rem;
+  --text-body-fluid: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-body-fluid--line-height: 1.6;
+  --text-h3: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+  --text-h3--line-height: 1.3;
+  --text-h2: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  --text-h2--line-height: 1.2;
+  --text-hero: clamp(1.875rem, 1.2rem + 3vw, 2.75rem);
+  --text-hero--line-height: 1.1;
+
+  /* Fluid spacing: px-gutter, py-section, etc. Everything else uses the 4px scale. */
+  --spacing-gutter: clamp(1rem, 4vw, 2rem);
+  --spacing-section: clamp(3rem, 8vw, 6rem);
+}
+
+/* Accent glow: dark mode only (light tokens are transparent). Static, never animated. */
+@utility accent-glow {
+  --tw-shadow: var(--glow);
+  box-shadow:
+    var(--tw-inset-shadow, 0 0 #0000), var(--tw-inset-ring-shadow, 0 0 #0000),
+    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow);
+  &:hover {
+    --tw-shadow: var(--glow-strong);
+  }
+}
+
+/* Small mono uppercase labels */
+@utility micro-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  line-height: var(--text-micro--line-height);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* In-text links: body colour, blue underline */
+@utility link {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--keyword);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
