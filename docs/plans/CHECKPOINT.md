@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-26 · **Branch:** `slice/02-home` (from `main` @ `04bac7b`, which includes merged PR #1)
+**Updated:** 2026-11-26 (end of session) · **Branch:** `slice/02-home` (from `main` @ `04bac7b`, which includes merged PR #1). Everything below is committed and pushed.
 
 ## To resume
 
@@ -20,7 +20,16 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Builder check: done, and Kyle answered** (grain in a band below the copy; `<h2>`s "About" and "Contact"). The design doc is updated. **Waiting for Kyle to approve the design doc.**
+1. **Get Kyle's approval of the Slice 2 design doc.** This is the current step. The builder check is done and Kyle's answers are in the doc: the grain sits in a band below the copy, and the `<h2>`s are "About" and "Contact". These calls were put to Kyle and are waiting for his approval:
+   - Section order: hero → Selected work → About → Contact.
+   - "Get in touch" appears twice (hero and Contact), and both are accent.
+   - The hero visual is the site's one ongoing animation: slow, never flashing, and fully still under reduced motion.
+   - The work cards link to `/work` until Slice 3, and the entry bodies are `TODO(kyle)` stubs.
+   - The card labels ("AI · 2025–26" and so on) come from the resume dates and project type.
+   - No headshot on Home this slice.
+
+   If Kyle requests changes, update the doc and commit it. Nothing is built before approval.
+
 2. **Once Kyle approves the design**, use the `superpowers:writing-plans` skill to write `docs/plans/slice-02.md`. Then ask how to run it (Native or subagent-driven). Kyle used Native for Slice 1.
 3. **Build**, with `superpowers:executing-plans`. Follow the Slice 1 pattern:
    - a progress ledger in `.superpowers/sdd/`
