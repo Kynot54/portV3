@@ -54,3 +54,55 @@ test.describe("head tags", () => {
     }
   });
 });
+
+/** Width and height from a PNG's IHDR chunk (bytes 16–23). */
+function pngSize(buf: Buffer) {
+  return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+}
+
+test.describe("cards and crawl files", () => {
+  test("each route's og:image is a 1200×630 PNG", async ({
+    page,
+    request,
+  }, info) => {
+    test.skip(info.project.name !== "desktop", "doesn't vary by viewport");
+    for (const path of await routes()) {
+      await page.goto(path);
+      const src = await meta(page, 'meta[property="og:image"]');
+      expect(src, path).toBeTruthy();
+      const res = await request.get(
+        new URL(src!).pathname + new URL(src!).search,
+      );
+      expect(res.status(), path).toBe(200);
+      expect(res.headers()["content-type"], path).toContain("image/png");
+      expect(pngSize(await res.body()), path).toEqual({
+        width: 1200,
+        height: 630,
+      });
+      expect(await meta(page, 'meta[property="og:image:alt"]'), path).toMatch(
+        /, Kyle Whynott$/,
+      );
+    }
+  });
+
+  test("robots.txt matches", async ({ request }, info) => {
+    test.skip(info.project.name !== "desktop", "doesn't vary by viewport");
+    const text = await (await request.get("/robots.txt")).text();
+    expect(text).toContain("User-Agent: *");
+    expect(text).toContain("Allow: /");
+    expect(text).toContain("Disallow: /api/");
+    expect(text).toContain("Sitemap: https://kwhynott.dev/sitemap.xml");
+  });
+
+  test("sitemap.xml has the expected URLs", async ({ request }, info) => {
+    test.skip(info.project.name !== "desktop", "doesn't vary by viewport");
+    const xml = await (await request.get("/sitemap.xml")).text();
+    for (const path of await routes())
+      expect(xml).toContain(
+        `<loc>https://kwhynott.dev${path === "/" ? "/" : path}</loc>`,
+      );
+    expect(xml).not.toContain("/blog/none");
+    expect(xml).not.toContain("/services");
+    expect(xml).not.toContain("/api");
+  });
+});
