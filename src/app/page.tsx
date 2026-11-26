@@ -1,11 +1,23 @@
-export default function Home() {
+import { About } from "@/components/home/about";
+import { ContactCta } from "@/components/home/contact-cta";
+import { Hero } from "@/components/home/hero";
+import { SelectedWork } from "@/components/home/selected-work";
+import { getFeaturedWork } from "@/lib/content/load";
+
+// Content files only change on deploy, so the read is cacheable (Cache Components).
+async function featuredWork() {
+  "use cache";
+  return getFeaturedWork();
+}
+
+export default async function Home() {
+  const featured = await featuredWork();
   return (
-    <section className="mx-auto w-full max-w-5xl px-gutter py-section">
-      <h1 className="text-hero font-bold tracking-tight">Kyle Whynott</h1>
-      {/* TODO(kyle): hero and sections arrive in Slice 02 */}
-      <p className="mt-4 text-body-fluid text-muted-foreground">
-        Placeholder. The home page arrives in Slice 02.
-      </p>
-    </section>
+    <>
+      <Hero />
+      <SelectedWork entries={featured} />
+      <About />
+      <ContactCta />
+    </>
   );
 }

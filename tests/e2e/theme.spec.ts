@@ -18,7 +18,7 @@ test("stored light beats OS dark on first paint and after navigation", async ({
   await page.goto("/", { waitUntil: "domcontentloaded" });
   expect(await htmlClass(page)).toMatch(/\blight\b/);
   if (isMobile(page)) await page.getByRole("button", { name: "Menu" }).click();
-  await page.getByRole("link", { name: "Work" }).first().click();
+  await page.getByRole("link", { name: "Work", exact: true }).first().click();
   await expect(page).toHaveURL(/\/work$/);
   expect(await htmlClass(page)).toMatch(/\blight\b/);
   await page.reload({ waitUntil: "domcontentloaded" });
@@ -93,10 +93,14 @@ test("no-JS renders dark, hides toggle and menu button, links reachable", async 
     await expect(t).toBeHidden();
   await expect(page.locator(".menu-button")).toBeHidden();
   await expect(
-    page.getByRole("link", { name: "Work" }).locator("visible=true"),
+    page
+      .getByRole("link", { name: "Work", exact: true })
+      .locator("visible=true"),
   ).toHaveCount(1);
   await expect(
-    page.getByRole("link", { name: "Blog" }).locator("visible=true"),
+    page
+      .getByRole("link", { name: "Blog", exact: true })
+      .locator("visible=true"),
   ).toHaveCount(1);
   // Nothing may cover the page heading.
   const h1Uncovered = await page.locator("h1").evaluate((h) => {

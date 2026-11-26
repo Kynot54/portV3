@@ -1,10 +1,14 @@
+import { readFile } from "node:fs/promises";
 import {
   ContentError,
+  getFeaturedWork,
   getPost,
   getPosts,
   getWork,
   getWorkEntry,
 } from "@/lib/content/load";
+import { HERO_PROOF } from "@/components/home/hero";
+import { ABOUT_TEXT } from "@/components/home/about";
 
 const F = "tests/fixtures/content";
 
@@ -18,6 +22,9 @@ test("getWork parses frontmatter, slugs from filename, newest first", async () =
     date: "2026-01",
     tags: ["typescript", "nextjs"],
     placeholder: false,
+    featured: false,
+    order: null,
+    label: null,
     body: "Beta body.\n",
   });
   expect(work[1].placeholder).toBe(false); // default
@@ -79,4 +86,93 @@ test("an .mdx file whose name isn't a valid slug fails loudly", async () => {
     file: "My-Post.mdx",
     field: "filename",
   });
+});
+
+test("getFeaturedWork returns featured, non-placeholder entries by order", async () => {
+  const w = await getFeaturedWork(`${F}/work-featured`);
+  expect(w.map((e) => e.slug)).toEqual(["first", "second"]);
+  expect(w[0]).toMatchObject({
+    featured: true,
+    order: 1,
+    label: "AI · 2025–26",
+  });
+});
+
+test("featured entry without order fails loudly", async () => {
+  await expect(
+    getFeaturedWork(`${F}/work-featured-noorder`),
+  ).rejects.toMatchObject({
+    file: "x.mdx",
+    field: "order",
+  });
+});
+
+test("non-featured entries default featured=false, order=null, label=null", async () => {
+  const plain = (await getWork(`${F}/work-featured`)).find(
+    (e) => e.slug === "plain",
+  )!;
+  expect(plain).toMatchObject({ featured: false, order: null, label: null });
+});
+
+test("real featured work matches the approved cards", async () => {
+  const w = await getFeaturedWork();
+  expect(w.map((e) => [e.label, e.title, e.summary])).toEqual([
+    [
+      "AI · 2025–26",
+      "AI document pipelines",
+      "I built AI pipelines for 10+ clients. Manual review dropped 50%.",
+    ],
+    [
+      "Web · 2024–25",
+      "C.O.N.T.R.O.L. BH",
+      "I built and maintained a nonprofit web app for 1,000+ users. Donations rose 40%.",
+    ],
+    [
+      "AI · Mobile · 2025–26",
+      "Ulti-Health",
+      "I built a wellness app that plans workouts and meals from the user's own data.",
+    ],
+  ]);
+});
+
+/**
+ * Every numeric claim on Home, paired with the exact resume phrase it comes from.
+ * A number in Home copy that isn't inside one of these copy phrases fails the test.
+ */
+const CLAIMS: [copyPhrase: string, resumePhrase: string][] = [
+  ["10+ clients", "over 10 clients"],
+  ["Manual review dropped 50%", "manual review down by 50%"],
+  ["1,000+ users", "1,000+ users"],
+  ["Donations rose 40%", "donation volume by 40%"],
+  ["40+ students", "40+ students"],
+];
+
+test("every number on Home traces to its exact resume phrase", async () => {
+  const resume = await readFile("content/source/resume.md", "utf8");
+  for (const [, source] of CLAIMS)
+    expect(resume, `resume lacks "${source}"`).toContain(source);
+  const copy = [
+    ...(await getFeaturedWork()).map((e) => e.summary),
+    HERO_PROOF.join(" · "),
+    ABOUT_TEXT,
+  ];
+  for (const text of copy) {
+    let rest = text;
+    for (const [phrase] of CLAIMS) rest = rest.split(phrase).join(" ");
+    // M.S. and C++ aren't claims; anything else numeric must have been covered above.
+    expect(
+      rest.replace(/C\+\+/g, "").match(/\d/),
+      `unmapped number in: ${text}`,
+    ).toBeNull();
+  }
+});
+
+test("resume Ulti-Health entry uses the approved stack", async () => {
+  const resume = await readFile("content/source/resume.md", "utf8");
+  const section = resume.slice(
+    resume.indexOf("### Ulti-Health"),
+    resume.indexOf("### AI Mind Companion"),
+  );
+  expect(section).toContain("Expo (React Native) and Supabase");
+  expect(section).not.toMatch(/Kotlin|Swift|Tower|Fly\.io|GitHub Actions/);
 });
