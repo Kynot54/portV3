@@ -1,4 +1,4 @@
-<!-- TODO(kyle): placeholder KW favicon; swap for a designed mark if wanted. -->
+<!-- "KW" in Geist Bold, as outlines: browsers can't load web fonts in a favicon. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <style>
     .bg { fill: #000000; }
@@ -9,5 +9,5 @@
     }
   </style>
   <rect class="bg" width="64" height="64" rx="14"/>
-  <text class="fg" x="32" y="43" text-anchor="middle" font-family="Geist, ui-sans-serif, system-ui, sans-serif" font-size="30" font-weight="800" letter-spacing="-1">KW</text>
+  <path class="fg" d="M9.16 43V21.7H13.72V31L21.46 21.7H26.77L18.94 31.09L27.25 43H22.06L15.94 34.15L13.72 36.73V43Z M33.48 43 27.72 21.7H32.49L36.15 36.7L39.84 21.7H43.83L47.55 36.7L51.18 21.7H55.95L50.22 43H45.3L41.82 29.38L38.34 43Z"/>
 </svg>
