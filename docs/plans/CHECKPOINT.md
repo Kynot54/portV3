@@ -18,13 +18,12 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 5 (Contact) is complete; PR #9 is waiting for Kyle.** The review fixes are in. Kyle's steps: remove `localhost` from the production Turnstile widget, confirm Vercel Authentication on `portv3` previews, send himself a message from the preview, try Book a call, do the VoiceOver check, then merge. Plan: `docs/plans/slice-05.md`. Ledger: `.superpowers/sdd/slice-05/progress.md`.
-2. **PR #8 (first blog post)** is ready for Kyle to merge.
-3. **After Slice 5:** Slice 6 (launch polish). Its notes are in `docs/plans/slice-04-pr.md` and `docs/plans/slice-05-pr.md`.
+1. **Slice 6 (launch polish) is built; its PR is open.** The whole-branch review is next, then fixes, then Kyle merges and runs the live checklist (in the PR and README). Plan: `docs/plans/slice-06.md`.
+2. **After Slice 6:** V3 is complete. Later (V3.1+): admin, cross-posting, consulting. Open `TODO(kyle)` items: favicon, project screenshots.
 
 ## Done
 
-- **Slices 1–4** are merged (PRs #1, #3, #5, #7) and live. The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
+- **Slices 1–5** are merged (PRs #1, #3, #5, #7, #9) and live, along with the first post (PR #8). The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
 
 ## Notes on the live site
 

@@ -36,6 +36,14 @@ Every pull request runs the `quality` CI job. It fails on any of:
 
 Design tokens and the rules behind them are in [`docs/design-tokens.md`](docs/design-tokens.md).
 
+## After a production deploy
+
+Vercel's bot challenge blocks automated checks against the live site, so these are manual:
+
+1. **LinkedIn Post Inspector** on `https://kwhynott.dev` and one project: no warnings, card shows.
+2. **Google Search Console:** sitemap `https://kwhynott.dev/sitemap.xml` submitted; URL Inspection on `/` passes.
+3. **Live `/contact` with DevTools open:** send a message, press Book a call, toggle the theme. There should be no "Refused to…" (CSP) errors.
+
 ## License
 
 The code is [MIT](LICENSE). Writing, images and other personal content (`content/`, `public/images/`) are all rights reserved.
