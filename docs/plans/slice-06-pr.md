@@ -125,8 +125,10 @@ Only the favicon and project screenshots remain open. The rest is approved and k
   I shortened the Work line from the plan's 163 characters to 157, so it fits search results. Every figure in the project descriptions is checked against the résumé by the facts test.
 
 - **Card layout** (screenshots above).
-- **Favicon** (`src/app/icon.svg`, still `TODO(kyle)`): keep the KW mark, or swap in a designed one.
-- **The five project screenshots:** still "Preview coming soon" (`TODO(kyle)`). The site is complete without them.
+- **Favicon** (`src/app/icon.svg`, still `TODO(kyle)`): "KW" in a rounded square. In a dark system theme it's black with neon green letters; in a light one, white with hot pink letters. It follows the visitor's system theme, not the site toggle. My recommendation, pending your sign-off:
+  - convert the letters to outlines, because browsers can't load Geist in a favicon and fall back to each system's font
+  - add a 180×180 `apple-icon.png` for iPhone home screens
+- **The five project screenshots** (`TODO(kyle)`, you'll add them later; the site is complete without them): see "Adding project screenshots" in the README.
 
 ## Dev setup
 

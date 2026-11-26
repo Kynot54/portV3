@@ -38,6 +38,18 @@ Every pull request runs the `quality` CI job. It fails on any of:
 
 Design tokens and the rules behind them are in [`docs/design-tokens.md`](docs/design-tokens.md).
 
+## Adding project screenshots
+
+Each project page shows one image in a 16:9 frame, at most 768 CSS px wide. A 4K monitor at 200% scaling or a Retina screen draws that frame with 1536 actual pixels, and high-end phones need about 1100.
+
+- **Size:** 1920 × 1080 (exactly 16:9; at least 1600 × 900).
+- **Format:** PNG for interface shots, a high-quality JPEG for photo-heavy ones. Under about 3 MB.
+- **One file per project.** Next's image component makes the AVIF and WebP copies at each size.
+- **Place:** `public/images/work/<slug>.png`, using the slugs `ai-document-pipelines`, `control-bh`, `video-interview-plugin`, `ulti-health` and `ai-mind-companion`.
+- **Phone apps:** place one or two phone screens on a 16:9 canvas.
+- **Hide client data** (names, figures, documents), and check that each client is fine with the image being public.
+- **Alt text:** each image needs a one-line description.
+
 ## Before merging a change to headers or third-party embeds
 
 Previews have no env vars, so check the real embeds locally. Build and start with Turnstile's public test key (`NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA`) and any public Cal link. Then, on `/contact` in Chromium, Firefox and WebKit, focus the form and press Book a call. There should be no "Refused to…" (CSP) errors. The e2e stand-ins can't catch these.
