@@ -106,3 +106,22 @@ test.describe("cards and crawl files", () => {
     expect(xml).not.toContain("/api");
   });
 });
+
+test.describe("security headers", () => {
+  test("headers present on pages", async ({ request }, info) => {
+    test.skip(info.project.name !== "desktop", "doesn't vary by viewport");
+    for (const path of ["/", "/contact"]) {
+      const h = (await request.get(path)).headers();
+      for (const name of [
+        "content-security-policy",
+        "strict-transport-security",
+        "x-content-type-options",
+        "referrer-policy",
+        "permissions-policy",
+        "x-frame-options",
+      ])
+        expect(h[name], `${path} ${name}`).toBeTruthy();
+      expect(h["content-security-policy"]).toContain("frame-ancestors 'none'");
+    }
+  });
+});
