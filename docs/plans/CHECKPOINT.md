@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-26 (end of day) · **Branch:** `slice/06-launch` (from `main` @ `f1ebff2`). Everything below is committed and pushed.
+**Updated:** 2026-11-26 · **Branch:** `main` @ `cfdc243` (Slice 6 merged). V3 is complete.
 
 ## To resume
 
@@ -18,11 +18,12 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 6 (launch polish): PR #10 is ready for Kyle.** Review and fix pass done: the full Vercel toolbar policy on previews, and `font-src https://cal.com` (found with a local check of the real embeds in WebKit). `browsing-topics` is dropped, no build allows eval (Kyle), and `.env.development` holds public test values. Optional `description` field on projects and posts, and the new Home description. Unit 238, e2e 433. Kyle approved the descriptions, the cards and the alt text (2026-11-27).
-   - **Kyle:** merge, then run the live checklist in PR #10.
+1. **Open `TODO(kyle)`:**
+   - **Favicon:** awaiting Kyle's sign-off. Recommendation: convert "KW" to outlines, add a 180×180 `apple-icon.png`.
+   - **Five project screenshots:** Kyle adds them to `public/images/work/<slug>.png` (specs in the README), then wire them in with next/image and alt text for his approval.
+2. **Deferred minors from the Slice 6 review** (PR #10): `metadataBase` vs `SITE_ORIGIN`; project/post cards render on first request; `/services` and 404 reuse Home's canonical (fix before Services ships); hand-written e2e route list for head tags; HSTS `includeSubDomains` for 2 years.
    - **Env vars are Production-only**, so check real embeds locally (README), never on a preview.
-2. **Open `TODO(kyle)`:** the favicon sign-off and the five project screenshots.
-3. **After Slice 6:** V3 is complete. V3.1+ covers the admin, cross-posting and consulting.
+3. **Next:** V3.1+ covers the admin, cross-posting and consulting.
 
 ## Live-site facts (2026-11-26)
 
@@ -35,7 +36,7 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Done
 
-- **Slices 1–5** are merged (PRs #1, #3, #5, #7, #9) and live, along with the first post (PR #8). Blog is in the nav. The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
+- **Slices 1–6** are merged (PRs #1, #3, #5, #7, #9, #10) and live, along with the first post (PR #8). Kyle ran the Slice 6 live checklist and confirmed it (2026-11-26). Blog is in the nav. The Blog is hidden on production until Kyle's first post, so the nav reads Work, Contact.
 
 ## Notes on the live site
 
