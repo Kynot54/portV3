@@ -39,9 +39,9 @@ Open a session in `~/Projects/portV3` and say:
    - an independent whole-branch review at the end
    - a PR with the description in `docs/plans/slice-02-pr.md`
 
-## Open issues
+## Open issue that needs Kyle (not code)
 
-None. The `kwhynott.dev` Vercel login wall was fixed by Kyle on 2026-11-26 (Deployment Protection set to Standard), and he confirmed it.
+- **`kwhynott.dev` still redirects anonymous visitors to a Vercel login page** (checked 2026-11-26 from this machine, without a Vercel session: `302 → vercel.com/sso-api`). Kyle sees the site because his browser is signed in to Vercel. Check it from a **private/incognito window** or a phone on cellular. The fix is in Vercel: `portfolio` → Settings → Deployment Protection. Use Standard Protection, or check whether the production domain is excluded from protection. Verify with `curl -sI https://kwhynott.dev` (expect a 200, not a 302 to `vercel.com/sso-api`).
 
 ## Environment notes (this machine)
 
