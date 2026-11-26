@@ -18,7 +18,7 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 4 (Blog) is built; its PR is open.** The whole-branch review runs next, then its fixes, then Kyle merges. Design: `docs/superpowers/specs/2026-11-26-slice-04-blog-design.md`. Plan: `docs/plans/slice-04.md`. Ledger: `.superpowers/sdd/slice-04/progress.md`. **Merging deploys to production,** and the live nav becomes Work, Contact until Kyle's first post (option B).
+1. **Slice 4 (Blog) is complete; PR #7 is waiting for Kyle.** The review fixes and coloured tag categories are in. Lighthouse is 100 on all 11 URLs. Design: `docs/superpowers/specs/2026-11-26-slice-04-blog-design.md`. Plan: `docs/plans/slice-04.md`. Ledger: `.superpowers/sdd/slice-04/progress.md`. **Merging deploys to production,** and the live nav becomes Work, Contact until Kyle's first post (option B).
 2. **After the merge:** Slice 5 (Contact: form + booking) starts with brainstorming.
 3. **Slice 3 (Work)** is merged (PR #5). **Dependabot PR #2** should be closed unmerged if it's still open.
 

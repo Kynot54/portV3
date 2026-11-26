@@ -37,6 +37,12 @@ That's by design (option B). Blog appears on its own in the first deploy after a
 
   Inside the list, a post's headings shift one level down so the page outline stays correct.
 
+- **Tag colours by category** (your direction, mid-review). Neon text and border on black in dark mode, with no glow. Pastel fill with deep text in light mode.
+  - The categories are **AI** (cyan), **Engineering** (yellow), **Career** (violet), **Business** (orange: HR, finance and accounting, operations, consulting) and **Notes** (rose).
+  - Any other tag stays grey.
+  - The tag-to-category list lives in one file, `src/lib/tag-categories.ts`.
+  - Every colour pair passes 4.5:1, and that's unit-tested.
+  - No tag colour reuses the accent green or magenta, the keyword blue or the error red.
 - **Sample posts.** Three posts in `content/samples/blog/`, all titled "Sample: …". They show only:
   - in e2e and Lighthouse (`BLOG_SAMPLES=1`)
   - on Vercel **previews** while no real post exists
@@ -70,8 +76,8 @@ Full-page post shots, dark and light: `docs/plans/slice-04-screens/samples-post-
 | Check                                                                                 | Result                                                                                                                                  |
 | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | lint · format · typecheck                                                             | pass                                                                                                                                    |
-| Unit (Vitest)                                                                         | **104 passed**                                                                                                                          |
-| E2E (Chromium mobile, tablet and desktop; WebKit; Firefox)                            | **359 passed** (116 skipped by design, viewport-specific)                                                                               |
+| Unit (Vitest)                                                                         | **143 passed**                                                                                                                          |
+| E2E (Chromium mobile, tablet and desktop; WebKit; Firefox)                            | **364 passed** (viewport-specific skips by design)                                                                                      |
 | axe: every route plus 2 post pages, plus the blog list fully expanded, light and dark | 0 violations                                                                                                                            |
 | Lighthouse (11 URLs, 3 runs each)                                                     | **100 in every category on every URL**                                                                                                  |
 | Production build without samples (local)                                              | `/blog` 404, `/blog/none` 404, `/blog/sample-formatting` 404, no `href="/blog"` on `/` or `/work`                                       |
@@ -79,7 +85,7 @@ Full-page post shots, dark and light: `docs/plans/slice-04-screens/samples-post-
 
 ## TODO(kyle)
 
-- **Your first post.** Add `content/blog/<name>.mdx` with `title`, `summary`, `date` (YYYY-MM-DD) and `tags`. Leave `draft` out, or set it to `false`, to publish. The test "production content/blog has no published posts yet" will then fail on purpose: update it in the same commit.
+- **Your first post.** Add `content/blog/<name>.mdx` with `title`, `summary`, `date` (YYYY-MM-DD) and `tags`. Leave `draft` out, or set it to `false`, to publish. No code change is needed. Blog appears on the next deploy.
 - **Carried over:** the meta description, the favicon, the 5 work media slots, `/contact` (Slice 5), the Services copy.
 
 ## Needs Kyle's call
@@ -89,12 +95,36 @@ Full-page post shots, dark and light: `docs/plans/slice-04-screens/samples-post-
   - "Collapse"
   - "← All posts"
   - the "Blog" heading
+- **Tag categories and their tags.** The current list is in `src/lib/tag-categories.ts`. Rename or regroup anything you like.
 - **Syntax colours in code blocks.** These need a new package, for example `shiki`, which runs at build time and adds no client JavaScript. Worth adding once you write code-heavy posts.
 - **Post names that can't be used:** `main`, `mobile-menu` and `none`. The first two collide with existing page ids. `none` is the build's empty-blog placeholder. The loader refuses them with a clear error.
 
 ## Conflicts flagged
 
 - **Nav order.** The brief fixes the nav as **Work, Blog, Contact**. Until the first post it reads **Work, Contact** (your option B). Consequence: nothing to do. Blog returns automatically in the first deploy after a post is published.
+
+- **Coloured tags.** The design system keeps colour for the accent (Contact pill, "Get in touch", open-to-work dot, hero visual), and its anti-goal is "other loud colours competing with the accent." Consequence: the Blog is the one page with extra colour. It's limited to small chips, with no glow and no fill in dark mode, in hues that never match the accent, and it's documented in `docs/design-tokens.md` as a flagged exception.
+
+## Independent review
+
+A fresh reviewer read the whole branch and found 1 critical, 4 important and 6 minor issues. I fixed these, each with a test I watched fail first:
+
+- **Critical: a mangled link like `/blog#%` crashed the page.** The hash is now compared as-is, never decoded. The test covers `#%`, `#%E0` and `#100%`.
+- **Sample posts could reach production** if `BLOG_SAMPLES=1` were ever set in Vercel. The flag is now ignored in production.
+- **Hidden pages could hijack a post's link or name.** Next keeps recently visited pages in the DOM, hidden. A post named `tools` or `work` could have matched one of their sections. Lookups now stay inside the list, and title ids are prefixed (`post-title-<name>`).
+- **A click just below "Collapse" closed the post** without returning you to its row. That strip now belongs to the open post.
+- **The hidden-Blog state is now unit-tested.** `/blog` and `/blog/<name>` both 404 with no posts. I checked the test by removing the guard and watching it fail.
+- **I regraded two minor findings to Important, because you would hit them:**
+  - A stray `#` heading in a post would have made a second page title. It now renders one level down.
+  - Adding your first post would have failed CI. It no longer does.
+
+**Deferred minor findings:**
+
+- `BLOG_SAMPLES=1` in `lighthouserc.json` has no effect, because the samples are fixed at build time. LHCI relies on the e2e build that runs just before it in CI. Running it alone locally needs `BLOG_SAMPLES=1 npm run build` first.
+- Closing an entry drops a query string from the URL (`/blog?utm=x#post` becomes `/blog`).
+- Text in a collapsed row can't be selected or copied. The whole-row click area sits on top of it, which is the cost of "click anywhere on the row."
+- Every code block is a tab stop, even one that doesn't scroll.
+- Worth one manual VoiceOver pass in Safari on the row toggle (its name comes from `aria-labelledby` on `<summary>`).
 
 ## Notes for Slice 6
 
