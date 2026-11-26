@@ -7,7 +7,9 @@ export const CARD_SIZE = { width: 1200, height: 630 };
 export const CARD_TYPE = "image/png";
 export const HOME_CARD_TITLE = "I'm Kyle Whynott, an AI engineer.";
 
-export const cardAlt = (title: string) => `${title}, Kyle Whynott`;
+/** "<title>, Kyle Whynott", without the title's end punctuation (no ".,"). */
+export const cardAlt = (title: string) =>
+  `${title.replace(/[.!?…]+$/, "")}, Kyle Whynott`;
 
 // Read once when the module loads (as in Next's docs), not per request: under
 // Cache Components a read during rendering counts as uncached I/O.

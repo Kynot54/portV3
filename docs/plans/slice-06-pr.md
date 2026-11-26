@@ -47,7 +47,7 @@ https://portv3-git-slice-06-launch-kynot54s-projects.vercel.app (sign in to Verc
 | Check                                                      | Result                                                                                                                                                                                                                                        |
 | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | lint · format · typecheck                                  | pass                                                                                                                                                                                                                                          |
-| Unit (Vitest)                                              | **236 passed**: descriptions are 100–160 and exact, trimming, metadata, sitemap gating, and the exact production policy, plus its preview and local variants                                                                                  |
+| Unit (Vitest)                                              | **238 passed**: descriptions are 100–160 and exact, trimming, metadata, sitemap gating, and the exact production policy, plus its preview and local variants                                                                                  |
 | E2E (Chromium mobile, tablet and desktop; WebKit; Firefox) | **433 passed with the headers on**. Every route's tags, every card is a real 1200×630 PNG, robots and sitemap contents, header presence. The contact (Turnstile and Cal stand-ins), theme and blog flows ran with **no "Refused to…" errors** |
 | axe, every route and state                                 | 0 violations                                                                                                                                                                                                                                  |
 | Lighthouse (11 URLs, 3 runs each, headers on)              | **100 in every category**                                                                                                                                                                                                                     |
@@ -68,7 +68,7 @@ An independent reviewer read the whole branch. Verdict: ready to merge with fixe
 1. The `og:image` address comes from `NEXT_PUBLIC_SITE_URL`, while canonical is fixed to `kwhynott.dev`. Setting that variable on production would point cards at another host. It's unset today.
 2. Project and post cards are made on first request, not at build (now stated correctly above). The first crawler waits about a second once.
 3. `/services` and 404 pages reuse Home's canonical. Harmless while they 404. Services needs its own tags when it ships.
-4. The Home card's alt text reads "…an AI engineer., Kyle Whynott" (under "Needs Kyle's call").
+4. ~~The Home card's alt text read "…an AI engineer., Kyle Whynott".~~ Fixed per Kyle: "I'm Kyle Whynott, an AI engineer, Kyle Whynott".
 5. The e2e tag check lists routes by hand. A future page could miss its card unnoticed.
 6. HSTS covers subdomains for 2 years. That's sticky: a future plain-HTTP subdomain wouldn't load for past visitors.
 
@@ -100,7 +100,13 @@ In Chromium, Firefox and WebKit, I focused the form, pressed Book a call and swi
 3. **On live `/contact`, open DevTools → Console**, then send yourself a test message and press **Book a call**. There should be **no "Refused to…" errors**. This checks your real calendar and Cloudflare's analytics beacon, which runs only behind Cloudflare.
 4. If anything is blocked, tell me which "Refused to…" line appears.
 
+## Approved by Kyle (2026-11-27)
+
+- All ten page descriptions (listed below), the card layout, and the Home card alt text "I'm Kyle Whynott, an AI engineer, Kyle Whynott".
+
 ## Needs Kyle's call
+
+Only the favicon and project screenshots remain open. The rest is approved and kept here for the record.
 
 - **Description copy:**
   - **Site and Home:** above.
@@ -119,7 +125,6 @@ In Chromium, Firefox and WebKit, I focused the form, pressed Book a call and swi
   I shortened the Work line from the plan's 163 characters to 157, so it fits search results. Every figure in the project descriptions is checked against the résumé by the facts test.
 
 - **Card layout** (screenshots above).
-- **Home card alt text:** now "I'm Kyle Whynott, an AI engineer., Kyle Whynott". I'd drop the period before the comma.
 - **Favicon** (`src/app/icon.svg`, still `TODO(kyle)`): keep the KW mark, or swap in a designed one.
 - **The five project screenshots:** still "Preview coming soon" (`TODO(kyle)`). The site is complete without them.
 
