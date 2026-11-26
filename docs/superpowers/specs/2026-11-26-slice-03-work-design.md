@@ -9,6 +9,7 @@ The `/work` pages let a hiring manager go one level deeper than a Home card. For
 1. the **business or practical impact**
 2. **what the product looks like** (a short clip or photo)
 3. a **brief summary of the tools and technologies** used
+4. the story told as **CARL**: Context, Action, Result, and what was Learned (Kyle, added after the first draft)
 
 The copy is in Kyle's voice: objective, first person, short sentences, and only facts from `content/source/resume.md`.
 
@@ -19,8 +20,10 @@ The copy is in Kyle's voice: objective, first person, short sentences, and only 
    - the label and title
    - the summary
    - a media slot
-   - Impact (or "What it does")
-   - What I built
+   - **Context**
+   - **Action** ("What I built")
+   - **Result** ("Result", or "What it does" for projects without metrics)
+   - **What I learned**
    - Built with
    - role, place and dates
 3. **MDX:** brought in now, using `@mdx-js/mdx` (Kyle approved the package), to render each project's "What I built" prose. The Blog reuses it in Slice 4.
@@ -64,10 +67,12 @@ The copy is in Kyle's voice: objective, first person, short sentences, and only 
   - `role`: string, required
   - `location`: string, required
   - `period`: string, required, e.g. "Oct 2025 – Jan 2026"
-  - `impactHeading`: "Impact" or "What it does"
-  - `impact`: string[], one point per item
+  - `context`: string, required
+  - `impactHeading`: "Result" or "What it does"
+  - `impact`: string[], one point per item (the Result)
+  - `learned`: string, required
   - `tools`: string[]
-- **The body** holds only the "What I built" prose, in MDX.
+- **The body** holds only the Action ("What I built") prose, in MDX.
 - **Validation:** the loader requires the new fields on every non-placeholder entry and fails loudly when one is missing, just like the existing fields.
 - **The placeholder entry** (`placeholder-project.mdx`) stays excluded from every list and page.
 
@@ -79,7 +84,8 @@ The copy is in Kyle's voice: objective, first person, short sentences, and only 
 - **Label:** AI · 2025–26 · **Title:** AI document pipelines
 - **Summary:** I built AI pipelines for 50+ clients. Manual review dropped 50%.
 - **Role:** Automations Engineer Intern (Software and AI), Working Entrepreneurs · **Location:** Remote · **Period:** Oct 2025 – Jan 2026
-- **Impact:**
+- **Context:** Working Entrepreneurs' clients handled hundreds of financial applications a day, and much of the review was manual.
+- **Result:**
   - Used by 50+ clients.
   - Manual review dropped 50%.
   - Accuracy improved by over 60%.
@@ -87,51 +93,60 @@ The copy is in Kyle's voice: objective, first person, short sentences, and only 
   - AI chat automations bring in recurring revenue in the thousands of dollars.
 - **What I built:** I built AI pipelines that take in documents and data, in TypeScript and Python. I built production ETL workflows that handle hundreds of financial applications a day. I connected AI chat models to automate website interactions.
 - **Built with:** TypeScript · Python · ETL · LLM integration
+- **What I learned:** I learned to take data out of PDFs and Word documents and move it through ETL pipelines, so applications and AI models can use it.
 
 **2 · `control-bh`**
 - **Label:** Web · 2024–25 · **Title:** C.O.N.T.R.O.L. BH
 - **Summary:** I built and maintained a nonprofit web app for 1,000+ users. Donations rose 40%.
 - **Role:** Software Engineer (Freelance) · **Location:** Remote · **Period:** Aug 2024 – Dec 2025
-- **Impact:**
+- **Context:** A nonprofit needed a web app that takes donations, live in under two weeks.
+- **Result:**
   - 1,000+ users.
   - Donations rose 40%.
   - Lighthouse score of 98.
   - Shipped in under two weeks, then maintained for a year.
 - **What I built:** I built a nonprofit web app with Next.js and TypeScript on Vercel. I integrated Stripe subscriptions, one-time payments, and webhooks, so donations process automatically. I set requirements directly with the executive team.
 - **Built with:** Next.js · TypeScript · Stripe · Vercel · HTML5 · CSS3
+- **What I learned:** I learned to build a website around what the client actually needs.
 
 **3 · `ulti-health`**
 - **Label:** AI · Mobile · 2025–26 · **Title:** Ulti-Health
 - **Summary:** I built a wellness app that plans workouts and meals from the user's own data.
 - **Role:** Personal project · **Location:** Remote · **Period:** Jul 2025 – May 2026
+- **Context:** I wanted one place to manage every part of your health, with AI to help people who don't know where to start.
 - **What it does:**
   - Recommends workout plans, nutrition plans that avoid the user's allergies, and sleep suggestions from the user's own data.
   - Points mental-health questions to verified resources.
 - **What I built:** I built the MVP with Expo and Supabase: sign-in, input validation, a pgvector store for recommendations, and Edge Functions. It includes an on-device journal with encrypted backups, a colour mood pad, and a heatmap of muscles worked. I led architecture, design, and cross-platform implementation.
 - **Built with:** Expo · React Native · Supabase · pgvector · Edge Functions · Docker
+- **What I learned:** I learned to build a project end to end with generative AI, and where GenAI fits alongside traditional software engineering and the SDLC.
 
 **4 · `video-interview-plugin`** (new, not featured)
 - **Label:** Web · 2024 · **Title:** Video-interview plugin
 - **Summary:** I built a video-interview plugin that screened 100+ applicants. Hiring efficiency rose over 50%.
 - **Role:** Software Engineer (Freelance), O'Hagan Electrical · **Location:** Aliso Viejo, CA · **Period:** Apr 2024 – Jun 2024
-- **Impact:**
+- **Context:** O'Hagan Electrical had 100+ applicants to screen, and screening took management hundreds of hours.
+- **Result:**
   - 100+ applicants screened.
   - Hiring efficiency up over 50%.
   - Hundreds of management hours saved.
 - **What I built:** I built a WordPress plugin for video interviews in PHP 8.2 and MySQL. It automated the first screen of applicants.
 - **Built with:** WordPress · PHP 8.2 · MySQL · HTML5 · CSS3
+- **What I learned:** I learned to solve a real business problem inside a client's existing technology, and to work through negotiations to an outcome we were both happy with.
 
 **5 · `ai-mind-companion`** (new, not featured)
 - **Label:** AI · 2023–24 · **Title:** AI Mind Companion
 - **Summary:** I built a voice assistant that flags possible early signs of dementia, using GPT-4 and GPT-3.5.
 - **Role:** Personal project · **Location:** Remote · **Period:** Aug 2023 – May 2024
+- **Context:** An exploratory project to see what AI can do in medicine.
 - **What it does:** A voice assistant people talk to. It listens through speech-to-text, replies with text-to-speech, and flags possible early signs of dementia in the conversation.
 - **What I built:** I used speech-to-text to capture what the user says and text-to-speech to reply. GPT-4 holds the conversation, and GPT-3.5 classifies it for early signs of dementia, using medical datasets. Data lives in Firestore on Firebase, and an API gateway runs on Google Cloud Run with Cloud Storage.
-- **Built with:** GPT-4 · GPT-3.5 · Speech-to-text · Text-to-speech · Firebase · Firestore · Cloud Run · Cloud Storage
+- **Built with:** GPT-4 · GPT-3.5 · Speech-to-text · Text-to-speech · FastAPI · Firebase · Firestore · Cloud Run · Cloud Functions · Cloud Storage
+- **What I learned:** I learned to build a native mobile app and deploy a working backend with FastAPI on Google Cloud Run and Cloud Functions, including a vector store in JSONL.
 
 ### `resume.md` updates (Kyle confirmed)
 - **Working Entrepreneurs:** "for over 10 clients" becomes **"for over 50 clients"**.
-- **AI Mind Companion:** add the voice-assistant facts. Speech-to-text input, text-to-speech replies, and classification that flags possible early signs of dementia.
+- **AI Mind Companion:** add the voice-assistant facts: speech-to-text input, text-to-speech replies, and classification that flags possible early signs of dementia. Also add Kyle's facts from his "learned" answer: a native mobile app, a FastAPI backend on Cloud Run and Cloud Functions, and a vector store in JSONL.
 - **Home:** the hero proof line becomes "AI pipelines for **50+** clients", and the card summary uses 50+. The facts test maps "50+ clients" to "over 50 clients".
 
 ### Detail page layout
@@ -143,8 +158,10 @@ I built AI pipelines for 50+ clients. …         lead (muted)
 ┌───────────────── media slot 16:9 ─────────────────┐
 │   PREVIEW COMING SOON (placeholder, see below)    │
 └───────────────────────────────────────────────────┘
-Impact / What it does                           h2 + list
-What I built                                    h2 + MDX prose
+Context                                         h2 + paragraph
+What I built  (Action)                          h2 + MDX prose
+Result / What it does                           h2 + list (paragraph if one item)
+What I learned                                  h2 + paragraph
 Built with                                      h2 + quiet grey tags (a list)
 Role · Location · Period                        muted meta line
 ```
@@ -162,7 +179,7 @@ Role · Location · Period                        muted meta line
 - **Heading levels (builder check, my call):** card titles are **h2** on `/work` (directly under the h1) and **h3** on Home (under "Selected work"). They look identical. The shared card component takes a heading-level prop, which keeps heading order correct (Lighthouse `heading-order`, accessibility 1.0).
 
 ### One-item "What it does" (builder check, my call)
-- An `impact` list with **one** item renders as a paragraph, not a one-bullet list. The approved copy is unchanged.
+- A Result / "What it does" list with **one** item renders as a paragraph, not a one-bullet list. The approved copy is unchanged.
 
 ## Left to the builder
 
