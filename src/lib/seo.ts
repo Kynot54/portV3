@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import type { BlogPost, WorkEntry } from "@/lib/content/types";
+import {
+  DESCRIPTION_MAX as MAX,
+  DESCRIPTION_MIN as MIN,
+} from "@/lib/description-limits";
 
 /** The site's description: Home, link previews, search results (Kyle signs off). */
 export const SITE_DESCRIPTION =
-  "I'm Kyle Whynott, an AI and software engineer. I've built AI document pipelines for 50+ clients and taught machine learning at Cal State Fullerton.";
+  "I'm Kyle Whynott, an AI and software engineer. I build production-grade generative AI applications end to end, including AI document pipelines for 50+ clients.";
 
 export const PAGE_DESCRIPTIONS = {
   work: "Selected projects I've built and shipped, from AI document pipelines to full-stack apps, each with its context, what I built, the result, and what I learned.",
@@ -11,10 +15,6 @@ export const PAGE_DESCRIPTIONS = {
   contact:
     "Send me a message or book a 30-minute intro call. I'm looking for my next role as an AI or software engineer and reply within 2–3 business days.",
 };
-
-/** LinkedIn warns under 100 characters; search results cut off around 160. */
-const MIN = 100;
-const MAX = 160;
 
 /** Shortens to `max` characters at a word boundary, ending in "…" when cut. */
 export function trimTo(text: string, max: number): string {
@@ -28,8 +28,9 @@ export function trimTo(text: string, max: number): string {
   return `${cut.replace(/[\s,;:.–-]+$/, "")}…`;
 }
 
-/** A project's approved summary plus its context line, so it clears LinkedIn's minimum. */
+/** A project's own description, else its summary plus context line (clears LinkedIn's minimum). */
 export function describeWork(e: WorkEntry): string {
+  if (e.description) return e.description;
   return trimTo(`${e.summary} ${e.context}`, MAX);
 }
 
@@ -46,8 +47,9 @@ function firstParagraph(body: string): string {
     .trim();
 }
 
-/** A post's summary, topped up with its first paragraph when under 100 characters. */
+/** A post's own description, else its summary, topped up with its first paragraph when under 100. */
 export function describePost(p: BlogPost): string {
+  if (p.description) return p.description;
   if (p.summary.length >= MIN) return trimTo(p.summary, MAX);
   return trimTo(`${p.summary} ${firstParagraph(p.body)}`.trim(), MAX);
 }

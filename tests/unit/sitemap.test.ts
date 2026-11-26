@@ -5,6 +5,7 @@ const post = (slug: string, date: string): BlogPost => ({
   slug,
   title: slug,
   summary: "s",
+  description: null,
   date,
   tags: [],
   placeholder: false,

@@ -18,7 +18,7 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 6 (launch polish): PR #10 is ready for Kyle.** Review and fix pass done: the full Vercel toolbar policy on previews, and `font-src https://cal.com` (found with a local check of the real embeds in WebKit). `browsing-topics` is dropped, no build allows eval (Kyle), and `.env.development` holds public test values. Unit 233, e2e 433.
+1. **Slice 6 (launch polish): PR #10 is ready for Kyle.** Review and fix pass done: the full Vercel toolbar policy on previews, and `font-src https://cal.com` (found with a local check of the real embeds in WebKit). `browsing-topics` is dropped, no build allows eval (Kyle), and `.env.development` holds public test values. Optional `description` field on projects and posts, and the new Home description. Unit 236, e2e 433.
    - **Kyle:** approve the copy, cards and alt text, merge, then run the live checklist in PR #10.
    - **Env vars are Production-only**, so check real embeds locally (README), never on a preview.
 2. **Open `TODO(kyle)`:** the favicon sign-off and the five project screenshots.

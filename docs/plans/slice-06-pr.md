@@ -11,10 +11,9 @@ After merging, run the **live checklist** below. It's the part only your account
 ## Summary
 
 - **Descriptions** on every page, all 100–160 characters, so LinkedIn's "at least 100 characters" warning is gone.
-  - **Site and Home:** "I'm Kyle Whynott, an AI and software engineer. I've built AI document pipelines for 50+ clients and taught machine learning at Cal State Fullerton." The facts test maps "50+ clients" to the résumé.
+  - **Site and Home:** "I'm Kyle Whynott, an AI and software engineer. I build production-grade generative AI applications end to end, including AI document pipelines for 50+ clients." (Kyle's direction: lead with end-to-end, production-grade GenAI.) The facts test maps "50+ clients" to the résumé.
   - **Work, Blog and Contact:** their own descriptions (below).
-  - **Projects:** the approved summary plus context line, trimmed at a word.
-  - **Posts:** the summary, topped up with the first paragraph when it's short.
+  - **Projects and posts:** an optional `description` field in the frontmatter. It must be 100–160 characters, or the build fails. Every project and your post now has one, summarised from its own page. Without one, a page falls back to its summary plus context (or first paragraph), trimmed at a word.
 - **Search and sharing tags** on every page, built by one helper (`pageMetadata`), so no page drops the shared tags:
   - canonical link (`https://kwhynott.dev/…`, even on previews)
   - Open Graph: title, description, url, site name, type, and `article` with a date for posts
@@ -48,7 +47,7 @@ https://portv3-git-slice-06-launch-kynot54s-projects.vercel.app (sign in to Verc
 | Check                                                      | Result                                                                                                                                                                                                                                        |
 | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | lint · format · typecheck                                  | pass                                                                                                                                                                                                                                          |
-| Unit (Vitest)                                              | **233 passed**: descriptions are 100–160 and exact, trimming, metadata, sitemap gating, and the exact production policy, plus its preview and local variants                                                                                  |
+| Unit (Vitest)                                              | **236 passed**: descriptions are 100–160 and exact, trimming, metadata, sitemap gating, and the exact production policy, plus its preview and local variants                                                                                  |
 | E2E (Chromium mobile, tablet and desktop; WebKit; Firefox) | **433 passed with the headers on**. Every route's tags, every card is a real 1200×630 PNG, robots and sitemap contents, header presence. The contact (Turnstile and Cal stand-ins), theme and blog flows ran with **no "Refused to…" errors** |
 | axe, every route and state                                 | 0 violations                                                                                                                                                                                                                                  |
 | Lighthouse (11 URLs, 3 runs each, headers on)              | **100 in every category**                                                                                                                                                                                                                     |
@@ -109,7 +108,15 @@ In Chromium, Firefox and WebKit, I focused the form, pressed Book a call and swi
   - **Blog:** "My writing on software engineering, AI and security: how software works at its foundation, and how it fails or is defended."
   - **Contact:** "Send me a message or book a 30-minute intro call. I'm looking for my next role as an AI or software engineer and reply within 2–3 business days."
 
-  I shortened the Work line from the plan's 163 characters to 157, so it fits search results.
+  - **Projects and post** (new `description` field, each from its own page):
+    - **AI document pipelines:** "I built AI document pipelines in TypeScript and Python for 50+ clients. They cut manual review of financial applications by 50% and raised accuracy over 60%."
+    - **C.O.N.T.R.O.L. BH:** "I built a nonprofit's donation web app with Next.js and Stripe in under two weeks, then maintained it for a year. It served 1,000+ users; donations rose 40%."
+    - **Video-interview plugin:** "I built a WordPress video-interview plugin in PHP and MySQL for O'Hagan Electrical. It screened 100+ applicants and raised hiring efficiency by over 50%."
+    - **Ulti-Health:** "I built a wellness app with Expo and Supabase. It recommends workouts, meal plans that avoid allergies, and sleep suggestions from the user's own data."
+    - **AI Mind Companion:** "I built a voice assistant with GPT-4 and GPT-3.5 that talks with people and flags possible early signs of dementia. An exploratory project in AI for medicine."
+    - **Your post:** "A career assessment pointed me toward systems and cybersecurity. They're the problems I return to on my own time: how software works, fails, or is defended."
+
+  I shortened the Work line from the plan's 163 characters to 157, so it fits search results. Every figure in the project descriptions is checked against the résumé by the facts test.
 
 - **Card layout** (screenshots above).
 - **Home card alt text:** now "I'm Kyle Whynott, an AI engineer., Kyle Whynott". I'd drop the period before the comma.

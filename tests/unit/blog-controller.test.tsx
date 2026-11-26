@@ -12,6 +12,7 @@ const post: BlogPost = {
   slug: "tools",
   title: "Tools",
   summary: "S.",
+  description: null,
   date: "2026-11-01",
   tags: [],
   placeholder: false,

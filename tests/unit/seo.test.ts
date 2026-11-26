@@ -10,7 +10,7 @@ import type { BlogPost } from "@/lib/content/types";
 
 test("SITE_DESCRIPTION and page descriptions are the exact copy", () => {
   expect(SITE_DESCRIPTION).toBe(
-    "I'm Kyle Whynott, an AI and software engineer. I've built AI document pipelines for 50+ clients and taught machine learning at Cal State Fullerton.",
+    "I'm Kyle Whynott, an AI and software engineer. I build production-grade generative AI applications end to end, including AI document pipelines for 50+ clients.",
   );
   expect(PAGE_DESCRIPTIONS).toEqual({
     work: "Selected projects I've built and shipped, from AI document pipelines to full-stack apps, each with its context, what I built, the result, and what I learned.",
@@ -28,8 +28,15 @@ test("trim at a word boundary", () => {
   expect(trimTo(long, 160).endsWith("…")).toBe(true);
 });
 
-test("describeWork is summary + context, ≤ 160", async () => {
+test("describeWork uses the entry's own description when it has one", async () => {
   const [e] = await getWorkList();
+  const own = "D".repeat(120);
+  expect(describeWork({ ...e, description: own })).toBe(own);
+});
+
+test("describeWork falls back to summary + context, ≤ 160", async () => {
+  const [first] = await getWorkList();
+  const e = { ...first, description: null };
   const d = describeWork(e);
   expect(d.length).toBeLessThanOrEqual(160);
   expect(d.startsWith(e.summary)).toBe(true);
@@ -38,15 +45,25 @@ test("describeWork is summary + context, ≤ 160", async () => {
   );
 });
 
-const post = (summary: string, body: string): BlogPost => ({
+const post = (
+  summary: string,
+  body: string,
+  description: string | null = null,
+): BlogPost => ({
   slug: "p",
   title: "P",
   summary,
+  description,
   date: "2026-11-26",
   tags: [],
   placeholder: false,
   draft: false,
   body,
+});
+
+test("describePost uses the post's own description when it has one", () => {
+  const own = "E".repeat(130);
+  expect(describePost(post("Short summary.", "Body.", own))).toBe(own);
 });
 
 test("describePost falls back to summary + first paragraph under 100", () => {

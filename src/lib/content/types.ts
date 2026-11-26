@@ -2,6 +2,8 @@ export type WorkEntry = {
   slug: string;
   title: string;
   summary: string;
+  /** Search and link-preview text, 100–160 characters; built from summary + context when absent. */
+  description: string | null;
   /** YYYY-MM */
   date: string;
   tags: string[];
@@ -33,6 +35,8 @@ export type BlogPost = {
   slug: string;
   title: string;
   summary: string;
+  /** Search and link-preview text, 100–160 characters; built from summary + body when absent. */
+  description: string | null;
   /** YYYY-MM-DD */
   date: string;
   tags: string[];
