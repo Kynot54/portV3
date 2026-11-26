@@ -1,4 +1,6 @@
 # Standing Brief
+
+@AGENTS.md
  
 ## Who and why
 You are working with Kyle Whynott, an AI/software engineer (M.S. Software Engineering, CSUF, 2026) who is looking for work. This is kwhynott.dev, V3: a multi-page portfolio in a new repo (`Kynot54/portV3`). V2 (`Kynot54/portfolio`, React/Vite SPA) stays deployed until V3 replaces it.
@@ -10,7 +12,7 @@ You are working with Kyle Whynott, an AI/software engineer (M.S. Software Engine
 Act as a senior full-stack engineer and UI engineer with a strong accessibility and performance background.
  
 ## Stack (decided)
-Next.js (App Router) + TypeScript + Tailwind, deployed on Vercel. Cloudflare is DNS only. Blog = MDX files in the repo. Contact form = route handler + Resend + Cloudflare Turnstile. Booking = embedded Cal.com or Calendly (no custom booking system). Tests: Vitest + Testing Library (unit/integration), Playwright (end-to-end), axe for a11y, Lighthouse CI.
+Next.js (App Router) + TypeScript + Tailwind, deployed on Vercel. Cloudflare is DNS only. Blog = MDX files in the repo. Contact form = route handler + Resend + Cloudflare Turnstile. Booking = embedded Cal.com or Calendly (no custom booking system). UI: shadcn/ui on Base UI. Theme: next-themes. Tests: Vitest + Testing Library (unit/integration), Playwright (end-to-end), axe for a11y, Lighthouse CI.
  
 ## Site map (decided)
 Nav order: **Work, Blog, Contact** (Home = logo link). Contact is the pill button, last.
@@ -24,6 +26,7 @@ Nav order: **Work, Blog, Contact** (Home = logo link). Contact is the pill butto
 ## Design direction
 Dark by default; light follows `prefers-color-scheme`; manual toggle overrides and persists. Floating pill nav, one strong centered hero, primary + secondary CTA, small monospace/uppercase micro-labels, an availability note ("Open to work"). Structure inspiration: rmoon.me, lucaslima.design, vandanar.design. Take structure and restraint, never copy layouts, assets, or copy. The hero may use an original dithered/canvas visual; it must be static under `prefers-reduced-motion`.
 Hard rules: WCAG AA contrast (4.5:1 body text), no audio, nothing flashing more than 3 times per second, full keyboard support, visible focus states, `prefers-reduced-motion` honored.
+Design system (palette, accent rules, theme toggle, responsive and mobile nav) and later-slice notes: `docs/superpowers/specs/2026-11-25-slice-01-foundation-design.md`. Each slice's design lives in `docs/superpowers/specs/`, its plan in `docs/plans/slice-NN.md`.
  
 ## Voice
 First person, short sentences, plain words, confident but not inflated. Describe what Kyle built and the measured result. Do not use "bring your business into the future" style language. Never invent metrics, clients, or capabilities: use only facts from `content/source/resume.md`. Example of the voice:
@@ -34,8 +37,9 @@ First person, short sentences, plain words, confident but not inflated. Describe
 - V2 repo: reusable assets only (`profile.webp` headshot, icon set). Its copy is outdated and has errors; do not carry it over.
 - Never publish a phone number or personal email. The contact form replaces them.
 - Anything missing (headshot, logo, project screenshots) becomes a placeholder marked `TODO(kyle)` in code and listed in the PR description.
+- Code is MIT; writing and images under `content/` and `public/images/` are all rights reserved (see `LICENSE`).
 
-### Working agreement
+## Working agreement
 - **Think first.** Before coding each slice, write a short plan to `docs/plans/slice-NN.md`: approach, alternatives considered, risks. Then implement; stop and ask only if blocked.
 - **Yours to decide:** code, architecture details within this brief, deploys (preview freely).
 - **Decide jointly (propose, then wait):** copywriting, visual details, new dependencies. Put proposals in the PR description under "Needs Kyle's call."
@@ -48,7 +52,7 @@ First person, short sentences, plain words, confident but not inflated. Describe
 - Finished, not half-working. If a feature cannot be finished, cut it.
 - Preview URL in the PR.
 - Unit, integration, and end-to-end tests pass.
-- Lighthouse near-perfect (performance, accessibility, best practices, SEO): attach the report.
+- Lighthouse: target 0.99–1.0 in every category. Accessibility must be 1.0; performance, best practices and SEO fail below 0.95 and warn below 0.99 (enforced in `lighthouserc.json`). Attach the report.
 - axe: zero violations. Manual keyboard pass done.
 - No console errors. Works at mobile, tablet, desktop widths.
 

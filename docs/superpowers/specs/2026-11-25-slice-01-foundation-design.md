@@ -149,7 +149,7 @@ Open:   [ Kyle Whynott   (█Contact█)  ✕ ]
 
 1. **Commit Kyle's tooling.** `.mcp.json`, `skills-lock.json`, `.agents/`, `.claude/skills/` and `.claude/settings.json` are committed. `.claude/settings.local.json` and `.claude/.cc-writes` stay ignored. `AGENTS.md` (written by Next) is committed.
 2. **Keep the scaffold's Next features.** `cacheComponents` and `partialPrefetching` stay on.
-3. **Lighthouse gate.** Accessibility must be **1.0**. Performance, best practices and SEO must be **≥ 0.95**.
+3. **Lighthouse gate.** The target is **0.99–1.0** everywhere. Accessibility must be **1.0**. Performance, best practices and SEO fail below **0.95** and warn below **0.99**.
 4. **E2E browsers.** Chromium (mobile, tablet, desktop), WebKit desktop and **Firefox desktop**.
 5. **Security headers and CSP wait for Slice 6.** The `next-themes` inline script will need a nonce or hash then.
 6. **Pin Node 24.** Add `.nvmrc` (`24`) and `"engines": { "node": ">=24" }`.

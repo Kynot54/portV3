@@ -339,7 +339,7 @@ test('footer shows © Kyle Whynott and a GitHub link to github.com/Kynot54', ...
 - [ ] **Step 1: Lighthouse config.**
   - Run `npm i -D @lhci/cli`.
   - `lighthouserc.json`: `collect.startServerCommand: "npm run start"`, `url` set to the 4 routes on `http://localhost:3000`, `numberOfRuns: 3`.
-  - Assertions: `categories:accessibility` is `["error", {"minScore": 1}]`. `categories:performance`, `categories:best-practices` and `categories:seo` are each `["error", {"minScore": 0.95}]`.
+  - Assertions: `categories:accessibility` is `["error", {"minScore": 1}]`. `categories:performance`, `categories:best-practices` and `categories:seo` each fail below 0.95 and warn below 0.99. LHCI takes one level per assertion key, so use `error` at `0.95`, and add a small check script `scripts/lh-warn.mjs` that reads `.lighthouseci/` and prints a warning for any median below 0.99. The target is 0.99–1.0: try to fix any warning, and list any that remain in the PR.
   - `upload.target: "filesystem"`, `outputDir: ".lighthouseci"`.
 - [ ] **Step 2:** Run `npm run build && npm run lhci`. Expected: all assertions pass. Note the median scores per route for the PR.
 - [ ] **Step 3: Write `ci.yml`.**
