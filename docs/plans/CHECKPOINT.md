@@ -18,9 +18,9 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 6 (launch polish): PR #10 is ready for Kyle.** Final review done, and the fix pass is done: the preview toolbar policy, dev `'unsafe-eval'`, and the pre-merge preview check. Unit 233, e2e 433.
-   - **Kyle:** run the preview check in PR #10, approve the copy, cards and alt text, merge, then run the live checklist.
-   - **Deferred minors** are listed in the PR under "Final review".
+1. **Slice 6 (launch polish): PR #10 is ready for Kyle.** Review and fix pass done: the full Vercel toolbar policy on previews, and `font-src https://cal.com` (found with a local check of the real embeds in WebKit). `browsing-topics` is dropped, no build allows eval (Kyle), and `.env.development` holds public test values. Unit 233, e2e 433.
+   - **Kyle:** approve the copy, cards and alt text, merge, then run the live checklist in PR #10.
+   - **Env vars are Production-only**, so check real embeds locally (README), never on a preview.
 2. **Open `TODO(kyle)`:** the favicon sign-off and the five project screenshots.
 3. **After Slice 6:** V3 is complete. V3.1+ covers the admin, cross-posting and consulting.
 

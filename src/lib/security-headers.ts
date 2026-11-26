@@ -12,13 +12,11 @@ const VERCEL_LIVE = "https://vercel.live";
  * per-request nonces). Inline scripts are allowed because Next and the theme
  * switcher need them; the site never renders visitor-supplied HTML.
  * - Vercel previews also allow Vercel's toolbar (its documented origins).
- * - `next dev` also allows eval: React uses it to rebuild server error stacks.
  * - Off Vercel (local, CI) skips upgrade-insecure-requests: tests run on http.
  */
 export function securityHeaders(env: Env): { key: string; value: string }[] {
   const on = (cond: boolean, ...values: string[]) => (cond ? values : []);
   const preview = env.VERCEL_ENV === "preview";
-  const dev = env.NODE_ENV === "development";
   const csp: [string, string[]][] = [
     ["default-src", ["'self'"]],
     [
@@ -30,14 +28,14 @@ export function securityHeaders(env: Env): { key: string; value: string }[] {
         CAL_APP,
         CF_BEACON,
         ...on(preview, VERCEL_LIVE),
-        ...on(dev, "'unsafe-eval'"),
       ],
     ],
     ["style-src", ["'self'", "'unsafe-inline'", ...on(preview, VERCEL_LIVE)]],
     ["img-src", ["'self'", "data:", "https:", ...on(preview, "blob:")]],
     [
       "font-src",
-      ["'self'", ...on(preview, VERCEL_LIVE, "https://assets.vercel.com")],
+      // Cal's embed adds an @font-face for cal.com/cal.ttf to this page (WebKit loads it).
+      ["'self'", CAL, ...on(preview, VERCEL_LIVE, "https://assets.vercel.com")],
     ],
     [
       "connect-src",
@@ -71,7 +69,7 @@ export function securityHeaders(env: Env): { key: string; value: string }[] {
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
     {
       key: "Permissions-Policy",
-      value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+      value: "camera=(), microphone=(), geolocation=()",
     },
     { key: "X-Frame-Options", value: "DENY" },
   ];

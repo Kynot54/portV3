@@ -5,7 +5,7 @@ const PROD_CSP = [
   "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://app.cal.com https://static.cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
-  "font-src 'self'",
+  "font-src 'self' https://cal.com", // Cal's embed adds @font-face for cal.com/cal.ttf (seen in WebKit)
   "connect-src 'self' https://challenges.cloudflare.com https://app.cal.com https://cal.com https://cloudflareinsights.com",
   "frame-src https://challenges.cloudflare.com https://app.cal.com https://cal.com",
   "frame-ancestors 'none'",
@@ -26,8 +26,7 @@ test("production policy is exact", () => {
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Permissions-Policy":
-      "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()", // Chrome dropped browsing-topics and warns on it
     "X-Frame-Options": "DENY",
   });
 });
@@ -67,23 +66,20 @@ test("preview adds the Vercel toolbar's origins and nothing else", () => {
   }
 });
 
-test("next dev adds 'unsafe-eval' to script-src only", () => {
-  const prod = directives(PROD_CSP.replace("; upgrade-insecure-requests", ""));
-  const dev = directives(
+// Kyle, 2026-11-27: dev gets the same policy as any local build, with no eval.
+test("next dev gets the local policy, without eval", () => {
+  expect(
     asMap(securityHeaders({ NODE_ENV: "development" }))[
       "Content-Security-Policy"
     ],
-  );
-  expect(Object.keys(dev)).toEqual(Object.keys(prod));
-  for (const name of Object.keys(prod)) {
-    const added = name === "script-src" ? ["'unsafe-eval'"] : [];
-    expect(dev[name], name).toEqual([...prod[name], ...added]);
-  }
+  ).toBe(PROD_CSP.replace("; upgrade-insecure-requests", ""));
 });
 
-test("a production build never allows eval", () => {
+test("no build ever allows eval", () => {
   for (const env of [
+    { NODE_ENV: "development" },
     { NODE_ENV: "production" },
+    { VERCEL: "1", VERCEL_ENV: "preview" },
     { VERCEL: "1", VERCEL_ENV: "production", NODE_ENV: "production" },
   ]) {
     expect(

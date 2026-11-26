@@ -19,6 +19,8 @@ npm run dev          # http://localhost:3000
 npm run build && npm run start
 ```
 
+`npm run dev` reads `.env.development`, which holds public test values: Turnstile's test key, Cal.com's demo calendar, and a fake send. The contact page works locally with no accounts. `next build` never reads it. The real keys live only in Vercel's Production environment.
+
 | Script                                                        | What it does                                                                          |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `npm run lint` / `npm run format:check` / `npm run typecheck` | ESLint, Prettier, TypeScript                                                          |
@@ -38,7 +40,7 @@ Design tokens and the rules behind them are in [`docs/design-tokens.md`](docs/de
 
 ## Before merging a change to headers or third-party embeds
 
-On the PR's preview `/contact` with DevTools open: click into the form, press Book a call, toggle the theme. There should be no "Refused to…" (CSP) errors. Merging deploys to production, so this is where the real Cal.com and Turnstile scripts get checked.
+Previews have no env vars, so check the real embeds locally. Build and start with Turnstile's public test key (`NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA`) and any public Cal link. Then, on `/contact` in Chromium, Firefox and WebKit, focus the form and press Book a call. There should be no "Refused to…" (CSP) errors. The e2e stand-ins can't catch these.
 
 ## After a production deploy
 

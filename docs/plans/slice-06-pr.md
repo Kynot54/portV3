@@ -6,7 +6,7 @@ Merging puts on `kwhynott.dev`:
 - `robots.txt` and `sitemap.xml`
 - security headers on every page
 
-Before merging, run the short **preview check** below; after merging, the **live checklist**. It's the part only a real browser and your accounts can check.
+After merging, run the **live checklist** below. It's the part only your accounts and the real domain can check.
 
 ## Summary
 
@@ -29,7 +29,7 @@ Before merging, run the short **preview check** below; after merging, the **live
   - **The policy:** allows only the site itself, plus Turnstile, Cal.com and Cloudflare Web Analytics. It blocks plugins and stops other sites from framing the pages.
   - **Also sent:** HTTPS-only (HSTS), no content-type sniffing, a strict referrer policy and permissions policy.
   - **Pages stay prebuilt**, and Lighthouse is still 100.
-  - **Previews also allow Vercel's toolbar** (its documented origins), and `next dev` also allows eval, which React needs for error stacks. Production gets neither.
+  - **Previews also allow Vercel's toolbar** (its documented origins). Production doesn't. No build allows eval, `next dev` included.
 
 Design: `docs/superpowers/specs/2026-11-26-slice-06-launch-design.md`. Plan: `docs/plans/slice-06.md`.
 
@@ -60,11 +60,12 @@ https://portv3-git-slice-06-launch-kynot54s-projects.vercel.app (sign in to Verc
 An independent reviewer read the whole branch. Verdict: ready to merge with fixes, no critical issues.
 
 **Fixed (each test-first):**
+
 - **Previews blocked Vercel's toolbar.** The preview policy allowed only part of Vercel's documented list, so a signed-in preview would log "Refused to…" errors. It now allows the full list (styles, fonts, images and the comments socket).
-- **The real Cal.com and Turnstile check came after merging**, which is production. It's now the pre-merge **preview check** above.
-- **`next dev` blocked eval**, which hides server error stacks while developing. Dev only now; a test pins that production never allows it.
+- **The real Cal.com and Turnstile check came after merging**, which is production. I ran it before handing over (above). It found the Cal.com font block, now fixed.
 
 **Left for later (minor):**
+
 1. The `og:image` address comes from `NEXT_PUBLIC_SITE_URL`, while canonical is fixed to `kwhynott.dev`. Setting that variable on production would point cards at another host. It's unset today.
 2. Project and post cards are made on first request, not at build (now stated correctly above). The first crawler waits about a second once.
 3. `/services` and 404 pages reuse Home's canonical. Harmless while they 404. Services needs its own tags when it ships.
@@ -73,21 +74,23 @@ An independent reviewer read the whole branch. Verdict: ready to merge with fixe
 6. HSTS covers subdomains for 2 years. That's sticky: a future plain-HTTP subdomain wouldn't load for past visitors.
 
 **Calls I made on what the reviewer couldn't check:**
-- **Cal.com's exact origins:** the preview check covers them with the real embed.
+
+- **Cal.com's exact origins:** checked with the real embed in all three engines (above).
 - **Vercel's toolbar list:** checked against Vercel's docs and fixed.
 - **Other Cloudflare injections:** you have only Web Analytics on, and Rocket Loader is off. Cloudflare's other inline features would pass under the current policy anyway.
 - **Slack, iMessage and Discord previews:** whether their fetchers get past Vercel's bot challenge is a Vercel setting, not code. LinkedIn and Google already pass.
 
-## Before merging: preview check (about 3 minutes)
+## Real Cal.com and Turnstile check (done before handing over)
 
-Merging is the production deploy, so the real Cal.com embed and Turnstile get checked here first. Tests stub both.
+Previews have no env vars (production only), so a preview can't load the calendar or Turnstile. Instead, I ran a production build locally with the **real** scripts, no stand-ins, under the production policy:
 
-1. Open this PR's **preview** `/contact`, signed in to Vercel (so the toolbar loads too), with **DevTools → Console** open.
-2. Click into the message form. This loads Turnstile.
-3. Press **Book a call**.
-4. Switch the theme.
+- Turnstile ran with Cloudflare's public test key.
+- Cal.com ran with a public demo calendar. Its origins are the same as yours.
 
-There should be **no red "Refused to…" errors**. Other errors don't count here. For example, Turnstile may reject the preview address, or the calendar may be missing if the preview lacks `NEXT_PUBLIC_CAL_LINK`. Those are settings, not the security policy. If a "Refused to…" line appears, send it to me: allowing that origin is a one-line change.
+In Chromium, Firefox and WebKit, I focused the form, pressed Book a call and switched the theme.
+
+- **First run:** WebKit blocked `https://cal.com/cal.ttf`, a font Cal's script adds to the page. The e2e stand-ins could never have shown this. `font-src` now allows `https://cal.com`.
+- **After the fix:** Turnstile's frame and the calendar loaded in all three browsers, with **no policy violations**.
 
 ## Live checklist (after merging, about 5 minutes)
 
@@ -95,7 +98,7 @@ There should be **no red "Refused to…" errors**. Other errors don't count here
 2. **Google Search Console:**
    - **Sitemaps:** submit `https://kwhynott.dev/sitemap.xml`.
    - **URL Inspection** on `/`: Test live URL → "URL is available to Google".
-3. **On live `/contact`, open DevTools → Console**, then send yourself a test message and press **Book a call**. There should be **no "Refused to…" errors**. This is the only check of Cloudflare's analytics beacon, which runs only behind Cloudflare.
+3. **On live `/contact`, open DevTools → Console**, then send yourself a test message and press **Book a call**. There should be **no "Refused to…" errors**. This checks your real calendar and Cloudflare's analytics beacon, which runs only behind Cloudflare.
 4. If anything is blocked, tell me which "Refused to…" line appears.
 
 ## Needs Kyle's call
@@ -113,9 +116,18 @@ There should be **no red "Refused to…" errors**. Other errors don't count here
 - **Favicon** (`src/app/icon.svg`, still `TODO(kyle)`): keep the KW mark, or swap in a designed one.
 - **The five project screenshots:** still "Preview coming soon" (`TODO(kyle)`). The site is complete without them.
 
+## Dev setup
+
+- **`.env.development`** (committed, public test values only) makes `/contact` work under `next dev`: Turnstile's test key, Cal.com's demo calendar, and a fake send. `next build`, Vercel, CI and the tests never load it.
+
+## Changes to the approved design
+
+- **`font-src` adds `https://cal.com`.** The design allowed adding Cal.com origins that the real embed needs.
+- **Permissions-Policy drops `browsing-topics=()`.** Chrome removed that feature, so it logged "Unrecognized feature" on every page.
+
 ## Conflicts flagged
 
-None.
+- **`next dev` doesn't allow eval (your call).** Next's CSP guide says dev needs `'unsafe-eval'`, because React uses it to rebuild server error stacks in the browser. The consequence: during `next dev`, the console may show "Refused to evaluate a string as JavaScript" lines, and server error stacks are less detailed. Production, previews and the tests aren't affected; a unit test pins that no build allows eval.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
