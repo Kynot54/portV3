@@ -26,7 +26,7 @@ That's by design (option B). Blog appears on its own in the first deploy after a
     - One click: the full post.
   - **Closing takes one action.** Clicking the row again or **Collapse** closes the entry. On phones it also resets the inner level. Collapse returns you to the row, with focus on it.
   - **Entries open independently.**
-  - **The address bar follows the open post** (`/blog#<name>`). Opening that link opens the post. No history entries are added.
+  - **The address bar follows the post you're reading** (`/blog#<name>`). When several posts are open, it names the one taking up most of the screen, and it returns to `/blog` when none is on screen. Opening that link opens the post. No history entries are added, and query strings like `?ref=linkedin` are kept.
   - **It's built on the browser's native expand/collapse,** so it works with JavaScript off. Only Collapse and the address-bar sync need JavaScript, and Collapse is hidden without it.
 - **`/blog/[slug]` post page:**
   - "← All posts", title, date and tags, then the post
@@ -118,13 +118,13 @@ A fresh reviewer read the whole branch and found 1 critical, 4 important and 6 m
   - A stray `#` heading in a post would have made a second page title. It now renders one level down.
   - Adding your first post would have failed CI. It no longer does.
 
-**Deferred minor findings:**
+**Minor findings, after your calls:**
 
-- `BLOG_SAMPLES=1` in `lighthouserc.json` has no effect, because the samples are fixed at build time. LHCI relies on the e2e build that runs just before it in CI. Running it alone locally needs `BLOG_SAMPLES=1 npm run build` first.
-- Closing an entry drops a query string from the URL (`/blog?utm=x#post` becomes `/blog`).
-- Text in a collapsed row can't be selected or copied. The whole-row click area sits on top of it, which is the cost of "click anywhere on the row."
-- Every code block is a tab stop, even one that doesn't scroll.
-- Worth one manual VoiceOver pass in Safari on the row toggle (its name comes from `aria-labelledby` on `<summary>`).
+- **Fixed:** Lighthouse now builds the site with the sample posts itself, so it works when run on its own.
+- **Fixed:** the URL keeps query strings and follows the post being read (see Summary).
+- **Accepted:** text in a collapsed row can't be selected. The open post and the post page can still be selected.
+- **Kept:** every code block is a tab stop, because keyboard users need it to scroll wide code.
+- **Your VoiceOver pass in Safari on the row toggle:** pending, at review.
 
 ## Notes for Slice 6
 

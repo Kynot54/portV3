@@ -115,8 +115,8 @@ Reading should be quick. On the list, a reader can open a post **in place**, wit
 - **Breakpoint:** 640 px (`sm`), the same as the nav.
 - **No "open as page" link; the address bar links to the open post (Kyle, 2026-11-26).**
   - Each entry has `id="<slug>"`.
-  - **Opening an entry** replaces the URL with `/blog#<slug>`, using `history.replaceState` so no history entry is added.
-  - **Closing it** puts the URL back to `/blog`. If several entries are open, the URL follows the one most recently opened, and closing that one clears the hash.
+  - **The URL names the post being read (Kyle, 2026-11-26, after review).** It shows `/blog#<slug>` for the open entry that takes up the most of the screen. It updates on scroll and on open/close, and goes back to plain `/blog` when no open entry is on screen.
+  - The URL changes through `history.replaceState`, so no history entries are added. The query string is kept.
   - **Loading `/blog#<slug>`** opens that entry fully (both levels on phones) and scrolls it into view, below the nav (`scroll-padding-top`).
   - **An unknown hash** does nothing.
   - **Without JS,** the hash still scrolls to the entry, which stays closed.

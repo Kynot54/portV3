@@ -287,3 +287,30 @@ test.describe("list behaviour", () => {
     }
   });
 });
+
+test.describe("address bar follows the post being read", () => {
+  test("with two posts open, the hash follows the one on screen", async ({
+    page,
+  }) => {
+    await page.goto("/blog");
+    await tapTitle(page, "sample-formatting");
+    if (isMobile(page)) await readFull(page, "sample-formatting").click();
+    await tapTitle(page, "sample-long-read");
+    if (isMobile(page)) await readFull(page, "sample-long-read").click();
+    await entry(page, "sample-long-read")
+      .locator(".blog-entry-body h3")
+      .nth(3)
+      .scrollIntoViewIfNeeded();
+    await expect(page).toHaveURL(/\/blog#sample-long-read$/);
+    await page.evaluate(() => scrollTo(0, 0));
+    await expect(page).toHaveURL(/\/blog#sample-formatting$/);
+  });
+
+  test("the query string survives opening and closing", async ({ page }) => {
+    await page.goto("/blog?ref=linkedin");
+    await tapTitle(page, "sample-short-note");
+    await expect(page).toHaveURL(/\/blog\?ref=linkedin#sample-short-note$/);
+    await tapTitle(page, "sample-short-note");
+    await expect(page).toHaveURL(/\/blog\?ref=linkedin$/);
+  });
+});
