@@ -243,6 +243,22 @@ test.describe("list behaviour", () => {
     ).toBe(true);
   });
 
+  test("a click just below Collapse keeps the post open", async ({ page }) => {
+    await page.goto("/blog");
+    await tapTitle(page, "sample-short-note");
+    if (isMobile(page)) await readFull(page, "sample-short-note").click();
+    const collapse = entry(page, "sample-short-note").getByRole("button", {
+      name: "Collapse",
+    });
+    // Centre it, so the strip below is on screen and the click lands.
+    await collapse.evaluate((el) => el.scrollIntoView({ block: "center" }));
+    const box = (await collapse.boundingBox())!;
+    const li = (await entry(page, "sample-short-note").boundingBox())!;
+    const y = (box.y + box.height + li.y + li.height) / 2;
+    await page.mouse.click(box.x + 4, y);
+    await expect(outer(page, "sample-short-note")).toHaveAttribute("open", "");
+  });
+
   test("opening sets #slug, closing clears it", async ({ page }) => {
     await page.goto("/blog");
     const before = await page.evaluate(() => history.length);
@@ -265,7 +281,7 @@ test.describe("list behaviour", () => {
   });
 
   test("unknown hash is ignored", async ({ page }) => {
-    for (const hash of ["#nope", "#%22%5Dx"]) {
+    for (const hash of ["#nope", "#%22%5Dx", "#%", "#%E0"]) {
       await page.goto(`/blog${hash}`);
       await expect(page.locator("details[data-entry][open]")).toHaveCount(0);
     }

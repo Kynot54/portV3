@@ -406,7 +406,19 @@ test("shipped samples are labelled and published", async () => {
   for (const p of s) expect(p.title).toMatch(/^Sample: /);
 });
 
-test("production content/blog has no published posts yet", async () => {
-  // Update when Kyle's first post lands.
-  expect(await getBlogPosts({})).toEqual([]);
+test("content/blog never holds sample posts", async () => {
+  // Real posts can be added with no code change; samples stay in content/samples.
+  for (const p of await getBlogPosts({}))
+    expect(p.title).not.toMatch(/^Sample: /);
+});
+
+test("BLOG_SAMPLES=1 is ignored in production", async () => {
+  expect(
+    slugs(
+      await getBlogPosts(
+        { BLOG_SAMPLES: "1", VERCEL_ENV: "production" },
+        blogDirs,
+      ),
+    ),
+  ).toEqual(["real-one"]);
 });

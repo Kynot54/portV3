@@ -47,10 +47,19 @@ export function BlogController({ slugs }: { slugs: string[] }) {
       details.querySelector("summary")?.focus({ preventScroll: true });
     };
 
+    // Slugs are [a-z0-9-], so the raw hash is compared as-is: no decoding (a
+    // malformed escape like "#%" would throw) and no selector built from it.
+    // The lookup stays inside the list, because pages Next keeps hidden under
+    // <Activity> can hold elements with the same id.
+    const entryFor = (slug: string) =>
+      [...list.querySelectorAll<HTMLLIElement>("li.blog-entry")].find(
+        (li) => li.id === slug,
+      );
+
     const openFromHash = () => {
-      const slug = decodeURIComponent(location.hash.slice(1));
+      const slug = location.hash.slice(1);
       if (!slugs.includes(slug)) return;
-      const li = document.getElementById(slug);
+      const li = entryFor(slug);
       if (!li) return;
       li.querySelectorAll<HTMLDetailsElement>("details").forEach((d) => {
         d.open = true;

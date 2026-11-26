@@ -265,7 +265,7 @@ const published = (posts: BlogPost[]) =>
 /**
  * The posts the site shows, newest first. The one entry point for pages, the
  * layout and the nav, so a later admin only has to change this loader.
- * - BLOG_SAMPLES=1: the sample posts only (e2e, Lighthouse, local).
+ * - BLOG_SAMPLES=1: the sample posts only (e2e, Lighthouse, local); ignored in production.
  * - Vercel preview: the samples while no real post is published.
  * - Otherwise (production): real published posts only.
  */
@@ -281,7 +281,9 @@ export async function getBlogPosts(
     return posts;
   };
   const samples = () => load(dirs.samples ?? "content/samples/blog");
-  if (env.BLOG_SAMPLES === "1") return samples();
+  // Never in production, even if the flag is set there by mistake.
+  if (env.BLOG_SAMPLES === "1" && env.VERCEL_ENV !== "production")
+    return samples();
   const real = await load(dirs.real ?? "content/blog");
   if (real.length === 0 && env.VERCEL_ENV === "preview") return samples();
   return real;

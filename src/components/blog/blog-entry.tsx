@@ -14,11 +14,12 @@ import { PostMeta, TagList } from "./post-meta";
  *   summary + tags, and opening shows the post. CSS: .blog-entry in globals.css.
  */
 export async function BlogEntry({ post }: { post: BlogPost }) {
-  const titleId = `${post.slug}-title`;
+  // Prefixed so it can't collide with another post's slug or a page section id.
+  const titleId = `post-title-${post.slug}`;
   const body = await renderMdx(post.body, { headingOffset: 1 });
 
   return (
-    <li id={post.slug} className="blog-entry relative border-t py-6">
+    <li id={post.slug} className="blog-entry relative border-t pt-6">
       <div className="pr-10 sm:pr-36">
         <h2 id={titleId} className="text-h3 font-bold tracking-tight">
           {post.title}
@@ -47,7 +48,7 @@ export async function BlogEntry({ post }: { post: BlogPost }) {
         <span className="blog-entry-hint-open">Collapse</span>
       </span>
 
-      <details data-entry className="group">
+      <details data-entry className="group pb-6 open:pb-0">
         <summary
           aria-labelledby={titleId}
           className="blog-entry-toggle list-none [&::-webkit-details-marker]:hidden"
@@ -58,7 +59,7 @@ export async function BlogEntry({ post }: { post: BlogPost }) {
           />
         </summary>
 
-        <div className="blog-entry-content">
+        <div className="blog-entry-content pb-6">
           <div className="mt-3 flex flex-col gap-3 sm:hidden">
             <p className="text-body-fluid text-muted-foreground">
               {post.summary}

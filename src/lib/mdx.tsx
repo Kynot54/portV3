@@ -30,9 +30,13 @@ function heading(level: Level) {
 
 function components(offset: 0 | 1) {
   return {
+    // The page owns the h1, so a stray "#" in a post renders as the top level.
+    h1: heading((2 + offset) as Level),
     h2: heading((2 + offset) as Level),
     h3: heading((3 + offset) as Level),
     h4: heading((4 + offset) as Level),
+    h5: heading(Math.min(5 + offset, 6) as Level),
+    h6: heading(6),
     p: (props: ComponentProps<"p">) => <p className={muted} {...props} />,
     a: ({ href = "", ...props }: ComponentProps<"a">) => (
       <a

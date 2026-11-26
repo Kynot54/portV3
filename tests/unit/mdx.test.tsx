@@ -52,3 +52,13 @@ test("pre is focusable and scrolls", async () => {
   expect(pre).toHaveAttribute("tabindex", "0");
   expect(pre).toHaveClass("overflow-x-auto", "font-mono");
 });
+
+test("a stray # heading never becomes a second h1", async () => {
+  const page = render(await renderMdx("# One\n"));
+  expect(levels(page.container)).toEqual(["H2"]);
+  page.unmount();
+  const inline = render(
+    await renderMdx("# One\n\n##### Five\n", { headingOffset: 1 }),
+  );
+  expect(levels(inline.container)).toEqual(["H3", "H6"]);
+});
