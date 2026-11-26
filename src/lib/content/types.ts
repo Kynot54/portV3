@@ -7,6 +7,12 @@ export type WorkEntry = {
   tags: string[];
   /** True for stand-in entries; titles start with "Placeholder". */
   placeholder: boolean;
+  /** Shown in Home's Selected work. */
+  featured: boolean;
+  /** Position in Selected work (ascending); required when featured. */
+  order: number | null;
+  /** Card micro-label, e.g. "AI · 2025–26"; required when featured. */
+  label: string | null;
   body: string;
 };
 

@@ -1,5 +1,7 @@
+import { readFile } from "node:fs/promises";
 import {
   ContentError,
+  getFeaturedWork,
   getPost,
   getPosts,
   getWork,
@@ -18,6 +20,9 @@ test("getWork parses frontmatter, slugs from filename, newest first", async () =
     date: "2026-01",
     tags: ["typescript", "nextjs"],
     placeholder: false,
+    featured: false,
+    order: null,
+    label: null,
     body: "Beta body.\n",
   });
   expect(work[1].placeholder).toBe(false); // default
@@ -79,4 +84,74 @@ test("an .mdx file whose name isn't a valid slug fails loudly", async () => {
     file: "My-Post.mdx",
     field: "filename",
   });
+});
+
+test("getFeaturedWork returns featured, non-placeholder entries by order", async () => {
+  const w = await getFeaturedWork(`${F}/work-featured`);
+  expect(w.map((e) => e.slug)).toEqual(["first", "second"]);
+  expect(w[0]).toMatchObject({
+    featured: true,
+    order: 1,
+    label: "AI · 2025–26",
+  });
+});
+
+test("featured entry without order fails loudly", async () => {
+  await expect(
+    getFeaturedWork(`${F}/work-featured-noorder`),
+  ).rejects.toMatchObject({
+    file: "x.mdx",
+    field: "order",
+  });
+});
+
+test("non-featured entries default featured=false, order=null, label=null", async () => {
+  const plain = (await getWork(`${F}/work-featured`)).find(
+    (e) => e.slug === "plain",
+  )!;
+  expect(plain).toMatchObject({ featured: false, order: null, label: null });
+});
+
+test("real featured work matches the approved cards", async () => {
+  const w = await getFeaturedWork();
+  expect(w.map((e) => [e.label, e.title, e.summary])).toEqual([
+    [
+      "AI · 2025–26",
+      "AI document pipelines",
+      "I built AI pipelines for 10+ clients. Manual review dropped 50%.",
+    ],
+    [
+      "Web · 2024–25",
+      "C.O.N.T.R.O.L. BH",
+      "I built and maintained a nonprofit web app for 1,000+ users. Donations rose 40%.",
+    ],
+    [
+      "AI · Mobile · 2025–26",
+      "Ulti-Health",
+      "I built a wellness app that plans workouts and meals from the user's own data.",
+    ],
+  ]);
+});
+
+test("every number in featured summaries appears in resume.md", async () => {
+  const resume = await readFile("content/source/resume.md", "utf8");
+  for (const e of await getFeaturedWork())
+    for (const n of e.summary.match(/\d[\d,]*\+?%?/g) ?? []) {
+      // "10+" on a card matches "10+" or "over 10" in the resume.
+      const base = n.replace(/[+%]$/, "");
+      const found =
+        resume.includes(n.replace(/%$/, "")) ||
+        (n.endsWith("+") && resume.includes(`over ${base}`));
+      expect(found, `${e.slug}: ${n} not in resume`).toBe(true);
+    }
+});
+
+test("resume Ulti-Health entry uses the approved stack", async () => {
+  const resume = await readFile("content/source/resume.md", "utf8");
+  const section = resume.slice(
+    resume.indexOf("### Ulti-Health"),
+    resume.indexOf("### AI Mind Companion"),
+  );
+  expect(section).toContain("Expo (React Native) and Supabase");
+  expect(section).not.toMatch(/Kotlin|Swift|Tower|Fly\.io|GitHub Actions/);
 });

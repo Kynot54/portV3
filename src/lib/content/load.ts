@@ -92,7 +92,30 @@ function bool(r: Raw, field: string): boolean {
 const newestFirst = <T extends { date: string; slug: string }>(a: T, b: T) =>
   b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug);
 
+function optNum(r: Raw, field: string): number | null {
+  const v = r.data[field];
+  if (v === undefined || v === null) return null;
+  if (typeof v !== "number" || !Number.isFinite(v))
+    throw new ContentError(r.file, field, "must be a number");
+  return v;
+}
+
+function optStr(r: Raw, field: string): string | null {
+  const v = r.data[field];
+  if (v === undefined || v === null) return null;
+  if (typeof v !== "string" || v.trim() === "")
+    throw new ContentError(r.file, field, "must be a non-empty string");
+  return v;
+}
+
 function toWork(r: Raw): WorkEntry {
+  const featured = bool(r, "featured");
+  const order = optNum(r, "order");
+  const label = optStr(r, "label");
+  if (featured && order === null)
+    throw new ContentError(r.file, "order", "is required when featured");
+  if (featured && label === null)
+    throw new ContentError(r.file, "label", "is required when featured");
   return {
     slug: r.slug,
     title: str(r, "title"),
@@ -100,6 +123,9 @@ function toWork(r: Raw): WorkEntry {
     date: date(r, MONTH, "YYYY-MM"),
     tags: tags(r),
     placeholder: bool(r, "placeholder"),
+    featured,
+    order,
+    label,
     body: r.body,
   };
 }
@@ -119,6 +145,15 @@ function toPost(r: Raw): BlogPost {
 
 export async function getWork(dir = "content/work"): Promise<WorkEntry[]> {
   return (await readEntries(dir)).map(toWork).sort(newestFirst);
+}
+
+/** Entries for Home's Selected work: featured, not placeholders, by `order`. */
+export async function getFeaturedWork(
+  dir = "content/work",
+): Promise<WorkEntry[]> {
+  return (await getWork(dir))
+    .filter((w) => w.featured && !w.placeholder)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getWorkEntry(

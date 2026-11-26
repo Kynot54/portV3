@@ -5,7 +5,8 @@ Web-safe resume: the authoritative source of facts for site copy (see CLAUDE.md)
 Transcribed from "Kyle Whynott_SWE_Web_Resume.pdf" on 2026-11-25.
 Changes from the PDF:
 - the ZIP code is removed
-- per Kyle, Teaching Associate ended May 2026, and the Ulti-Health bullets are past tense
+- per Kyle, Teaching Associate ended May 2026
+- Ulti-Health rewritten to its real MVP stack (Expo + Supabase), per Kyle, 2026-11-26
 Never add a phone number or personal email here.
 -->
 
@@ -58,8 +59,10 @@ Aliso Viejo, CA · April 2024 – June 2024
 
 July 2025 – May 2026
 
-- Created a wellness app (Kotlin Multiplatform + Swift) with a secure Rust API (JWT authentication/validation, Tower middleware); led architecture, design, and cross-platform implementation
-- Established CI/CD pipeline with GitHub Actions, Docker, Fly.io, and Supabase to enable rapid iteration and future deployment
+- Built a wellness app MVP with Expo (React Native) and Supabase: Auth, input validation, pgvector, and Edge Functions. Docker.
+- Recommends workout plans, nutrition plans that avoid the user's allergies, and sleep suggestions from the user's own data. Mental-health questions are pointed to verified resources.
+- Covers mental and physical wellness: an on-device journal with encrypted cloud backups, a colour mood pad, and sleep, nutrition, and fitness logs with a heatmap of muscles worked and effort.
+- Led architecture, design, and cross-platform implementation.
 
 ### AI Mind Companion
 
