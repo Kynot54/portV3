@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** A responsive Next.js shell for kwhynott.dev V3: the shadcn (Base UI) visual system with the "isolation" palette, a three-state theme through next-themes, a pill nav with a mobile menu, placeholder routes, and a local quality pipeline (unit, e2e, axe, Lighthouse) plus a CI workflow ready for when the repo exists.
+**Goal:** A responsive Next.js shell for kwhynott.dev V3 (Kyle's Slice 1 brief: Prettier, documented tokens, typed content loaders, `SERVICES_ENABLED`): the shadcn (Base UI) visual system with the "isolation" palette, a three-state theme through next-themes, a pill nav with a mobile menu, placeholder routes, and a local quality pipeline (unit, e2e, axe, Lighthouse) plus a CI workflow ready for when the repo exists.
 
 **Architecture:** Next.js App Router in `src/`. The colours are shadcn CSS variables in `globals.css`. `next-themes` toggles `.dark` on `<html>`, and the server renders `class="dark"` so no-JS visitors get dark. The nav is one client component: the full pill from 640 px up, and logo + Contact + a disclosure menu below 640 px. Content stays in files under `content/`.
 
@@ -47,7 +47,7 @@ The `CLAUDE.md` working agreement asks for these three.
   - Tap targets are ≥ 44 px. No animation under `prefers-reduced-motion`.
 - **Accessibility.** WCAG AA (body text ≥ 4.5:1), full keyboard support, a visible focus ring everywhere, `prefers-reduced-motion` honoured, no audio, nothing flashing more than 3 times per second.
 - **Packages.**
-  - Only those in the spec's "Approved dependencies" list.
+  - Only those in the spec's "Approved dependencies" list, plus `prettier` (named in Kyle's brief) and `gray-matter` (Kyle, 2026-11-25). shadcn's `cn` package replaces `clsx` + `tailwind-merge`.
   - Never `@vitejs/plugin-react` or `vite-tsconfig-paths`.
   - Never `--legacy-peer-deps` or `--force`.
 - **Copy.** No phone number or email. Placeholders are marked `TODO(kyle)`. No invented claims.
@@ -60,11 +60,11 @@ The `CLAUDE.md` working agreement asks for these three.
 
 ## Review Focus
 
-1. **Stored theme against the opposite OS setting.** Correct on first paint, after client navigation, and after a reload. → Task 5 `stored light beats OS dark on first paint and after navigation`.
-2. **System choice follows live OS changes.** After cycling back to System, flipping the OS scheme changes the page without a reload. → Task 5 `system follows OS change live`.
-3. **Resize across 640 px with the menu open.** No stuck open panel, and focus isn't lost. → Task 4 `menu closes when viewport crosses to desktop`; Task 5 `resize from mobile to desktop with menu open`.
-4. **`localStorage` throws** (Safari private mode). The page loads in the system theme, the toggle still works for the visit, and there are no console errors. → Task 5 `toggle works when localStorage throws`.
-5. **No JavaScript.** Renders dark and hides the toggle; the nav links still work. On mobile, the Menu button is hidden and the panel's links are reachable. → Task 5 `no-JS renders dark, hides toggle, links reachable`.
+1. **Stored theme against the opposite OS setting.** Correct on first paint, after client navigation, and after a reload. → Task 6 `stored light beats OS dark on first paint and after navigation`.
+2. **System choice follows live OS changes.** After cycling back to System, flipping the OS scheme changes the page without a reload. → Task 6 `system follows OS change live`.
+3. **Resize across 640 px with the menu open.** No stuck open panel, and focus isn't lost. → Task 4 `menu closes when viewport crosses to desktop`; Task 6 `resize from mobile to desktop with menu open`.
+4. **`localStorage` throws** (Safari private mode). The page loads in the system theme, the toggle still works for the visit, and there are no console errors. → Task 6 `toggle works when localStorage throws`.
+5. **No JavaScript.** Renders dark and hides the toggle; the nav links still work. On mobile, the Menu button is hidden and the panel's links are reachable. → Task 6 `no-JS renders dark, hides toggle, links reachable`.
 
 ---
 
@@ -122,12 +122,16 @@ The current state: the scaffold, `vitest.config.mts`, `vitest.setup.ts` and `con
   - CSS variables `--background`, `--foreground`, `--muted-foreground`, `--primary`, `--primary-foreground`, `--ring`, `--keyword`, `--border` and the remaining shadcn tokens, under `:root` (light) and `.dark` (dark).
   - Tailwind colours from them (`bg-primary`, `text-keyword`, and so on).
   - Utility `.accent-glow`: the dark glow, `none` in light.
-  - Fluid type utilities `text-hero` (`clamp(1.875rem, 1.2rem + 3vw, 2.75rem)`) and `text-body-fluid`.
+  - Type scale (fluid, `clamp()`): `text-micro` (mono uppercase labels, about 0.75rem), `text-body-fluid` (1rem → 1.125rem), `text-h3`, `text-h2`, and `text-hero` (`clamp(1.875rem, 1.2rem + 3vw, 2.75rem)`).
+  - A spacing scale for sections and gutters: `--space-gutter` (`clamp(1rem, 4vw, 2rem)`) and `--space-section` (`clamp(3rem, 8vw, 6rem)`), used as Tailwind `px-gutter` / `py-section`. Everything else uses Tailwind's default 4px scale.
+  - Radii: `--radius` 0.625rem (shadcn's scale), with pills using `rounded-full`.
+  - `docs/design-tokens.md` documents every token: colour (both themes, with each text pair's contrast ratio), type scale, spacing, radii, glow, and the accent and blue usage rules.
   - `Button` variants: shadcn defaults; `default` = the accent (bg-primary, black text, glow in dark); `outline` = the quiet grey.
   - `Keyword({ children }: { children: React.ReactNode }): JSX.Element`, which renders `<span className="text-keyword">`.
   - Test helper `contrastRatio(hexA: string, hexB: string): number` (WCAG 2.x relative luminance).
 
-- [ ] **Step 1:** Run `npx shadcn@latest init --base base --no-monorepo -y`, then `npx shadcn@latest add button`. Expected: `components.json` has `base`, and the packages it adds stay within the approved list. If it asks for a preset, pick its neutral default.
+- [ ] **Step 0: Prettier.** Run `npm i -D prettier`. Add `.prettierrc.json` (`{}`, the defaults) and a `.prettierignore` covering `.next`, `node_modules`, `.agents`, `.claude`, `.superpowers`, `docs/superpowers`, `package-lock.json` and `*.mdx`. Add the scripts `format` (`prettier --write .`) and `format:check` (`prettier --check .`). Run `npm run format` once and commit it on its own: `style: add Prettier and format the repo`.
+- [ ] **Step 1:** Run `npx shadcn@latest init --base base --preset nova --no-monorepo -y`, then `npx shadcn@latest add button`. Expected: `components.json` has `base`, and the packages it adds stay within the approved list. If it asks for a preset, pick its neutral default.
 - [ ] **Step 2: Write the failing tests.**
 
 `tests/unit/palette.test.ts`: parse `src/app/globals.css`, read each token's hex for `:root` and `.dark`, and assert:
@@ -156,7 +160,9 @@ test('palette values match the spec exactly', () => {
 
 `tests/unit/keyword.test.tsx`: `<Keyword>LLMs</Keyword>` renders a `span` with text `LLMs` and class `text-keyword`, and it is not a link.
 
-`tests/unit/button.test.tsx`: the `default` Button's class list contains no `scale-`, `translate-` or `-translate-` utilities, and does contain `hover:brightness-110` and `active:brightness-95`.
+`tests/unit/button.test.tsx`: the `default` Button's class list contains no `scale-`, `translate-` or `-translate-` utilities, and does contain `hover:brightness-110` and `active:brightness-95`. (shadcn's generated base class has `active:not-aria-[haspopup]:translate-y-px`; remove it.)
+
+`tests/unit/design-tokens-doc.test.ts`: every hex in the palette table of `docs/design-tokens.md` equals the matching token in `globals.css`, so the doc can't drift.
 
 - [ ] **Step 3:** Run `npm test`. Expected: FAIL. The tokens are still shadcn defaults (oklch, not our hexes), and `keyword` is missing.
 - [ ] **Step 4: Implement.**
@@ -166,7 +172,7 @@ test('palette values match the spec exactly', () => {
   - **Components:** set the Button `default` variant to the accent with `accent-glow`, and write `Keyword`.
   - **Accent states:** hover is `brightness-110`, with a stronger glow in dark mode (`.accent-glow:hover`, about 1.3× the spread and alpha). Active is `brightness-95`. No transform, translate or scale.
   - **Favicon:** delete `src/app/favicon.ico`. Add `src/app/icon.svg`: bold "KW" in `#39FF14` on `#000000`, with an embedded `@media (prefers-color-scheme: light)` that switches it to `#FF0080` on `#FFFFFF`. Add a `// TODO(kyle)` comment in it.
-- [ ] **Step 5:** Run `npm test`. Expected: PASS (12 tests). Then run `npm run build`. Expected: exit 0.
+- [ ] **Step 5:** Run `npm test`. Expected: PASS (all Task 2 tests plus the earlier ones). Then run `npm run build`. Expected: exit 0.
 - [ ] **Step 6: Commit.** `feat: shadcn (Base UI) with isolation palette and Keyword`
 
 ---
@@ -252,8 +258,8 @@ test('choosing System again follows the OS', async () => {
   - `type NavItem = { href: '/work' | '/blog' | '/contact'; label: string }`
   - `siteConfig: { name: 'Kyle Whynott'; url: string /* NEXT_PUBLIC_SITE_URL ?? 'https://kwhynott.dev' */; nav: NavItem[]; contact: NavItem }`. `nav` is Work and Blog; `contact` is separate, because it renders as the accent pill.
   - `Header(): JSX.Element` (client), with menu panel id `mobile-menu`.
-  - `Footer(): JSX.Element`, rendering `© Kyle Whynott · GitHub`. The GitHub link goes to `https://github.com/Kynot54`, with a `{/* TODO(kyle): LinkedIn */}` comment. No year, because of `cacheComponents`.
-  - `siteConfig.social: { github: 'https://github.com/Kynot54' }`.
+  - `Footer(): JSX.Element`, rendering `© Kyle Whynott · GitHub · LinkedIn`, linking to `https://github.com/Kynot54` and `https://www.linkedin.com/in/kyle-whynott` (both from the resume). No year, because of `cacheComponents`.
+  - `siteConfig.social: { github: 'https://github.com/Kynot54', linkedin: 'https://www.linkedin.com/in/kyle-whynott' }`.
 
 - [ ] **Step 1: Write the failing tests** in `tests/unit/header.test.tsx`. Mock `next/navigation` `usePathname`.
 
@@ -267,7 +273,7 @@ test('Escape closes the menu and returns focus to the button', ...)
 test('clicking a menu link closes the menu', ...)
 test('route change closes the menu', ...)                                          // rerender with new pathname
 test('menu closes when viewport crosses to desktop', ...)                          // matchMedia('(min-width: 640px)') change → closed
-test('footer shows © Kyle Whynott and a GitHub link to github.com/Kynot54', ...)
+test('footer shows © Kyle Whynott with GitHub and LinkedIn links', ...)
 ```
 
 - [ ] **Step 2:** Run `npm test`. Expected: FAIL, because `Header` is not found.
@@ -290,7 +296,62 @@ test('footer shows © Kyle Whynott and a GitHub link to github.com/Kynot54', ...
 
 ---
 
-### Task 5: End-to-end, accessibility and responsive suite
+### Task 5: Content structure, typed loaders, `SERVICES_ENABLED`
+
+**Files:**
+- Create:
+  - `content/source/resume.md`, the web-safe transcription of Kyle's resume PDF: no ZIP, phone or email
+  - `content/work/placeholder-project.mdx`, `content/blog/placeholder-post.mdx`
+  - `src/lib/content/types.ts`, `src/lib/content/load.ts`
+  - `src/lib/flags.ts`, `src/app/services/page.tsx`
+  - `docs/plans/services.md`: a stub with `TODO(kyle)` that holds the Services copy later
+  - `tests/fixtures/content/**`
+  - `tests/unit/content.test.ts`, `tests/unit/flags.test.ts`
+
+**Interfaces:**
+- Produces:
+  - `type WorkEntry = { slug: string; title: string; summary: string; date: string /* YYYY-MM */; tags: string[]; placeholder: boolean; body: string }`
+  - `type BlogPost = { slug: string; title: string; summary: string; date: string /* YYYY-MM-DD */; tags: string[]; placeholder: boolean; draft: boolean; body: string }`
+  - `class ContentError extends Error { file: string; field: string }`
+  - `getWork(dir = 'content/work'): Promise<WorkEntry[]>`, newest first
+  - `getWorkEntry(slug: string, dir?): Promise<WorkEntry | null>`
+  - `getPosts(opts?: { dir?: string; includeDrafts?: boolean }): Promise<BlogPost[]>`, newest first, with drafts excluded by default
+  - `getPost(slug: string, opts?): Promise<BlogPost | null>`
+  - `isServicesEnabled(env: Record<string, string | undefined> = process.env): boolean`, true only for the exact string `"true"`
+- **How it works:** the loaders read `*.mdx` with `fs/promises` and parse frontmatter with `gray-matter`. They validate with plain TypeScript checks (no schema library). The slug comes from the filename. Other file types are ignored, and a missing directory returns `[]`. Slugs are restricted to `^[a-z0-9-]+$`, so `getPost('../x')` returns `null`.
+
+- [ ] **Step 1: Write the failing tests**, using fixtures under `tests/fixtures/content/{work,blog}`:
+
+```ts
+test('getWork parses frontmatter, slugs from filename, newest first', ...)
+test('missing title throws ContentError naming file and field', ...)   // expect.objectContaining({ file: 'bad.mdx', field: 'title' })
+test('invalid date format throws ContentError (field: date)', ...)
+test('non-mdx files are ignored and a missing dir returns []', ...)
+test('getPosts excludes drafts unless includeDrafts', ...)
+test('getPost rejects path-traversal slugs', async () => expect(await getPost('../secrets', { dir })).toBeNull())
+test('real content dir loads and every placeholder is marked', async () => {
+  for (const e of [...await getWork(), ...await getPosts({ includeDrafts: true })]) {
+    if (e.placeholder) expect(e.title).toMatch(/^Placeholder/);
+  }
+})
+test('isServicesEnabled: only exact "true"', () => {
+  expect(isServicesEnabled({ SERVICES_ENABLED: 'true' })).toBe(true);
+  for (const v of [undefined, '', 'TRUE', '1', 'yes', 'false']) expect(isServicesEnabled({ SERVICES_ENABLED: v })).toBe(false);
+})
+```
+
+- [ ] **Step 2:** Run `npm test`. Expected: FAIL, because the modules aren't found.
+- [ ] **Step 3: Implement.**
+  - Run `npm i gray-matter`, then write the types, loaders and flags.
+  - **Placeholder entries:** `placeholder: true`, titles starting with "Placeholder", and `TODO(kyle)` in the body. The blog placeholder is also `draft: true`.
+  - **`resume.md`:** a faithful transcription of the PDF in Markdown. Drop the ZIP code and keep "Anaheim, CA". Per Kyle, both of these ended in May 2026: Teaching Associate runs "August 2024 – May 2026", and the Ulti-Health bullets are past tense ("Created…", "led…").
+  - **`/services`:** `page.tsx` calls `notFound()` unless `isServicesEnabled()`. When it's on, it renders an `<h1>Services</h1>` stub with `robots: { index: false, follow: false }`. It never appears in `siteConfig.nav`. Add `// TODO(slice-06): exclude from sitemap`.
+- [ ] **Step 4:** Run `npm test`. Expected: PASS. Then run `npm run build`. Expected: exit 0, with `/services` in the route list.
+- [ ] **Step 5: Commit.** `feat: content structure, typed loaders, SERVICES_ENABLED flag`
+
+---
+
+### Task 6: End-to-end, accessibility and responsive suite
 
 **Files:**
 - Create: `playwright.config.ts`, `tests/e2e/fixtures.ts`, `tests/e2e/shell.spec.ts`, `tests/e2e/theme.spec.ts`, `tests/e2e/a11y.spec.ts`, `tests/e2e/responsive.spec.ts`
@@ -307,6 +368,7 @@ test('footer shows © Kyle Whynott and a GitHub link to github.com/Kynot54', ...
   - Each of the 4 routes returns 200 and has exactly one h1.
   - `link[rel=icon]` points to an SVG that returns 200.
   - `/nope` returns 404 with the h1 "Page not found".
+  - `/services` returns 404 by default (the flag is off in the test build).
   - Desktop tab order: skip link → logo → Work → Blog → theme toggle → Contact. Each stop has a non-`none` `outline-style`.
   - Mobile tab order: skip link → logo → Contact → Menu.
   - The skip link moves focus to `#main`.
@@ -331,7 +393,7 @@ test('footer shows © Kyle Whynott and a GitHub link to github.com/Kynot54', ...
 
 ---
 
-### Task 6: Lighthouse and the CI workflow
+### Task 7: Lighthouse and the CI workflow
 
 **Files:**
 - Create: `lighthouserc.json`, `.github/workflows/ci.yml`
@@ -344,7 +406,7 @@ test('footer shows © Kyle Whynott and a GitHub link to github.com/Kynot54', ...
 - [ ] **Step 2:** Run `npm run build && npm run lhci`. Expected: all assertions pass. Note the median scores per route for the PR.
 - [ ] **Step 3: Write `ci.yml`.**
   - It runs on `pull_request` and on `push` to `slice/**`, on `ubuntu-latest`, with `actions/setup-node` (Node 24, npm cache).
-  - Steps: `npm ci` → lint → typecheck → `npm test` → `npx playwright install --with-deps chromium webkit firefox` → `npm run test:e2e` → `npm run lhci`. Upload `playwright-report/` and `.lighthouseci/` as artifacts, always.
+  - Steps: `npm ci` → lint → `npm run format:check` → typecheck → `npm test` → `npx playwright install --with-deps chromium webkit firefox` → `npm run test:e2e` → `npm run lhci`. Upload `playwright-report/` and `.lighthouseci/` as artifacts, always.
   - One job, named `quality`, so Kyle can mark it as the required check.
 - [ ] **Step 4: Validate.** Run `npx --yes @action-validator/cli .github/workflows/ci.yml`. Expected: no errors. If that package isn't available, check that the YAML parses with `node -e "require('yaml')…"` (no new dependency), and note in the PR that the first real run happens once the repo exists.
 - [ ] **Step 5: Dependabot.** Add `.github/dependabot.yml` with `npm` (directory `/`) and `github-actions`, both on a `monthly` schedule. Each has one group: `patterns: ["*"]`. Validate it the same way as Step 4.
@@ -352,7 +414,7 @@ test('footer shows © Kyle Whynott and a GitHub link to github.com/Kynot54', ...
 
 ---
 
-### Task 7: Handoff
+### Task 8: Handoff
 
 - [ ] **Step 1:** Run the full local suite: `npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run lhci`. Expected: all green. Save the tail of each output for the PR.
 - [ ] **Step 2: Manual keyboard pass.** At 375 px and 1440 px, in each theme state: tab through, open and close the menu with Enter and Esc, and cycle the toggle. Record the result.
@@ -370,7 +432,7 @@ test('footer shows © Kyle Whynott and a GitHub link to github.com/Kynot54', ...
   - **Test evidence:** command tails, and the Lighthouse medians with the `.lighthouseci/` report paths.
   - **Preview URL:** pending Kyle's Vercel setup.
   - **Needs Kyle's call:** grey values (tuned after the preview), meta description, the favicon, README copy.
-  - **TODO(kyle):** `resume.md`, page copy, the LinkedIn link.
+  - **TODO(kyle):** page copy and `docs/plans/services.md` copy.
   - **Conflicts flagged:** the 4 from the spec (including the logo's label-in-name).
   - **Kyle's checklist:** connect a **new** Vercel project to `Kynot54/portV3` without touching V2 or the domain; make `quality` a required check on `main`; review and merge.
 - [ ] **Step 5: Commit and push**, then open the PR: `gh pr create --base main --head slice/01-foundation --title "Slice 01: Foundation" --body-file docs/plans/slice-01-pr.md`. Expected: a PR URL. The first CI run on the PR proves the `quality` job for real.

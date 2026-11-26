@@ -18,7 +18,7 @@ kwhynott.dev V3 has to read as "AI/SWE engineer, open to work" to employers and 
 
 ## Non-goals (later slices)
 
-- Home hero, the "Open to work" note, and About copy → Slice 2. Work content → Slice 3. Blog/MDX → Slice 4. **Recorded for Slice 4:** on mobile, the blog list is compact (title and date), and each entry can be expanded to show more. Contact form and booking → Slice 5. SEO, sitemap, the Services flag and the production deploy → Slice 6.
+- Home hero, the "Open to work" note, and About copy → Slice 2. Work content → Slice 3. Blog/MDX rendering → Slice 4. **Recorded for Slice 4:** on mobile, the blog list is compact (title and date), and each entry can be expanded to show more. Contact form and booking → Slice 5. SEO, sitemap and the production deploy → Slice 6.
 - Any admin, auth, database, cross-posting or consulting work (V3.1+). Don't block them: content stays in files under `content/`.
 
 ## Anti-goals (a failure even if it "works")
@@ -159,6 +159,15 @@ Open:   [ Kyle Whynott   (█Contact█)  ✕ ]
 10. **Licence.** MIT for the code, © 2026 Kyle Whynott. Writing, images and personal content under `content/` and `public/images/` are all rights reserved. A note in `LICENSE` and the README says so.
 11. **README.** A short README for hiring managers: what the site is, the stack, how to run it, and the quality bar. Kyle approves the copy in the PR.
 12. **Dependabot.** Monthly updates for npm and GitHub Actions, grouped into one PR per ecosystem.
+
+## Additions from Kyle's Slice 1 brief (2026-11-25)
+
+- **Prettier** with `format` and `format:check` scripts, checked in CI.
+- **Design tokens** (colour, type scale, spacing, radii) documented in `docs/design-tokens.md`.
+- **Content structure.** `content/source/resume.md` is the web-safe transcription of Kyle's resume PDF (no ZIP, phone or email). Add `content/work/` and `content/blog/` with clearly marked placeholder entries, plus typed loaders (`gray-matter`, approved by Kyle) with unit tests.
+- **`SERVICES_ENABLED` and `/services`** move here from Slice 6. The route 404s unless the flag is exactly `true`, and it's never in the nav. Sitemap exclusion is noted for Slice 6.
+- **Footer** links GitHub and LinkedIn; both come from the resume.
+- **Packages:** `shadcn init` now installs `cn` (shadcn's own package, `github.com/shadcn-ui/cn`) in place of `clsx` + `tailwind-merge`.
 
 ## Left to the builder
 
