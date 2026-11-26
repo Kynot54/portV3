@@ -1,7 +1,10 @@
 import "@testing-library/jest-dom/vitest";
 import { afterEach } from "vitest";
 import { cleanup } from "@testing-library/react";
-import { installMatchMedia, resetMatchMedia } from "./tests/support/match-media";
+import {
+  installMatchMedia,
+  resetMatchMedia,
+} from "./tests/support/match-media";
 
 installMatchMedia();
 

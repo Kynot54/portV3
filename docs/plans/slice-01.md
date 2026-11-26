@@ -97,9 +97,11 @@ docs/plans/slice-01-pr.md     PR body, ready to paste
 The current state: the scaffold, `vitest.config.mts`, `vitest.setup.ts` and `content/source/README.md` are on disk and uncommitted. The test packages aren't installed.
 
 **Files:**
+
 - Modify: `package.json`, `vitest.setup.ts`, `.gitignore` (confirm it ignores `/.superpowers/`, `/.claude/settings.local.json`, `/.claude/.cc-writes`, `/.lighthouseci/`, `/playwright-report/`, `/test-results/`)
 
 **Interfaces:**
+
 - Produces: the npm scripts `dev`, `build`, `start`, `lint`, `typecheck` (`tsc --noEmit`), `test` (`vitest run`), `test:e2e` (`playwright test`) and `lhci` (`lhci autorun`). Vitest uses jsdom with the `@` → `src` alias, and the setup file provides a `window.matchMedia` stub that later tasks can control.
 
 - [ ] **Step 1:** Set `@types/node` to `^24`. Then run `npm i -D vitest jsdom @testing-library/react @testing-library/dom @testing-library/jest-dom @testing-library/user-event`. Expected: exit 0 with no ERESOLVE.
@@ -113,11 +115,13 @@ The current state: the scaffold, `vitest.config.mts`, `vitest.setup.ts` and `con
 ### Task 2: Visual system: shadcn on Base UI, palette, Keyword
 
 **Files:**
+
 - Create (by CLI): `components.json`, `src/lib/utils.ts`, `src/components/ui/button.tsx`
 - Create: `src/components/keyword.tsx`, `tests/support/contrast.ts`, `tests/unit/palette.test.ts`, `tests/unit/keyword.test.tsx`
 - Modify: `src/app/globals.css`
 
 **Interfaces:**
+
 - Produces:
   - CSS variables `--background`, `--foreground`, `--muted-foreground`, `--primary`, `--primary-foreground`, `--ring`, `--keyword`, `--border` and the remaining shadcn tokens, under `:root` (light) and `.dark` (dark).
   - Tailwind colours from them (`bg-primary`, `text-keyword`, and so on).
@@ -138,23 +142,25 @@ The current state: the scaffold, `vitest.config.mts`, `vitest.setup.ts` and `con
 
 ```ts
 test.each([
-  ['dark', 'foreground', 'background', 19],
-  ['dark', 'muted-foreground', 'background', 6],
-  ['dark', 'keyword', 'background', 8],
-  ['dark', 'primary-foreground', 'primary', 15],
-  ['light', 'foreground', 'background', 19],
-  ['light', 'muted-foreground', 'background', 5.3],
-  ['light', 'keyword', 'background', 6.7],
-  ['light', 'primary-foreground', 'primary', 5.5],
-  ['light', 'primary', 'background', 3.7],
-])('%s %s on %s ≥ %s:1', (theme, fg, bg, min) => {
-  expect(contrastRatio(token(theme, fg), token(theme, bg))).toBeGreaterThanOrEqual(min);
+  ["dark", "foreground", "background", 19],
+  ["dark", "muted-foreground", "background", 6],
+  ["dark", "keyword", "background", 8],
+  ["dark", "primary-foreground", "primary", 15],
+  ["light", "foreground", "background", 19],
+  ["light", "muted-foreground", "background", 5.3],
+  ["light", "keyword", "background", 6.7],
+  ["light", "primary-foreground", "primary", 5.5],
+  ["light", "primary", "background", 3.7],
+])("%s %s on %s ≥ %s:1", (theme, fg, bg, min) => {
+  expect(
+    contrastRatio(token(theme, fg), token(theme, bg)),
+  ).toBeGreaterThanOrEqual(min);
 });
-test('palette values match the spec exactly', () => {
-  expect(token('dark', 'primary')).toBe('#39FF14');
-  expect(token('light', 'primary')).toBe('#FF0080');
-  expect(token('dark', 'background')).toBe('#000000');
-  expect(token('light', 'background')).toBe('#FFFFFF');
+test("palette values match the spec exactly", () => {
+  expect(token("dark", "primary")).toBe("#39FF14");
+  expect(token("light", "primary")).toBe("#FF0080");
+  expect(token("dark", "background")).toBe("#000000");
+  expect(token("light", "background")).toBe("#FFFFFF");
 });
 ```
 
@@ -180,10 +186,12 @@ test('palette values match the spec exactly', () => {
 ### Task 3: Theme: next-themes and the three-state toggle
 
 **Files:**
+
 - Create: `src/lib/theme.ts`, `src/components/theme-provider.tsx`, `src/components/theme-toggle.tsx`, `tests/unit/theme.test.ts`, `tests/unit/theme-toggle.test.tsx`
 - Modify: `src/app/layout.tsx`
 
 **Interfaces:**
+
 - Produces:
   - `type ThemeChoice = 'system' | 'light' | 'dark'`
   - `nextTheme(current: ThemeChoice): ThemeChoice`, cycling system → light → dark → system
@@ -195,39 +203,49 @@ test('palette values match the spec exactly', () => {
 
 ```ts
 // tests/unit/theme.test.ts
-test('cycles system → light → dark → system', () => {
-  expect(nextTheme('system')).toBe('light');
-  expect(nextTheme('light')).toBe('dark');
-  expect(nextTheme('dark')).toBe('system');
+test("cycles system → light → dark → system", () => {
+  expect(nextTheme("system")).toBe("light");
+  expect(nextTheme("light")).toBe("dark");
+  expect(nextTheme("dark")).toBe("system");
 });
-test('label names current and next', () => {
-  expect(themeLabel('system')).toBe('Theme: System. Switch to light');
-  expect(themeLabel('light')).toBe('Theme: Light. Switch to dark');
-  expect(themeLabel('dark')).toBe('Theme: Dark. Switch to system');
+test("label names current and next", () => {
+  expect(themeLabel("system")).toBe("Theme: System. Switch to light");
+  expect(themeLabel("light")).toBe("Theme: Light. Switch to dark");
+  expect(themeLabel("dark")).toBe("Theme: Dark. Switch to system");
 });
 ```
 
 ```tsx
 // tests/unit/theme-toggle.test.tsx: render <ThemeProvider><ThemeToggle/></ThemeProvider>
-test('starts on System and resolves from the OS', async () => {
+test("starts on System and resolves from the OS", async () => {
   setPrefersDark(true);
   renderToggle();
-  expect(await screen.findByRole('button', { name: 'Theme: System. Switch to light' })).toBeInTheDocument();
-  expect(document.documentElement).toHaveClass('dark');
+  expect(
+    await screen.findByRole("button", {
+      name: "Theme: System. Switch to light",
+    }),
+  ).toBeInTheDocument();
+  expect(document.documentElement).toHaveClass("dark");
 });
-test('clicking cycles and applies the class', async () => {
-  setPrefersDark(true); renderToggle();
-  await userEvent.click(await screen.findByRole('button'));
-  expect(document.documentElement).toHaveClass('light');
-  expect(screen.getByRole('button')).toHaveAccessibleName('Theme: Light. Switch to dark');
+test("clicking cycles and applies the class", async () => {
+  setPrefersDark(true);
+  renderToggle();
+  await userEvent.click(await screen.findByRole("button"));
+  expect(document.documentElement).toHaveClass("light");
+  expect(screen.getByRole("button")).toHaveAccessibleName(
+    "Theme: Light. Switch to dark",
+  );
 });
-test('choosing System again follows the OS', async () => {
-  setPrefersDark(false); renderToggle();
-  const btn = await screen.findByRole('button');
-  await userEvent.click(btn); await userEvent.click(btn); await userEvent.click(btn); // back to system
-  expect(document.documentElement).toHaveClass('light');
+test("choosing System again follows the OS", async () => {
+  setPrefersDark(false);
+  renderToggle();
+  const btn = await screen.findByRole("button");
+  await userEvent.click(btn);
+  await userEvent.click(btn);
+  await userEvent.click(btn); // back to system
+  expect(document.documentElement).toHaveClass("light");
   act(() => setPrefersDark(true));
-  expect(document.documentElement).toHaveClass('dark');
+  expect(document.documentElement).toHaveClass("dark");
 });
 ```
 
@@ -249,10 +267,12 @@ test('choosing System again follows the OS', async () => {
 ### Task 4: Shell: responsive pill nav, mobile menu, footer, routes
 
 **Files:**
+
 - Create: `src/lib/site.ts`, `src/components/header.tsx`, `src/components/footer.tsx`, `src/app/{work,blog,contact}/page.tsx`, `src/app/not-found.tsx`, `tests/unit/header.test.tsx`
 - Modify: `src/app/layout.tsx`, `src/app/page.tsx`
 
 **Interfaces:**
+
 - Consumes: `ThemeToggle` (Task 3), `Button` (Task 2).
 - Produces:
   - `type NavItem = { href: '/work' | '/blog' | '/contact'; label: string }`
@@ -299,6 +319,7 @@ test('footer shows © Kyle Whynott with GitHub and LinkedIn links', ...)
 ### Task 5: Content structure, typed loaders, `SERVICES_ENABLED`
 
 **Files:**
+
 - Create:
   - `content/source/resume.md`, the web-safe transcription of Kyle's resume PDF: no ZIP, phone or email
   - `content/work/placeholder-project.mdx`, `content/blog/placeholder-post.mdx`
@@ -309,6 +330,7 @@ test('footer shows © Kyle Whynott with GitHub and LinkedIn links', ...)
   - `tests/unit/content.test.ts`, `tests/unit/flags.test.ts`
 
 **Interfaces:**
+
 - Produces:
   - `type WorkEntry = { slug: string; title: string; summary: string; date: string /* YYYY-MM */; tags: string[]; placeholder: boolean; body: string }`
   - `type BlogPost = { slug: string; title: string; summary: string; date: string /* YYYY-MM-DD */; tags: string[]; placeholder: boolean; draft: boolean; body: string }`
@@ -354,9 +376,11 @@ test('isServicesEnabled: only exact "true"', () => {
 ### Task 6: End-to-end, accessibility and responsive suite
 
 **Files:**
+
 - Create: `playwright.config.ts`, `tests/e2e/fixtures.ts`, `tests/e2e/shell.spec.ts`, `tests/e2e/theme.spec.ts`, `tests/e2e/a11y.spec.ts`, `tests/e2e/responsive.spec.ts`
 
 **Interfaces:**
+
 - Consumes: the routes (Task 4), the `.dark`/`.light` classes, `.theme-toggle`, `#mobile-menu`, the button names "Menu" and `Theme: …` (Tasks 3–4).
 
 - [ ] **Step 1: Install and configure.**
@@ -396,6 +420,7 @@ test('isServicesEnabled: only exact "true"', () => {
 ### Task 7: Lighthouse and the CI workflow
 
 **Files:**
+
 - Create: `lighthouserc.json`, `.github/workflows/ci.yml`
 
 - [ ] **Step 1: Lighthouse config.**
