@@ -253,7 +253,11 @@ export async function getPost(
 /** Slugs that would collide with ids the layout already uses, or the empty-blog sentinel. */
 export const RESERVED_SLUGS = ["main", "mobile-menu", "none"];
 
-export type BlogEnv = { BLOG_SAMPLES?: string; VERCEL_ENV?: string };
+export type BlogEnv = {
+  BLOG_SAMPLES?: string;
+  VERCEL_ENV?: string;
+  [key: string]: string | undefined;
+};
 
 const published = (posts: BlogPost[]) =>
   posts.filter((p) => !p.draft && !p.placeholder);
