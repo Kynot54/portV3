@@ -45,6 +45,12 @@ const PLACEHOLDERS: Record<ContactField, string> = {
   message:
     "Hi Kyle, we're hiring a software engineer and I'd like to talk about the role.",
 };
+// On Services, a founder writes, not a recruiter (proposal, pending Kyle's call).
+const SERVICES_PLACEHOLDERS: Partial<Record<ContactField, string>> = {
+  role: "Owner",
+  message:
+    "Hi Kyle, I run a small business and need a simpler way to keep track of my customers.",
+};
 const AUTOCOMPLETE: Record<ContactField, string> = {
   name: "name",
   email: "email",
@@ -218,7 +224,10 @@ export function ContactForm({
                 f === "email" ? "email" : f === "message" ? undefined : "text"
               }
               autoComplete={AUTOCOMPLETE[f]}
-              placeholder={PLACEHOLDERS[f]}
+              placeholder={
+                (source === "services" && SERVICES_PLACEHOLDERS[f]) ||
+                PLACEHOLDERS[f]
+              }
               rows={f === "message" ? 6 : undefined}
               value={values[f]}
               onChange={(e) =>

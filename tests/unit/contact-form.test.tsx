@@ -252,3 +252,20 @@ test('source="services" is sent with the message', async () => {
   await screen.findByRole("status");
   expect(JSON.parse(fetchMock.mock.calls[0][1].body).source).toBe("services");
 });
+
+test("on Services, the role and message examples fit a founder", () => {
+  render(<ContactForm siteKey="site" source="services" />);
+  expect(screen.getByLabelText("Your role (optional)")).toHaveAttribute(
+    "placeholder",
+    "Owner",
+  );
+  expect(screen.getByLabelText("Message")).toHaveAttribute(
+    "placeholder",
+    "Hi Kyle, I run a small business and need a simpler way to keep track of my customers.",
+  );
+  // Name, email and company examples are shared.
+  expect(screen.getByLabelText("Company (optional)")).toHaveAttribute(
+    "placeholder",
+    "Acme Inc.",
+  );
+});
