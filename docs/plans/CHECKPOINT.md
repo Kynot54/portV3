@@ -18,13 +18,13 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 7 (Services) is merged (PR #13) and ships hidden.** `SERVICES_ENABLED=false` in Production; `NEXT_PUBLIC_CAL_CONSULT_LINK` is set. Kyle confirmed the merge works as intended (2026-11-27).
-   - **To launch:** set the flag to `true`, redeploy, then run PR #13's live checklist (Safari booking, both calendars in one visit, a test message arriving as "Services:").
-   - **Deferred minors** are listed in PR #13's "Final review".
-2. **Slice 8 (project media):** PR on `slice/08-work-media`. It adds card thumbnails with hover clips, two images and a clip on each project page, Title Case on label headings, and a test-only sample project.
-   - **Kyle:** add each project's files (`public/images/work/<slug>/`, spec in the README), then a follow-up PR with alt text and clip descriptions for his approval.
+1. **Slice 8 (project media) is merged (PR #16).** The small fixes deferred from PRs #13 and #16, plus removing the Slice 3 placeholder project, are on `fix/deferred-minors`. Kyle reviews and merges them.
+2. **Real media: the last V3 step.** Kyle adds each project's files to `public/images/work/<slug>/` (spec in the README). Then I review and test them and open a follow-up PR, with alt text and clip descriptions for his approval. V3 is done when that PR merges.
    - **Revisit hosting** if traffic surges (clips are served from Vercel).
-3. **Later:** cross-posting to LinkedIn, Medium and X (Kyle still wants it, 2026-11-27). Posts are added through manual PRs, with no admin.
+3. **After V3 is done:** test the untracked project skills (`.claude/skills/portv3-copy`, `portv3-slice-done`) on fresh agents, then commit them in their own PR.
+4. **V3.1 (Kyle, 2026-11-27):**
+   - **Launch Services:** set `SERVICES_ENABLED=true`, redeploy, then run PR #13's live checklist (Safari booking, both calendars in one visit, a test message arriving as "Services:").
+   - **Cross-posting** to LinkedIn, Medium and X. Posts are still added through manual PRs, with no admin.
 
 ## Live-site facts (2026-11-26)
 

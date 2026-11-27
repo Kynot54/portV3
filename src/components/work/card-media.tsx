@@ -8,6 +8,9 @@ import { cn } from "@/lib/utils";
 const CAN_HOVER = "(hover: hover) and (pointer: fine)";
 const REDUCED = "(prefers-reduced-motion: reduce)";
 
+/** Stops whichever card is playing, so focus plus hover never plays two. */
+let stopCurrent: (() => void) | null = null;
+
 /**
  * A project card's thumbnail (image 1). On a mouse or trackpad, with reduced
  * motion off, the clip plays while the card is hovered or keyboard-focused,
@@ -33,9 +36,12 @@ export function CardMedia({
     const pointer = window.matchMedia(CAN_HOVER);
     const reduced = window.matchMedia(REDUCED);
     let active = false;
+    // Each start gets a number, so a late result from an earlier hover is ignored.
+    let run = 0;
 
     const stop = () => {
       active = false;
+      if (stopCurrent === stop) stopCurrent = null;
       setPlaying(false);
       v.pause();
       v.currentTime = 0;
@@ -43,7 +49,10 @@ export function CardMedia({
     const start = (e: Event) => {
       if ((e as PointerEvent).pointerType === "touch") return;
       if (!pointer.matches || reduced.matches || active) return;
+      if (stopCurrent !== stop) stopCurrent?.();
+      stopCurrent = stop;
       active = true;
+      const mine = ++run;
       setPlaying(true);
       v.play().then(
         // Left before the clip started: make sure it ends paused.
@@ -52,7 +61,7 @@ export function CardMedia({
         },
         // The browser can't play it: keep the still.
         () => {
-          if (active) stop();
+          if (active && mine === run) stop();
         },
       );
     };
@@ -66,6 +75,7 @@ export function CardMedia({
     card.addEventListener("focusout", stop);
     reduced.addEventListener("change", onReduced);
     return () => {
+      if (stopCurrent === stop) stopCurrent = null;
       card.removeEventListener("pointerenter", start);
       card.removeEventListener("focusin", start);
       card.removeEventListener("pointerleave", stop);

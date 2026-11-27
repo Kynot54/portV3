@@ -33,16 +33,27 @@ const PUBLIC_ENV = [
  */
 export function assertPublicEnv(env: Env): void {
   if (env.VERCEL_ENV !== "production") return;
-  const required = [
-    ...PUBLIC_ENV,
+  const pages = [
+    { page: "Contact page", keys: PUBLIC_ENV },
     // The Services page books on its own Cal.com event.
     ...(isServicesEnabled(env)
-      ? (["NEXT_PUBLIC_CAL_CONSULT_LINK"] as const)
+      ? [
+          {
+            page: "Services page",
+            keys: ["NEXT_PUBLIC_CAL_CONSULT_LINK"] as const,
+          },
+        ]
       : []),
   ];
-  const missing = required.filter((k) => !env[k]?.trim());
-  if (missing.length)
+  const problems = pages
+    .map(({ page, keys }) => ({
+      page,
+      missing: keys.filter((k) => !env[k]?.trim()),
+    }))
+    .filter((p) => p.missing.length)
+    .map((p) => `${p.page}: set ${p.missing.join(" and ")}`);
+  if (problems.length)
     throw new Error(
-      `Contact page: set ${missing.join(" and ")} in Vercel (Production) before deploying.`,
+      `${problems.join("; ")} in Vercel (Production) before deploying.`,
     );
 }

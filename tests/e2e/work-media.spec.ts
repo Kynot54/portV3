@@ -50,6 +50,15 @@ test.describe("card clip (mouse)", () => {
     await expectStopped(page);
   });
 
+  test("a fast in and out, before the clip starts, still ends stopped", async ({
+    page,
+  }) => {
+    await page.goto("/work");
+    await page.locator(SAMPLE).hover();
+    await page.getByRole("heading", { level: 1 }).hover();
+    await expectStopped(page);
+  });
+
   test("keyboard focus plays; moving focus away stops", async ({ page }) => {
     await countPlays(page);
     await page.goto("/work");
