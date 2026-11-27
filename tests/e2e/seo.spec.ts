@@ -25,6 +25,7 @@ async function expectedListed() {
       (p) => `/blog/${p.slug}`,
     ),
     "/contact",
+    "/services",
   ];
 }
 
@@ -119,7 +120,6 @@ test.describe("cards and crawl files", () => {
         `<loc>https://kwhynott.dev${path === "/" ? "/" : path}</loc>`,
       );
     expect(xml).not.toContain("/blog/none");
-    expect(xml).not.toContain("/services");
     expect(xml).not.toContain("/api");
   });
 });
