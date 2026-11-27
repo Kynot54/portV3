@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { PostMeta } from "@/components/blog/post-meta";
 import { blogPosts } from "@/lib/blog";
 import { renderMdx } from "@/lib/mdx";
-import { describePost, pageMetadata } from "@/lib/seo";
+import { describePost, cardAlt, pageMetadata } from "@/lib/seo";
 
 // Fully static; unknown slugs resolve before the response, so notFound() is a
 // real HTTP 404 (Next 16 ensureStatic), as on /work/[slug].
@@ -32,6 +32,10 @@ export async function generateMetadata({
         path: `/blog/${post.slug}`,
         type: "article",
         publishedTime: post.date,
+        image: {
+          path: `/blog/${post.slug}/opengraph-image`,
+          alt: cardAlt(post.title),
+        },
       })
     : {};
 }

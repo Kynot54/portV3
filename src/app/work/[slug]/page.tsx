@@ -5,7 +5,7 @@ import { cacheLife } from "next/cache";
 import { MediaPlaceholder } from "@/components/work/media-placeholder";
 import { getWorkList } from "@/lib/content/load";
 import { renderMdx } from "@/lib/mdx";
-import { describeWork, pageMetadata } from "@/lib/seo";
+import { describeWork, cardAlt, pageMetadata } from "@/lib/seo";
 
 // Every /work page is fully static. An unknown slug is resolved before the
 // response starts, so notFound() returns a real HTTP 404 (Next 16 ensureStatic).
@@ -35,6 +35,10 @@ export async function generateMetadata({
         title: entry.title,
         description: describeWork(entry),
         path: `/work/${entry.slug}`,
+        image: {
+          path: `/work/${entry.slug}/opengraph-image`,
+          alt: cardAlt(entry.title),
+        },
       })
     : {};
 }

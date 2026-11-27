@@ -1,5 +1,6 @@
 import {
   PAGE_DESCRIPTIONS,
+  SITE_ORIGIN,
   SITE_DESCRIPTION,
   describePost,
   describeWork,
@@ -139,4 +140,38 @@ test("article type carries publishedTime", () => {
     type: "article",
     publishedTime: "2026-11-26",
   });
+});
+
+test("siteConfig.url is kwhynott.dev whatever NEXT_PUBLIC_SITE_URL says", async () => {
+  const before = process.env.NEXT_PUBLIC_SITE_URL;
+  process.env.NEXT_PUBLIC_SITE_URL = "https://portv3-git-x.vercel.app";
+  try {
+    vi.resetModules();
+    const { siteConfig } = await import("@/lib/site");
+    expect(siteConfig.url).toBe(SITE_ORIGIN);
+  } finally {
+    process.env.NEXT_PUBLIC_SITE_URL = before;
+    vi.resetModules();
+  }
+});
+
+test("pageMetadata sets the card with its alt when given one", () => {
+  const m = pageMetadata({
+    title: "Alpha",
+    description: "d",
+    path: "/work/alpha",
+    image: { path: "/work/alpha/opengraph-image", alt: "Alpha, Kyle Whynott" },
+  });
+  expect((m.openGraph as { images: unknown }).images).toEqual([
+    {
+      url: "/work/alpha/opengraph-image",
+      width: 1200,
+      height: 630,
+      type: "image/png",
+      alt: "Alpha, Kyle Whynott",
+    },
+  ]);
+  // Without one, the page keeps its file-based card.
+  const plain = pageMetadata({ description: "d", path: "/work" });
+  expect(plain.openGraph).not.toHaveProperty("images");
 });

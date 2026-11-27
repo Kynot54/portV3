@@ -23,6 +23,15 @@ test.describe("not found", () => {
     const res = await page.goto("/services");
     expect(res?.status()).toBe(404);
   });
+
+  for (const path of ["/nope", "/services"])
+    test(`${path} has no canonical and isn't indexed`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.locator('head link[rel="canonical"]')).toHaveCount(0);
+      const robots = page.locator('head meta[name="robots"]');
+      await expect(robots).toHaveCount(1);
+      await expect(robots).toHaveAttribute("content", /noindex/);
+    });
 });
 
 test("favicon is the KW SVG", async ({ page, request }) => {
@@ -33,6 +42,20 @@ test("favicon is the KW SVG", async ({ page, request }) => {
     .getAttribute("href");
   expect(href).toContain(".svg");
   expect((await request.get(href!)).status()).toBe(200);
+});
+
+test("apple touch icon is a 180×180 PNG", async ({ page, request }) => {
+  await page.goto("/");
+  const href = await page
+    .locator('link[rel="apple-touch-icon"]')
+    .first()
+    .getAttribute("href");
+  expect(href).toBeTruthy();
+  const res = await request.get(href!);
+  expect(res.status()).toBe(200);
+  expect(res.headers()["content-type"]).toContain("image/png");
+  const buf = await res.body();
+  expect([buf.readUInt32BE(16), buf.readUInt32BE(20)]).toEqual([180, 180]);
 });
 
 test("tab order and visible focus", async ({ page, browserName }) => {

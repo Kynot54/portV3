@@ -7,9 +7,8 @@ export const CARD_SIZE = { width: 1200, height: 630 };
 export const CARD_TYPE = "image/png";
 export const HOME_CARD_TITLE = "I'm Kyle Whynott, an AI engineer.";
 
-/** "<title>, Kyle Whynott", without the title's end punctuation (no ".,"). */
-export const cardAlt = (title: string) =>
-  `${title.replace(/[.!?…]+$/, "")}, Kyle Whynott`;
+// Lives in seo.ts so pages can use it without loading the card's font.
+export { cardAlt } from "@/lib/seo";
 
 // Read once when the module loads (as in Next's docs), not per request: under
 // Cache Components a read during rendering counts as uncached I/O.

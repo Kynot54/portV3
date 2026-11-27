@@ -18,12 +18,11 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Open `TODO(kyle)`:**
-   - **Favicon:** awaiting Kyle's sign-off. Recommendation: convert "KW" to outlines, add a 180×180 `apple-icon.png`.
-   - **Five project screenshots:** Kyle adds them to `public/images/work/<slug>.png` (specs in the README), then wire them in with next/image and alt text for his approval.
-2. **Deferred minors from the Slice 6 review** (PR #10): `metadataBase` vs `SITE_ORIGIN`; project/post cards render on first request; `/services` and 404 reuse Home's canonical (fix before Services ships); hand-written e2e route list for head tags; HSTS `includeSubDomains` for 2 years.
+1. **PR `chore/slice-06-followups`:** the outlined favicon and Apple icon (Kyle approved 2026-11-26), and the Slice 6 review minors. Kyle merges.
+   - **HSTS stays** at 2 years with `includeSubDomains` (ruling in the PR): every subdomain will be HTTPS behind Cloudflare.
+2. **Open `TODO(kyle)`:** the five project screenshots. Kyle adds them to `public/images/work/<slug>.png` (specs in the README), then wire them in with next/image and alt text for his approval.
    - **Env vars are Production-only**, so check real embeds locally (README), never on a preview.
-3. **Next:** V3.1+ covers the admin, cross-posting and consulting.
+3. **Next: plan Services and post creation (V3.1).** Both need an admin section: work orders, scheduling Kyle as the technician, and payments that are held, then charged only if the service succeeds. Start with brainstorming.
 
 ## Live-site facts (2026-11-26)
 

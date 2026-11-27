@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { cacheLife } from "next/cache";
 import { getWorkList } from "@/lib/content/load";
-import { CARD_SIZE, CARD_TYPE, cardAlt, renderCard } from "@/lib/og-card";
+import { CARD_SIZE, CARD_TYPE, renderCard } from "@/lib/og-card";
 
 async function workList() {
   "use cache";
@@ -15,21 +15,10 @@ export async function generateStaticParams() {
   return (await workList()).map((e) => ({ slug: e.slug }));
 }
 
-export async function generateImageMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const entry = await entryFor((await params).slug);
-  return [
-    {
-      id: "card",
-      alt: cardAlt(entry?.title ?? "Work"),
-      size: CARD_SIZE,
-      contentType: CARD_TYPE,
-    },
-  ];
-}
+// No generateImageMetadata: with it, Next renders the card on first request
+// instead of at build. The page sets the alt (pageMetadata's image).
+export const size = CARD_SIZE;
+export const contentType = CARD_TYPE;
 
 export default async function Image({
   params,

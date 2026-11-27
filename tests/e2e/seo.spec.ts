@@ -1,9 +1,21 @@
-import type { Page } from "@playwright/test";
+import type { APIRequestContext, Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
 import { getBlogPosts, getWorkList } from "../../src/lib/content/load";
 
-/** Every page that exists in e2e builds (samples on). */
-async function routes() {
+/**
+ * Every page to check is what the sitemap lists (samples, in e2e builds), so a
+ * new page is checked as soon as it's listed; a unit test keeps every page in
+ * the sitemap.
+ */
+async function routes(request: APIRequestContext) {
+  const xml = await (await request.get("/sitemap.xml")).text();
+  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+    (m) => new URL(m[1]).pathname,
+  );
+}
+
+/** What the loaders say should be listed (samples on), to check the sitemap itself. */
+async function expectedListed() {
   return [
     "/",
     "/work",
@@ -20,12 +32,15 @@ const meta = (page: Page, sel: string) =>
   page.locator(`head ${sel}`).first().getAttribute("content");
 
 test.describe("head tags", () => {
-  test("every route has full OG/Twitter tags", async ({ page }, info) => {
+  test("every route has full OG/Twitter tags", async ({
+    page,
+    request,
+  }, info) => {
     test.skip(
       info.project.name !== "desktop",
       "head tags don't vary by viewport",
     );
-    for (const path of await routes()) {
+    for (const path of await routes(request)) {
       await page.goto(path);
       const description = await meta(page, 'meta[name="description"]');
       expect(description?.length ?? 0, path).toBeGreaterThanOrEqual(100);
@@ -66,7 +81,7 @@ test.describe("cards and crawl files", () => {
     request,
   }, info) => {
     test.skip(info.project.name !== "desktop", "doesn't vary by viewport");
-    for (const path of await routes()) {
+    for (const path of await routes(request)) {
       await page.goto(path);
       const src = await meta(page, 'meta[property="og:image"]');
       expect(src, path).toBeTruthy();
@@ -74,6 +89,8 @@ test.describe("cards and crawl files", () => {
         new URL(src!).pathname + new URL(src!).search,
       );
       expect(res.status(), path).toBe(200);
+      // Built with the site, not on the first crawler's request.
+      expect(res.headers()["x-nextjs-cache"], path).toBe("HIT");
       expect(res.headers()["content-type"], path).toContain("image/png");
       expect(pngSize(await res.body()), path).toEqual({
         width: 1200,
@@ -97,7 +114,7 @@ test.describe("cards and crawl files", () => {
   test("sitemap.xml has the expected URLs", async ({ request }, info) => {
     test.skip(info.project.name !== "desktop", "doesn't vary by viewport");
     const xml = await (await request.get("/sitemap.xml")).text();
-    for (const path of await routes())
+    for (const path of await expectedListed())
       expect(xml).toContain(
         `<loc>https://kwhynott.dev${path === "/" ? "/" : path}</loc>`,
       );

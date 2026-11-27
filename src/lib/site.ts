@@ -1,8 +1,11 @@
+import { SITE_ORIGIN } from "@/lib/seo";
+
 export type NavItem = { href: "/work" | "/blog" | "/contact"; label: string };
 
 export const siteConfig = {
   name: "Kyle Whynott",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://kwhynott.dev",
+  /** Fixed, so cards and canonicals never point at a preview host. */
+  url: SITE_ORIGIN,
   nav: [
     { href: "/work", label: "Work" },
     { href: "/blog", label: "Blog" },

@@ -3,11 +3,9 @@ import { notFound } from "next/navigation";
 import { isServicesEnabled } from "@/lib/flags";
 
 // Not shipped in V3: 404 unless SERVICES_ENABLED=true at build time.
-// Never in the nav. TODO(slice-06): exclude from the sitemap.
-export const metadata: Metadata = {
-  title: "Services",
-  robots: { index: false, follow: false },
-};
+// Never in the nav or the sitemap while off. Its own tags come when it ships.
+// While off, the 404 gets Next's own noindex.
+export const metadata: Metadata = { title: "Services" };
 
 export default function ServicesPage() {
   if (!isServicesEnabled()) notFound();

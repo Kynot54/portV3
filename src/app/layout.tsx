@@ -4,8 +4,7 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { hasBlog } from "@/lib/blog";
-import { siteConfig } from "@/lib/site";
-import { SITE_DESCRIPTION, pageMetadata } from "@/lib/seo";
+import { SITE_ORIGIN } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -20,10 +19,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+  metadataBase: new URL(SITE_ORIGIN),
   title: { default: "Kyle Whynott", template: "%s · Kyle Whynott" },
-  // Home's tags; every other page sets its own through pageMetadata().
-  ...pageMetadata({ description: SITE_DESCRIPTION, path: "/" }),
+  // No page tags here: each page sets its own through pageMetadata(), so a
+  // 404 or a switched-off page never inherits Home's canonical.
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
