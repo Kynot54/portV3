@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-27 · **Branch:** `slice/07-services` (from `main` @ `5c2aa65`). V3 is live; Slice 7 adds Services.
+**Updated:** 2026-11-27 · **Branch:** `main` (Slice 7 merged). V3 is live; Services is built and hidden.
 
 ## To resume
 
@@ -18,10 +18,9 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 7 (Services): PR on `slice/07-services` is ready for Kyle.** Design: `docs/superpowers/specs/2026-11-26-slice-07-services-design.md`; plan: `docs/plans/slice-07.md`.
-   - **Kyle:** all copy and visual calls approved (2026-11-27). Set the flag to `false`, then merge.
-   - **Ships hidden (Kyle, 2026-11-27):** Kyle sets `SERVICES_ENABLED=false` in Vercel Production before merging. `NEXT_PUBLIC_CAL_CONSULT_LINK` is set. To launch: set the flag to `true`, redeploy, then run the PR's live checklist.
-   - **Decided:** Services is consulting for non-technical founders (websites, custom software, AI automation, team training). No payments, scheduling, work orders or admin. Posts stay committed MDX (no admin). Placement B: not in the nav.
+1. **Slice 7 (Services) is merged (PR #13) and ships hidden.** `SERVICES_ENABLED=false` in Production; `NEXT_PUBLIC_CAL_CONSULT_LINK` is set. Kyle confirmed the merge works as intended (2026-11-27).
+   - **To launch:** set the flag to `true`, redeploy, then run PR #13's live checklist (Safari booking, both calendars in one visit, a test message arriving as "Services:").
+   - **Deferred minors** are listed in PR #13's "Final review".
 2. **Open `TODO(kyle)`:** the five project screenshots. Kyle adds them to `public/images/work/<slug>.png` (specs in the README), then wire them in with next/image and alt text for his approval.
    - **Env vars are Production-only**, so check real embeds locally (README), never on a preview.
 3. **Later:** cross-posting to LinkedIn, Medium and X.
