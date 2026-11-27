@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ServicesLinkLine } from "@/components/services-link-line";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ export function ContactCta() {
             I&apos;m looking for my next role as an AI or software engineer.
             Let&apos;s talk.
           </p>
+          <ServicesLinkLine className="mt-3 max-w-xl" />
         </div>
         <Link
           href="/contact"

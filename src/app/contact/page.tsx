@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Booking } from "@/components/contact/booking";
 import { ContactForm } from "@/components/contact/contact-form";
+import { ServicesLinkLine } from "@/components/services-link-line";
 import { PAGE_DESCRIPTIONS, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -21,6 +22,7 @@ export default function ContactPage() {
         I&apos;m looking for my next role as an AI or software engineer. Send a
         message or book a call. I reply within 2–3 business days.
       </p>
+      <ServicesLinkLine className="mt-3 max-w-2xl" />
 
       <div data-contact-grid className="mt-12 grid gap-12 md:grid-cols-2">
         <section aria-labelledby="message-title">

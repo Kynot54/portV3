@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { isServicesEnabled } from "@/lib/flags";
 import { siteConfig } from "@/lib/site";
 
 // No year: Cache Components rejects `new Date()` in prerendered output.
@@ -21,6 +23,15 @@ export function Footer() {
         >
           LinkedIn
         </a>
+        {isServicesEnabled() && (
+          <>
+            {" "}
+            ·{" "}
+            <Link className="link inline-block py-2" href="/services">
+              Services
+            </Link>
+          </>
+        )}
       </p>
     </footer>
   );
