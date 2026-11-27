@@ -18,7 +18,7 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **Slice 8 (project media) is merged (PR #16).** The small fixes deferred from PRs #13 and #16, plus removing the Slice 3 placeholder project, are on `fix/deferred-minors`. Kyle reviews and merges them.
+1. **Slice 8 (project media) is merged (PR #16).** The small fixes deferred from PRs #13 and #16, plus removing the Slice 3 placeholder project, are in PR #17. Kyle reviews and merges them.
 2. **Real media: the last V3 step.** Kyle adds each project's files to `public/images/work/<slug>/` (spec in the README). Then I review and test them and open a follow-up PR, with alt text and clip descriptions for his approval. V3 is done when that PR merges.
    - **Revisit hosting** if traffic surges (clips are served from Vercel).
 3. **After V3 is done:** test the untracked project skills (`.claude/skills/portv3-copy`, `portv3-slice-done`) on fresh agents, then commit them in their own PR.

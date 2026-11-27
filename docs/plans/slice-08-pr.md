@@ -56,7 +56,7 @@ A fresh reviewer read the whole branch and found no Critical or Important issues
 
 - **Fixed:** a file name of `.` or `..`, or the wrong file type, could pass the build and show a broken image. Now it fails the build.
 - **Fixed:** the README's advice to put phone apps on a 16:9 canvas is back.
-- **Left for later (minor), fixed after merge in the follow-up PR on `fix/deferred-minors`:**
+- **Left for later (minor), fixed after merge in PR #17:**
   1. A very fast out-and-back on a card's first hover can leave the still showing until the next hover.
   2. Keyboard focus on one card and mouse hover on another can play two clips.
   3. The page clip's still frame downloads larger than it needs to.
