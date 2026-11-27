@@ -47,3 +47,15 @@ test("MediaPlaceholder: readable label, decorative layer hidden, nothing focusab
   );
   expect(container.querySelectorAll("a,button,[tabindex]").length).toBe(0);
 });
+
+test("WorkCard shows a thumbnail only when the project has media", async () => {
+  const list = await getWorkList("content/work", { WORK_SAMPLES: "1" });
+  const sample = list.find((e) => e.slug === "sample-media")!;
+  const { rerender } = render(<WorkCard entry={sample} headingLevel={2} />);
+  const link = screen.getByRole("link");
+  expect(link.querySelector("img")).toHaveAttribute("alt", "");
+  expect(link.querySelector("video")).not.toBeNull();
+  expect(link).toHaveAccessibleName(/Sample project with media/);
+  rerender(<WorkCard entry={list[0]} headingLevel={2} />);
+  expect(screen.getByRole("link").querySelector("img, video")).toBeNull();
+});
