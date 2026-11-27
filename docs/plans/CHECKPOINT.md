@@ -21,9 +21,10 @@ Open a session in `~/Projects/portV3` and say:
 1. **Slice 7 (Services) is merged (PR #13) and ships hidden.** `SERVICES_ENABLED=false` in Production; `NEXT_PUBLIC_CAL_CONSULT_LINK` is set. Kyle confirmed the merge works as intended (2026-11-27).
    - **To launch:** set the flag to `true`, redeploy, then run PR #13's live checklist (Safari booking, both calendars in one visit, a test message arriving as "Services:").
    - **Deferred minors** are listed in PR #13's "Final review".
-2. **Open `TODO(kyle)`:** the five project screenshots. Kyle adds them to `public/images/work/<slug>.png` (specs in the README), then wire them in with next/image and alt text for his approval.
-   - **Env vars are Production-only**, so check real embeds locally (README), never on a preview.
-3. **Later:** cross-posting to LinkedIn, Medium and X.
+2. **Slice 8 (project media):** PR on `slice/08-work-media`. It adds card thumbnails with hover clips, two images and a clip on each project page, Title Case on label headings, and a test-only sample project.
+   - **Kyle:** add each project's files (`public/images/work/<slug>/`, spec in the README), then a follow-up PR with alt text and clip descriptions for his approval.
+   - **Revisit hosting** if traffic surges (clips are served from Vercel).
+3. **Later:** cross-posting to LinkedIn, Medium and X (Kyle still wants it, 2026-11-27). Posts are added through manual PRs, with no admin.
 
 ## Live-site facts (2026-11-26)
 

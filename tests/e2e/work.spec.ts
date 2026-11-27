@@ -16,6 +16,7 @@ test.describe("work detail pages", () => {
         "Context",
         "What I Built",
         e.impactHeading,
+        ...(e.media?.clip ? ["See It in Action"] : []),
         "What I Learned",
         "Built With",
       ]);
@@ -30,7 +31,9 @@ test.describe("work detail pages", () => {
       await expect(
         page.getByText(`${e.role} · ${e.location} · ${e.period}`),
       ).toBeVisible();
-      await expect(page.getByText("Preview coming soon")).toBeVisible();
+      await expect(page.getByText("Preview coming soon")).toHaveCount(
+        e.media ? 0 : 1,
+      );
     }
   });
 

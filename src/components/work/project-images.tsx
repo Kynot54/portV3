@@ -14,7 +14,7 @@ export function ProjectImages({ images }: { images: WorkMedia["images"] }) {
             src={img.src}
             alt={img.alt}
             fill
-            priority={i === 0}
+            preload={i === 0}
             sizes="(min-width: 768px) 384px, 100vw"
             className="object-cover"
           />

@@ -40,17 +40,39 @@ Every pull request runs the `quality` CI job. It fails on any of:
 
 Design tokens and the rules behind them are in [`docs/design-tokens.md`](docs/design-tokens.md).
 
-## Adding project screenshots
+## Adding project media
 
-Each project page shows one image in a 16:9 frame, at most 768 CSS px wide. A 4K monitor at 200% scaling or a Retina screen draws that frame with 1536 actual pixels, and high-end phones need about 1100.
+Each project can show two images and one optional short clip.
 
-- **Size:** 1920 × 1080 (exactly 16:9; at least 1600 × 900).
-- **Format:** PNG for interface shots, a high-quality JPEG for photo-heavy ones. Under about 3 MB.
-- **One file per project.** Next's image component makes the AVIF and WebP copies at each size.
-- **Place:** `public/images/work/<slug>.png`, using the slugs `working-entrepreneurs`, `control-bh`, `video-interview-plugin`, `ulti-health` and `ai-mind-companion`.
-- **Phone apps:** place one or two phone screens on a 16:9 canvas.
-- **Hide client data** (names, figures, documents), and check that each client is fine with the image being public.
-- **Alt text:** each image needs a one-line description.
+- **Cards:** image 1 is the thumbnail. On a mouse or trackpad, the clip plays while the card is hovered or keyboard-focused, and stops when the pointer or focus leaves. Phones, tablets and anyone with reduced motion on see the still.
+- **Project page:** both images near the top. The clip (if any) sits under "See It in Action", with controls, and never starts by itself.
+
+Put the files in `public/images/work/<slug>/`, using the slugs `working-entrepreneurs`, `control-bh`, `video-interview-plugin`, `ulti-health` and `ai-mind-companion`:
+
+| File                        | Spec                                                                                                                                                 |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `1.png`, `2.png` (required) | 1920 × 1080 (16:9), PNG, or JPEG for photo-heavy shots; under about 3 MB each. Image 1 is the card thumbnail, so make it the clearest view.          |
+| `clip.mp4` (optional)       | Up to about 20 seconds; 1920 × 1080 or 1280 × 720; H.264 MP4; **no audio track**; under about 5 MB; nothing that flashes more than 3 times a second. |
+
+Then list them in the project's frontmatter, with alt text for each image and a one-line description of the clip:
+
+```yaml
+media:
+  images:
+    - src: 1.png
+      alt: "…"
+    - src: 2.png
+      alt: "…"
+  clip: # optional
+    src: clip.mp4
+    description: "…"
+```
+
+The build fails if a file is missing, an image has no alt text, there aren't exactly two images, or a clip has no description.
+
+- **Hide client data** (names, figures, documents), and check that each client is fine with the media being public.
+- **Revisit if traffic surges** (Kyle, 2026-11-27): clips are served from this site. If they start to dominate Vercel's bandwidth, move them to a video host. Only the `src` values and the security policy's `media-src` would change.
+- **Tests:** `WORK_SAMPLES=1` adds a sample project with generated media (`scripts/make-sample-media.mjs`) to e2e and Lighthouse builds. It never appears in production.
 
 ## Before merging a change to headers or third-party embeds
 

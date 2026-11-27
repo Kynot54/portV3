@@ -9,6 +9,7 @@ const A11Y_ROUTES = [
   "/work/ulti-health",
   "/work/video-interview-plugin",
   "/work/ai-mind-companion",
+  "/work/sample-media",
   "/blog/sample-formatting",
   "/blog/sample-long-read",
 ];
