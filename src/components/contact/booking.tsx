@@ -39,9 +39,15 @@ function cal(): CalApi {
  */
 export function Booking({
   calLink,
+  intro = "A 30-minute intro call.",
+  label = "Book a call",
   timeoutMs = 10_000,
 }: {
   calLink: string | undefined;
+  /** The line above the button. */
+  intro?: string;
+  /** The button's text before the calendar loads. */
+  label?: string;
   timeoutMs?: number;
 }) {
   const [phase, setPhase] = useState<"idle" | "loading" | "ready" | "failed">(
@@ -108,9 +114,7 @@ export function Booking({
 
   return (
     <div className="flex flex-col items-start gap-4">
-      <p className="text-body-fluid text-muted-foreground">
-        A 30-minute intro call.
-      </p>
+      <p className="text-body-fluid text-muted-foreground">{intro}</p>
       {calLink && (phase === "idle" || phase === "loading") && (
         <Button
           type="button"
@@ -119,7 +123,7 @@ export function Booking({
           onClick={() => setPhase("loading")}
           className="h-11 px-5 text-sm"
         >
-          {phase === "loading" ? "Loading calendar…" : "Book a call"}
+          {phase === "loading" ? "Loading calendar…" : label}
         </Button>
       )}
       {calLink && phase === "failed" && (
