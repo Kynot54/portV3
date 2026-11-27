@@ -41,12 +41,14 @@ Project page: ![](https://github.com/Kynot54/portV3/blob/slice/08-work-media/doc
 
 ## Test evidence
 
-| Check                     | Result                                                                                                                                                                                                                                                      |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| lint · format · typecheck | pass                                                                                                                                                                                                                                                        |
-| Unit                      | **285 passed**: media validation (missing, not a file, wrong type, no alt, one image, clip without description); hover, focus and leave; touch; reduced motion, including switched on mid-play; a clip the browser can't play; leaving before play starts   |
-| E2E                       | **534 passed**: hover, keyboard, reduced motion, a touch phone (never plays, a tap opens the project), switching cards, 16:9 kept while loading, page section order, axe on the sample page. Breaking the leave handler on purpose made the hover test fail |
-| Lighthouse (13 URLs)      | Accessibility **100** everywhere; every other score **≥ 96**. The 96–98 dips appear on `main` too (this machine's timing)                                                                                                                                   |
+| Check                     | Result                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| lint · format · typecheck | pass                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Unit                      | **285 passed**: media validation (missing, not a file, wrong type, no alt, one image, clip without description); hover, focus and leave; touch; reduced motion, including switched on mid-play; a clip the browser can't play; leaving before play starts                                                                                                                                                                                         |
+| E2E                       | **534 passed**: hover, keyboard, reduced motion, a touch phone (never plays, a tap opens the project), switching cards, 16:9 kept while loading, page section order, axe on the sample page. Breaking the leave handler on purpose made the hover test fail                                                                                                                                                                                       |
+| Lighthouse (13 URLs)      | Accessibility **100** everywhere; every other score **≥ 96**. The 96–98 dips appear on `main` too (this machine's timing)                                                                                                                                                                                                                                                                                                                         |
+| Manual (Kyle)             | Keyboard pass on every page: works throughout. Booking confirmed in real Safari                                                                                                                                                                                                                                                                                                                                                                   |
+| Flaky tests               | Safari "failure line on a 500" (`contact.spec.ts`) and "a message sent from Services is tagged services" failed some CI runs (also on Slice 7): they could click Send message before the form's code was running. Both now wait for the form to be ready (`formReady()`: focus a field, wait for Turnstile to load), the same check the end-to-end send test already used. Contact and Services specs: 258 of 258 passed, 3 runs on every browser |
 
 ## Final review
 
@@ -54,7 +56,7 @@ A fresh reviewer read the whole branch and found no Critical or Important issues
 
 - **Fixed:** a file name of `.` or `..`, or the wrong file type, could pass the build and show a broken image. Now it fails the build.
 - **Fixed:** the README's advice to put phone apps on a 16:9 canvas is back.
-- **Left for later (minor):**
+- **Left for later (minor), fixed after merge in PR #17:**
   1. A very fast out-and-back on a card's first hover can leave the still showing until the next hover.
   2. Keyboard focus on one card and mouse hover on another can play two clips.
   3. The page clip's still frame downloads larger than it needs to.
@@ -63,6 +65,7 @@ A fresh reviewer read the whole branch and found no Critical or Important issues
 ## Kyle's calls (2026-11-27)
 
 - **Title Case rule:** capitalize the first word, nouns, verbs and adjectives. Articles, prepositions, conjunctions and "that" stay lowercase. So: **AI that Takes on Repetitive Work**, **Built with**, **Tell Me about Your Business**.
+- **Flaky Safari tests:** wait until the form is ready before clicking Send message (no fixed delay).
 - **The card thumbnail's look and "See It in Action":** fine as placeholders for now.
 
 ## Your next step

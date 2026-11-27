@@ -15,9 +15,9 @@ export function ProjectClip({
   const { src: posterSrc } = getImageProps({
     src: poster,
     alt: "",
-    width: 1920,
-    height: 1080,
-    sizes: "(min-width: 768px) 768px, 100vw",
+    // The clip's 768px column: at 2x that's the 1920w size, not the 3840w maximum.
+    width: 768,
+    height: 432,
   }).props;
   return (
     <figure aria-labelledby="clip-caption">

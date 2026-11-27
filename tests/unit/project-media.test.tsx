@@ -32,6 +32,8 @@ test("ProjectClip: controls, never autoplays, image 1 as poster, caption", () =>
   expect(video.getAttribute("poster")).toContain(
     encodeURIComponent("/images/work/x/1.png"),
   );
+  // Sized for the 768px column on a sharp screen (1920w), not the 3840w maximum.
+  expect(video.getAttribute("poster")).toContain("w=1920&");
   expect(screen.getByRole("figure")).toHaveAccessibleName(
     "Reading the AI insights",
   );

@@ -124,3 +124,42 @@ test("the still is decorative and the clip is hidden, muted and loads on demand"
   expect(video).toHaveAttribute("loop");
   expect(video!.muted).toBe(true);
 });
+
+test("a late failure from an earlier hover doesn't stop a quick re-hover", async () => {
+  let rejectFirst!: (e: unknown) => void;
+  play
+    .mockImplementationOnce(
+      () => new Promise<void>((_, rej) => (rejectFirst = rej)),
+    )
+    .mockImplementationOnce(() => Promise.resolve());
+  const { card, box } = renderCard();
+  await act(async () => fireEvent.pointerEnter(card));
+  await act(async () => fireEvent.pointerLeave(card));
+  await act(async () => fireEvent.pointerEnter(card));
+  await act(async () =>
+    rejectFirst(new DOMException("interrupted", "AbortError")),
+  );
+  expect(box).toHaveAttribute("data-playing", "true");
+});
+
+test("only one card plays: hovering a second card stops a focused one", async () => {
+  render(
+    <>
+      <Link href="/work/a">
+        <CardMedia media={MEDIA} sizes="100vw" />
+        <h3>A</h3>
+      </Link>
+      <Link href="/work/b">
+        <CardMedia media={MEDIA} sizes="100vw" />
+        <h3>B</h3>
+      </Link>
+    </>,
+  );
+  const [a, b] = screen.getAllByRole("link");
+  const boxOf = (el: HTMLElement) =>
+    el.querySelector("[data-playing]") as HTMLElement;
+  await act(async () => a.focus());
+  await act(async () => fireEvent.pointerEnter(b));
+  expect(boxOf(a)).toHaveAttribute("data-playing", "false");
+  expect(boxOf(b)).toHaveAttribute("data-playing", "true");
+});

@@ -43,15 +43,18 @@ export default function ServicesPage() {
         </h1>
         <p className={cn("mt-4 max-w-2xl", muted)}>{C.lead}</p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <a
-            href="#book"
-            className={cn(
-              buttonVariants({ variant: "default" }),
-              "h-11 px-5 text-sm",
-            )}
-          >
-            {C.cta.book}
-          </a>
+          {/* No link, no dead end: production can't build without one. */}
+          {calLink && (
+            <a
+              href="#book"
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "h-11 px-5 text-sm",
+              )}
+            >
+              {C.cta.book}
+            </a>
+          )}
           <a
             href="#message"
             className={cn(
