@@ -1,6 +1,6 @@
 # Slice 8: Project images and clips (design)
 
-**Status:** draft for Kyle's approval, 2026-11-27. Branch `slice/08-work-media`.
+**Status:** approved by Kyle, 2026-11-27. Branch `slice/08-work-media`.
 
 ## Intent
 
@@ -21,6 +21,8 @@ Show Kyle's projects visually. Each project gets two images and, optionally, one
 1. **Plain `<video>`, files in `public/` (chosen).** No account, no package, works in every browser. Costs Vercel bandwidth; at 2–5 MB per clip that's fine for a portfolio.
 2. **A video host (Mux, Cloudflare Stream, Vercel Blob).** Adaptive streaming, but a new account, possibly a monthly cost, a new origin in the security policy, and dependencies, all for five short silent clips.
 3. **Animated WebP or GIF.** 5–10× larger, lower quality, and can't be paused and reverted to a still cleanly.
+
+**Revisit trigger (Kyle, 2026-11-27):** approach 1 is approved on the condition that hosting gets revisited if traffic surges unexpectedly. Watch Vercel's bandwidth usage. If clips start to dominate it, move them to a video host (approach 2) or a CDN. Only the `src` values and the security policy's `media-src` would change; the cards and page stay the same.
 
 ## Goals, non-goals, anti-goals
 
