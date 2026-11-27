@@ -75,6 +75,7 @@ const entry = (
   learned: "Learned.",
   tools: ["Tool"],
   body: "",
+  media: null,
 });
 const FIXTURE_THREE = [
   entry(

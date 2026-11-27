@@ -29,6 +29,17 @@ export type WorkEntry = {
   tools: string[];
   /** MDX: the "What I built" (Action) prose. */
   body: string;
+  /** Images and clip, or null until Kyle supplies them. */
+  media: WorkMedia | null;
+};
+
+/** One project image: a site path (/images/work/<slug>/<file>) and its alt text. */
+export type MediaImage = { src: string; alt: string };
+
+/** A project's two images and optional silent clip (Slice 8). */
+export type WorkMedia = {
+  images: [MediaImage, MediaImage];
+  clip: { src: string; description: string } | null;
 };
 
 export type BlogPost = {

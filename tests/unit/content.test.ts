@@ -40,6 +40,7 @@ test("getWork parses frontmatter, slugs from filename, newest first", async () =
     learned: "Something learned.",
     tools: ["Tool"],
     body: "Beta body.\n",
+    media: null,
   });
   expect(work[1].placeholder).toBe(false); // default
   expect(work[1].description).toBe(
@@ -480,4 +481,38 @@ test("BLOG_SAMPLES=1 is ignored in production", async () => {
       ),
     ),
   ).toEqual(["real-one"]);
+});
+
+const MEDIA = `${F}/../media`;
+
+test("media: two images with alt text and an optional clip, as site paths", async () => {
+  const w = await getWork(`${F}/work-media`, MEDIA);
+  const by = (slug: string) => w.find((e) => e.slug === slug)!;
+  expect(by("full").media).toEqual({
+    images: [
+      { src: "/images/work/full/1.png", alt: "The dashboard" },
+      { src: "/images/work/full/2.png", alt: "The report view" },
+    ],
+    clip: {
+      src: "/images/work/full/clip.mp4",
+      description: "Uploading an application and reading the AI insights",
+    },
+  });
+  expect(by("images-only").media?.clip).toBeNull();
+  expect(by("none").media).toBeNull();
+});
+
+test.each([
+  ["work-media-missing-file", /not found/],
+  ["work-media-no-alt", /alt is required/],
+  ["work-media-one-image", /exactly two images/],
+  ["work-media-clip-no-description", /description is required/],
+])("bad media in %s fails the build", async (dir, problem) => {
+  const err = await getWork(`${F}/${dir}`, MEDIA).catch((e) => e);
+  expect(err).toMatchObject({ file: "x.mdx", field: "media" });
+  expect(err.message).toMatch(problem);
+});
+
+test("no real project has media yet", async () => {
+  for (const e of await getWorkList()) expect(e.media, e.slug).toBeNull();
 });
