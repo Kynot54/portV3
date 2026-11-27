@@ -205,15 +205,15 @@ const CLAIMS: [copyFragment: string, resumePhrases: string[]][] = [
     ["under 2 weeks", "continual maintenance for a year"],
   ],
   [
-    "I built a video-interview plugin that screened 100+ applicants. Hiring efficiency rose over 50%.",
-    ["100+ applicants", "hiring efficiency by over 50%"],
+    "I built a video-interview plugin that screened 100+ applicants. Hiring efficiency rose over 35%.",
+    ["100+ applicants", "hiring efficiency by over 35%"],
   ],
   [
     "had 100+ applicants to screen, and screening took management hundreds of hours",
     ["100+ applicants", "100s of working hours"],
   ],
   ["100+ applicants screened.", ["100+ applicants"]],
-  ["Hiring efficiency up over 50%.", ["hiring efficiency by over 50%"]],
+  ["Hiring efficiency up over 35%.", ["hiring efficiency by over 35%"]],
   ["Hundreds of management hours saved.", ["100s of working hours"]],
   ["40+ students", ["40+ students"]],
   ["built AI document pipelines for 50+ clients", ["over 50 clients"]],
@@ -232,8 +232,8 @@ const CLAIMS: [copyFragment: string, resumePhrases: string[]][] = [
     ],
   ],
   [
-    "It screened 100+ applicants and raised hiring efficiency by over 50%.",
-    ["100+ applicants", "hiring efficiency by over 50%"],
+    "It screened 100+ applicants and raised hiring efficiency by over 35%.",
+    ["100+ applicants", "hiring efficiency by over 35%"],
   ],
 ];
 /** Tool and degree names that contain digits but aren't claims. */

@@ -9,6 +9,8 @@ Changes from the PDF:
 - Ulti-Health rewritten to its real MVP stack (Expo + Supabase), per Kyle, 2026-11-26
 - Working Entrepreneurs: over 50 clients (was "over 10"), per Kyle, 2026-11-26
 - AI Mind Companion: voice-assistant, dementia-flagging, FastAPI, Cloud Functions, JSONL vector store facts, per Kyle, 2026-11-26
+- Teacher of Record, the C++ class size, and the certifications below added from Kyle's CV for the Services training offer, per Kyle, 2026-11-26 (only what that offer needs)
+- O'Hagan Electrical: hiring efficiency over 35% (was "over 50%"; both are estimates, Kyle chose the safe figure), per Kyle, 2026-11-26
 Never add a phone number or personal email here.
 -->
 
@@ -25,6 +27,12 @@ Anaheim, CA · [linkedin.com/in/kyle-whynott](https://www.linkedin.com/in/kyle-w
 - **Software engineering:** Software Development Lifecycle (SDLC), Systems Design, Software Architecture, UML, TDD
 - **Project management:** Agile, Scrum, XP, Jira, Confluence, Bitbucket, Trello, Linear, ClickUp, Notion
 
+## Certifications
+
+- **ConstrAIng AI: Recentering Human Intelligence**, CSUF Faculty Development Center, March 2026: instructional strategies and course design in response to generative AI
+- **AI for Everyone**, DeepLearning.AI / Coursera, September 2025: non-technical AI concepts and how organizations apply AI
+- **GATA Teaching and Learning Certificate**, CSUF Faculty Development Center, February 2025: evidence-based instructional design and inclusive teaching
+
 ## Work experience
 
 ### Teaching Associate, California State University, Fullerton
@@ -32,7 +40,8 @@ Anaheim, CA · [linkedin.com/in/kyle-whynott](https://www.linkedin.com/in/kyle-w
 Fullerton, CA · August 2024 – May 2026
 
 - Designed and delivered a university-grade machine learning course for 40+ students using Python, Scikit-Learn, TensorFlow, and Keras, incorporating data pipelines, GPU training, and end-to-end model deployment
-- Taught C++ programming lectures and labs with a focus on object-oriented programming, object-oriented design, and data structures while engaging with industry-grade practices on memory management, algorithmic complexity, and reinforcing core computer science principles
+- Teacher of Record for CPSC 483, Introduction to Machine Learning (January – May 2026): two sections of 40+ undergraduate students each; independently designed the course materials, assessments, exams and semester-long curriculum
+- Taught weekly C++ lectures and labs (CPSC 121, Object-Oriented Programming in C++) for 60+ undergraduate students, with a focus on object-oriented programming, object-oriented design, and data structures while engaging with industry-grade practices on memory management, algorithmic complexity, and reinforcing core computer science principles
 
 ### Automations Engineer Intern (Software and AI), Working Entrepreneurs
 
@@ -53,7 +62,7 @@ Remote · August 2024 – December 2025
 
 Aliso Viejo, CA · April 2024 – June 2024
 
-- Architected a WordPress video-interview plugin utilizing HTML5, CSS3, PHP 8.2, and MySQL to automate the screening for 100+ applicants, improve hiring efficiency by over 50%, thereby saving management 100s of working hours to screen applications
+- Architected a WordPress video-interview plugin utilizing HTML5, CSS3, PHP 8.2, and MySQL to automate the screening for 100+ applicants, improve hiring efficiency by over 35%, thereby saving management 100s of working hours to screen applications
 
 ## Projects
 
