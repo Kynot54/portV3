@@ -56,6 +56,8 @@ test.describe("server failure", () => {
     );
     await page.goto("/contact");
     await fill(page);
+    // Headless WebKit on CI sometimes clicks before the form is ready (Kyle, 2026-11-27).
+    await page.waitForTimeout(500);
     await page.getByRole("button", { name: "Send message" }).click();
     await expect(page.locator("main").getByRole("alert")).toHaveText(
       "Something went wrong. Try again, or book a call instead.",
