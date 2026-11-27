@@ -1,6 +1,12 @@
-## ⚠️ Merging deploys to production, with Services on
+## ⚠️ Merging deploys to production, with Services off
 
-`SERVICES_ENABLED=true` and `NEXT_PUBLIC_CAL_CONSULT_LINK` are already set in Vercel Production, so merging makes `kwhynott.dev/services` live. It also adds a link line on Home and Contact and a footer link. To merge without going live, set `SERVICES_ENABLED` to `false` first.
+Kyle's call (2026-11-27): ship with Services hidden. **Before merging, set `SERVICES_ENABLED=false` in Vercel Production** (Kyle; it's currently `true`). With it off, the page, its card, the sitemap entry and every link stay hidden, and the build doesn't need the consultation link. To launch later, set it to `true` and redeploy.
+
+**Off build checked locally** (production build, `SERVICES_ENABLED` unset):
+
+- `/services` and `/services/opengraph-image` return 404, with `noindex` and no canonical link.
+- `sitemap.xml` doesn't list it.
+- `/`, `/contact` and `/work` have no `/services` links.
 
 ## Summary
 
@@ -52,7 +58,7 @@ A fresh reviewer read the whole branch. Verdict: ready with fixes. All five risk
 
 ## Kyle's calls (2026-11-27)
 
-1. **Step 4, reworded for a professional tone** (please confirm the final text): **"Handover and support.** I train your team on the finished product and transfer full ownership to your business, including the hosting and service accounts and their costs. After launch, I provide ongoing maintenance at a monthly rate until you hire someone to take it over."
+1. **Step 4, reworded for a professional tone (approved):** **"Handover and support.** I train your team on the finished product and transfer full ownership to your business, including the hosting and service accounts and their costs. After launch, I provide ongoing maintenance at a monthly rate until you hire someone to take it over."
 2. **Form examples on Services (approved):** role **"Owner"**. The message example is now about what the founder wants built: **"Hi Kyle, I run a small business and I'd like a website where customers can request a quote online."**
 3. **Buttons in the call-to-action colour (approved):** on Services, the hero's "Book a consultation", the booking button and "Send message" all use the accent colour. "Send a message" in the hero stays an outline button as the secondary action. The Contact page is unchanged: one accent button, and its booking button stays outline.
 

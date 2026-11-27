@@ -19,8 +19,8 @@ Open a session in `~/Projects/portV3` and say:
 ## Next steps, in order
 
 1. **Slice 7 (Services): PR on `slice/07-services` is ready for Kyle.** Design: `docs/superpowers/specs/2026-11-26-slice-07-services-design.md`; plan: `docs/plans/slice-07.md`.
-   - **Kyle:** review "Needs Kyle's call" in the PR (step 4's wording, the founder form examples, two accent buttons), merge, then run its live checklist.
-   - **Production env:** `SERVICES_ENABLED=true` and `NEXT_PUBLIC_CAL_CONSULT_LINK` (Kyle set both, 2026-11-27). A production build with Services on fails without the link.
+   - **Kyle:** all copy and visual calls approved (2026-11-27). Set the flag to `false`, then merge.
+   - **Ships hidden (Kyle, 2026-11-27):** Kyle sets `SERVICES_ENABLED=false` in Vercel Production before merging. `NEXT_PUBLIC_CAL_CONSULT_LINK` is set. To launch: set the flag to `true`, redeploy, then run the PR's live checklist.
    - **Decided:** Services is consulting for non-technical founders (websites, custom software, AI automation, team training). No payments, scheduling, work orders or admin. Posts stay committed MDX (no admin). Placement B: not in the nav.
 2. **Open `TODO(kyle)`:** the five project screenshots. Kyle adds them to `public/images/work/<slug>.png` (specs in the README), then wire them in with next/image and alt text for his approval.
    - **Env vars are Production-only**, so check real embeds locally (README), never on a preview.
