@@ -47,7 +47,7 @@ Each project page shows one image in a 16:9 frame, at most 768 CSS px wide. A 4K
 - **Size:** 1920 × 1080 (exactly 16:9; at least 1600 × 900).
 - **Format:** PNG for interface shots, a high-quality JPEG for photo-heavy ones. Under about 3 MB.
 - **One file per project.** Next's image component makes the AVIF and WebP copies at each size.
-- **Place:** `public/images/work/<slug>.png`, using the slugs `ai-document-pipelines`, `control-bh`, `video-interview-plugin`, `ulti-health` and `ai-mind-companion`.
+- **Place:** `public/images/work/<slug>.png`, using the slugs `working-entrepreneurs`, `control-bh`, `video-interview-plugin`, `ulti-health` and `ai-mind-companion`.
 - **Phone apps:** place one or two phone screens on a 16:9 canvas.
 - **Hide client data** (names, figures, documents), and check that each client is fine with the image being public.
 - **Alt text:** each image needs a one-line description.

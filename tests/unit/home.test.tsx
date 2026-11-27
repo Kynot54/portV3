@@ -80,7 +80,7 @@ const FIXTURE_THREE = [
   entry(
     1,
     "AI · 2025–26",
-    "AI document pipelines",
+    "Working Entrepreneurs",
     "I built AI pipelines for 50+ clients. Manual review dropped 50%.",
   ),
   entry(
@@ -110,7 +110,7 @@ test("SelectedWork renders one linked card per entry with label, title, summary"
   expect(cards).toHaveLength(3);
   cards.forEach((c, i) => expect(c).toHaveAttribute("href", `/work/e${i + 1}`));
   expect(cards[0]).toHaveTextContent("AI · 2025–26");
-  expect(cards[0]).toHaveTextContent("AI document pipelines");
+  expect(cards[0]).toHaveTextContent("Working Entrepreneurs");
   expect(cards[1]).toHaveTextContent(FIXTURE_THREE[1].summary);
   expect(document.getElementById("work")).not.toBeNull();
 });
@@ -153,6 +153,6 @@ test("project titles are h3 headings inside a list", () => {
   render(<SelectedWork entries={FIXTURE_THREE} />);
   expect(
     screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent),
-  ).toEqual(["AI document pipelines", "C.O.N.T.R.O.L. BH", "Ulti-Health"]);
+  ).toEqual(["Working Entrepreneurs", "C.O.N.T.R.O.L. BH", "Ulti-Health"]);
   expect(screen.getByRole("list")).toHaveAttribute("role", "list");
 });

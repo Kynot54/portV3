@@ -69,7 +69,7 @@ test.describe("work detail pages", () => {
   }) => {
     await page.goto("/");
     await page.locator("#work a").first().click();
-    await expect(page).toHaveURL(/\/work\/ai-document-pipelines$/);
+    await expect(page).toHaveURL(/\/work\/working-entrepreneurs$/);
     await page.goto("/work");
     await page.getByRole("link", { name: /AI Mind Companion/ }).click();
     await expect(page).toHaveURL(/\/work\/ai-mind-companion$/);
@@ -117,4 +117,15 @@ test.describe("work detail pages", () => {
     expect(box!.x + box!.width).toBeLessThanOrEqual(320);
     await ctx.close();
   });
+});
+
+test("the old pipelines URL lands on Working Entrepreneurs", async ({
+  page,
+}) => {
+  const res = await page.goto("/work/ai-document-pipelines");
+  expect(res?.status()).toBe(200);
+  await expect(page).toHaveURL(/\/work\/working-entrepreneurs$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Working Entrepreneurs",
+  );
 });

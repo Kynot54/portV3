@@ -54,7 +54,7 @@ test("the hero's Send a message jumps to the form", async ({ page }) => {
 for (const slug of [
   "control-bh",
   "video-interview-plugin",
-  "ai-document-pipelines",
+  "working-entrepreneurs",
 ])
   test(`the ${slug} card opens its Work page`, async ({ page }) => {
     await page.goto("/services");

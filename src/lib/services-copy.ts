@@ -40,8 +40,8 @@ export const SERVICES_COPY = {
       text: "A video-interview plugin that screened 100+ applicants. Hiring efficiency rose over 35%.",
     },
     {
-      slug: "ai-document-pipelines",
-      title: "AI document pipelines",
+      slug: "working-entrepreneurs",
+      title: "Working Entrepreneurs",
       text: "Pipelines for 50+ clients that cut manual review by 50%.",
     },
   ],
