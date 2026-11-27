@@ -18,7 +18,7 @@ Project media appears only once you add each project's files. Until then, cards 
   - an image has no alt text, or there aren't exactly two images;
   - a clip has no description.
 - **Title Case (Kyle):**
-  - Selected Work, What I Built, What It Does, What I Learned, Built With
+  - Selected Work, What I Built, What It Does, What I Learned, Built with
   - Send a Message, Book a Call
   - the Services section and card titles
   - Page Not Found
@@ -60,10 +60,10 @@ A fresh reviewer read the whole branch and found no Critical or Important issues
   3. The page clip's still frame downloads larger than it needs to.
   4. Two e2e checks are weak while only one sample card has a clip. Unit tests cover them.
 
-## Needs Kyle's call
+## Kyle's calls (2026-11-27)
 
-- **"AI That Takes On Repetitive Work":** I capitalised "On" because "takes on" is a phrasal verb, as Title Case usually does. "Takes on" is the alternative.
-- **The card thumbnail's look** (screenshots above), and the heading **"See It in Action"**.
+- **Title Case rule:** capitalize the first word, nouns, verbs and adjectives. Articles, prepositions, conjunctions and "that" stay lowercase. So: **AI that Takes on Repetitive Work**, **Built with**, **Tell Me about Your Business**.
+- **The card thumbnail's look and "See It in Action":** fine as placeholders for now.
 
 ## Your next step
 
