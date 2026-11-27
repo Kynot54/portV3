@@ -1,6 +1,6 @@
 # Checkpoint: resume here
 
-**Updated:** 2026-11-26 · **Branch:** `main` @ `cfdc243` (Slice 6 merged). V3 is complete.
+**Updated:** 2026-11-27 · **Branch:** `slice/07-services` (from `main` @ `5c2aa65`). V3 is live; Slice 7 adds Services.
 
 ## To resume
 
@@ -18,11 +18,13 @@ Open a session in `~/Projects/portV3` and say:
 
 ## Next steps, in order
 
-1. **PR `chore/slice-06-followups`:** the outlined favicon and Apple icon (Kyle approved 2026-11-26), and the Slice 6 review minors. Kyle merges.
-   - **HSTS stays** at 2 years with `includeSubDomains` (ruling in the PR): every subdomain will be HTTPS behind Cloudflare.
+1. **Slice 7 (Services): PR on `slice/07-services` is ready for Kyle.** Design: `docs/superpowers/specs/2026-11-26-slice-07-services-design.md`; plan: `docs/plans/slice-07.md`.
+   - **Kyle:** review "Needs Kyle's call" in the PR (step 4's wording, the founder form examples, two accent buttons), merge, then run its live checklist.
+   - **Production env:** `SERVICES_ENABLED=true` and `NEXT_PUBLIC_CAL_CONSULT_LINK` (Kyle set both, 2026-11-27). A production build with Services on fails without the link.
+   - **Decided:** Services is consulting for non-technical founders (websites, custom software, AI automation, team training). No payments, scheduling, work orders or admin. Posts stay committed MDX (no admin). Placement B: not in the nav.
 2. **Open `TODO(kyle)`:** the five project screenshots. Kyle adds them to `public/images/work/<slug>.png` (specs in the README), then wire them in with next/image and alt text for his approval.
    - **Env vars are Production-only**, so check real embeds locally (README), never on a preview.
-3. **Next: plan Services and post creation (V3.1).** Both need an admin section: work orders, scheduling Kyle as the technician, and payments that are held, then charged only if the service succeeds. Start with brainstorming.
+3. **Later:** cross-posting to LinkedIn, Medium and X.
 
 ## Live-site facts (2026-11-26)
 
