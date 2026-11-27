@@ -16,6 +16,8 @@ test("SITE_DESCRIPTION and page descriptions are the exact copy", () => {
   expect(PAGE_DESCRIPTIONS).toEqual({
     work: "Selected projects I've built and shipped, from AI document pipelines to full-stack apps, each with its context, what I built, the result, and what I learned.",
     blog: "My writing on software engineering, AI and security: how software works at its foundation, and how it fails or is defended.",
+    services:
+      "I build websites and custom software for founders and small businesses, and I teach teams to use technology and AI. It starts with a free call.",
     contact:
       "Send me a message or book a 30-minute intro call. I'm looking for my next role as an AI or software engineer and reply within 2–3 business days.",
   });

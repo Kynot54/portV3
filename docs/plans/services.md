@@ -1,5 +1,6 @@
-# Services (not shipped)
+# Services
 
-Copy for the `/services` page. That route returns 404 unless `SERVICES_ENABLED=true`, and it's kept out of the nav, the sitemap and indexing. The small-business AI consulting offer is planned for V3.1+.
+Kyle's consulting offer for non-technical founders and small businesses. The route returns 404 unless `SERVICES_ENABLED=true`, and it's never in the header nav.
 
-TODO(kyle): write the services copy here when the offer is ready.
+- **Copy:** `src/lib/services-copy.ts` (approved by Kyle, 2026-11-27). The facts test checks it against `content/source/resume.md`.
+- **Design:** `docs/superpowers/specs/2026-11-26-slice-07-services-design.md`.
