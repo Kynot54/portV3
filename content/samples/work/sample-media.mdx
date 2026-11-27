@@ -1,0 +1,27 @@
+---
+title: Sample project with media
+summary: A test-only project that exercises images and the hover clip.
+date: 2020-01
+tags: [sample]
+label: "Sample · 2020"
+order: 99
+role: Sample
+location: Remote
+period: "Jan 2020"
+context: A sample shown only in test builds (WORK_SAMPLES=1), never in production.
+impactHeading: Result
+impact: ["The card shows a still and plays a clip on hover."]
+learned: Nothing; it is a test fixture.
+tools: ["Sample"]
+media:
+  images:
+    - src: 1.png
+      alt: "Sample image one: a dark panel beside a green panel"
+    - src: 2.png
+      alt: "Sample image two: a light panel beside a pink panel"
+  clip:
+    src: clip.mp4
+    description: "A green bar slides across a dark background."
+---
+
+This sample exists so the end-to-end tests can check project media before any real files are added.

@@ -19,7 +19,9 @@ async function expectedListed() {
   return [
     "/",
     "/work",
-    ...(await getWorkList()).map((e) => `/work/${e.slug}`),
+    ...(await getWorkList("content/work", { WORK_SAMPLES: "1" })).map(
+      (e) => `/work/${e.slug}`,
+    ),
     "/blog",
     ...(await getBlogPosts({ BLOG_SAMPLES: "1" })).map(
       (p) => `/blog/${p.slug}`,

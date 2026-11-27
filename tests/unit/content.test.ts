@@ -516,3 +516,22 @@ test.each([
 test("no real project has media yet", async () => {
   for (const e of await getWorkList()) expect(e.media, e.slug).toBeNull();
 });
+
+test("WORK_SAMPLES adds the media sample last, never in production", async () => {
+  const slugs = async (env: Record<string, string>) =>
+    (await getWorkList("content/work", env)).map((e) => e.slug);
+  expect((await slugs({ WORK_SAMPLES: "1" })).at(-1)).toBe("sample-media");
+  expect(
+    await slugs({ WORK_SAMPLES: "1", VERCEL_ENV: "production" }),
+  ).not.toContain("sample-media");
+  expect(await slugs({})).not.toContain("sample-media");
+});
+
+test("the media sample has two images and a clip", async () => {
+  const sample = (await getWorkList("content/work", { WORK_SAMPLES: "1" })).at(
+    -1,
+  )!;
+  expect(sample.media?.images).toHaveLength(2);
+  expect(sample.media?.clip?.src).toBe("/images/work/sample-media/clip.mp4");
+  expect(sample.featured).toBe(false);
+});

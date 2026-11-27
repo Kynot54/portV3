@@ -283,11 +283,27 @@ export async function getFeaturedWork(
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
-/** Every real entry, in list order (`order` ascending). */
-export async function getWorkList(dir = "content/work"): Promise<WorkEntry[]> {
-  return (await getWork(dir))
-    .filter((w) => !w.placeholder)
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+/**
+ * Every real entry, in list order (`order` ascending). With WORK_SAMPLES=1
+ * (e2e and Lighthouse only, never production), the media sample comes last.
+ */
+export async function getWorkList(
+  dir = "content/work",
+  env: Record<string, string | undefined> = process.env,
+  mediaRoot = MEDIA_ROOT,
+): Promise<WorkEntry[]> {
+  const samples =
+    env.WORK_SAMPLES === "1" && env.VERCEL_ENV !== "production"
+      ? await getWork("content/samples/work", mediaRoot)
+      : [];
+  const byOrder = (a: WorkEntry, b: WorkEntry) =>
+    (a.order ?? 0) - (b.order ?? 0);
+  return [
+    ...(await getWork(dir, mediaRoot))
+      .filter((w) => !w.placeholder)
+      .sort(byOrder),
+    ...samples.sort(byOrder),
+  ];
 }
 
 export async function getWorkEntry(

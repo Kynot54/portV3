@@ -5,7 +5,7 @@ test.describe("work detail pages", () => {
   test("every project page shows CARL sections in order with its content", async ({
     page,
   }) => {
-    for (const e of await getWorkList()) {
+    for (const e of await getWorkList("content/work", { WORK_SAMPLES: "1" })) {
       const res = await page.goto(`/work/${e.slug}`);
       expect(res?.status(), e.slug).toBe(200);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(e.title);
