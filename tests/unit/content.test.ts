@@ -150,7 +150,7 @@ test("real featured work matches the approved cards", async () => {
   expect(w.map((e) => [e.label, e.title, e.summary])).toEqual([
     [
       "AI · 2025–26",
-      "AI document pipelines",
+      "Working Entrepreneurs",
       "I built AI pipelines for 50+ clients. Manual review dropped 50%.",
     ],
     [
@@ -217,10 +217,9 @@ const CLAIMS: [copyFragment: string, resumePhrases: string[]][] = [
   ["Hiring efficiency up over 35%.", ["hiring efficiency by over 35%"]],
   ["Hundreds of management hours saved.", ["100s of working hours"]],
   ["40+ students", ["40+ students"]],
-  ["built AI document pipelines for 50+ clients", ["over 50 clients"]],
-  ["AI document pipelines for 50+ clients", ["over 50 clients"]],
+  ["built AI pipelines for 50+ clients", ["over 50 clients"]],
   [
-    "in TypeScript and Python for 50+ clients. They cut manual review of financial applications by 50% and raised accuracy over 60%.",
+    "I built AI pipelines for 50+ clients. They cut manual review of financial applications by 50% and raised accuracy over 60%.",
     ["over 50 clients", "manual review down by 50%", "accuracy by over 60%"],
   ],
   [
@@ -356,7 +355,7 @@ test("resume Ulti-Health entry uses the approved stack", async () => {
 
 test("getWorkList returns all five real entries in list order", async () => {
   expect((await getWorkList()).map((e) => e.slug)).toEqual([
-    "ai-document-pipelines",
+    "working-entrepreneurs",
     "control-bh",
     "ulti-health",
     "video-interview-plugin",

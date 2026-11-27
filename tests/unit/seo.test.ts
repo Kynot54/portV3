@@ -11,10 +11,10 @@ import type { BlogPost } from "@/lib/content/types";
 
 test("SITE_DESCRIPTION and page descriptions are the exact copy", () => {
   expect(SITE_DESCRIPTION).toBe(
-    "I'm Kyle Whynott, an AI and software engineer. I build production-grade generative AI applications end to end, including AI document pipelines for 50+ clients.",
+    "I'm Kyle Whynott, an AI and software engineer. I build production-grade generative AI applications end to end, from document pipelines to web and mobile apps.",
   );
   expect(PAGE_DESCRIPTIONS).toEqual({
-    work: "Selected projects I've built and shipped, from AI document pipelines to full-stack apps, each with its context, what I built, the result, and what I learned.",
+    work: "Selected projects I've built and shipped, from AI pipelines at Working Entrepreneurs to full-stack apps, each with its context, what I built, and the result.",
     blog: "My writing on software engineering, AI and security: how software works at its foundation, and how it fails or is defended.",
     services:
       "I build websites and custom software for founders and small businesses, and I teach teams to use technology and AI. It starts with a free call.",

@@ -4,7 +4,7 @@ import { test, expect, ROUTES, isMobile, storeTheme } from "./fixtures";
 
 const A11Y_ROUTES = [
   ...ROUTES,
-  "/work/ai-document-pipelines",
+  "/work/working-entrepreneurs",
   "/work/control-bh",
   "/work/ulti-health",
   "/work/video-interview-plugin",

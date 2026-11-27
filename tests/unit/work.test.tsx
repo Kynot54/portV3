@@ -8,14 +8,14 @@ test("WorkCard links to its page and uses the requested heading level", async ()
   const { rerender } = render(<WorkCard entry={first} headingLevel={2} />);
   expect(screen.getByRole("link")).toHaveAttribute(
     "href",
-    "/work/ai-document-pipelines",
+    "/work/working-entrepreneurs",
   );
   expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-    "AI document pipelines",
+    "Working Entrepreneurs",
   );
   rerender(<WorkCard entry={first} headingLevel={3} />);
   expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
-    "AI document pipelines",
+    "Working Entrepreneurs",
   );
 });
 
@@ -27,7 +27,7 @@ test("/work list: h1 Work, five cards in order, h2 titles, list role", async () 
   const list = screen.getByRole("list");
   const links = within(list).getAllByRole("link");
   expect(links.map((l) => l.getAttribute("href"))).toEqual([
-    "/work/ai-document-pipelines",
+    "/work/working-entrepreneurs",
     "/work/control-bh",
     "/work/ulti-health",
     "/work/video-interview-plugin",

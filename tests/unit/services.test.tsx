@@ -39,7 +39,7 @@ test("the approved headline, three offers, training, three projects, four steps"
   for (const slug of [
     "control-bh",
     "video-interview-plugin",
-    "ai-document-pipelines",
+    "working-entrepreneurs",
   ])
     expect(
       document.querySelector(`a[href="/work/${slug}"]`),

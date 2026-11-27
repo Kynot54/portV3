@@ -10,6 +10,7 @@ Changes from the PDF:
 - Working Entrepreneurs: over 50 clients (was "over 10"), per Kyle, 2026-11-26
 - AI Mind Companion: voice-assistant, dementia-flagging, FastAPI, Cloud Functions, JSONL vector store facts, per Kyle, 2026-11-26
 - Teacher of Record, the C++ class size, and the certifications below added from Kyle's CV for the Services training offer, per Kyle, 2026-11-26 (only what that offer needs)
+- Working Entrepreneurs: the pipeline is an automated document ingestion pipeline that reads filled-in form fields, processes loan applications and provides AI insights, per Kyle, 2026-11-27
 - O'Hagan Electrical: hiring efficiency over 35% (was "over 50%"; both are estimates, Kyle chose the safe figure), per Kyle, 2026-11-26
 Never add a phone number or personal email here.
 -->
@@ -48,6 +49,7 @@ Fullerton, CA · August 2024 – May 2026
 Remote · October 2025 – January 2026
 
 - Engineered AI-powered data ingestion and document processing pipelines in TypeScript and Python for over 50 clients; integrated AI into chat models to automate website interactions and generate $1,000s in recurring revenue
+- Built an automated document ingestion pipeline that reads the filled-in fields of loan application forms, processes each application, and provides AI insights
 - Constructed production Extract, Transform, Load (ETL) workflows to automate hundreds of daily financial applications, cutting manual review down by 50%, improving accuracy by over 60%, and accelerating the overall process by 40%
 
 ### Software Engineer (Freelance), C.O.N.T.R.O.L. BH

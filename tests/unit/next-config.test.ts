@@ -42,3 +42,12 @@ test("with Services on, production also needs the consultation link", () => {
     assertPublicEnv({ VERCEL_ENV: "preview", SERVICES_ENABLED: "true" }),
   ).not.toThrow();
 });
+
+test("the old pipelines URL redirects permanently to Working Entrepreneurs", async () => {
+  const { default: config } = await import("../../next.config");
+  expect(await config.redirects?.()).toContainEqual({
+    source: "/work/ai-document-pipelines",
+    destination: "/work/working-entrepreneurs",
+    permanent: true,
+  });
+});
