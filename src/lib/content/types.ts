@@ -21,7 +21,7 @@ export type WorkEntry = {
   /** Display range, e.g. "Oct 2025 – Jan 2026". */
   period: string;
   context: string;
-  impactHeading: "Result" | "What it does";
+  impactHeading: "Result" | "What It Does";
   /** The Result points (one item renders as a paragraph). */
   impact: string[];
   learned: string;

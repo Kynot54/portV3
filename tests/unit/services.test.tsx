@@ -29,12 +29,12 @@ test("the approved headline, three offers, training, three projects, four steps"
   );
   for (const title of [
     "Websites",
-    "Custom software",
-    "AI that takes on repetitive work",
+    "Custom Software",
+    "AI That Takes On Repetitive Work",
   ])
     expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
   expect(
-    screen.getByRole("heading", { name: "Teaching your team" }),
+    screen.getByRole("heading", { name: "Teaching Your Team" }),
   ).toBeInTheDocument();
   for (const slug of [
     "control-bh",
@@ -46,7 +46,7 @@ test("the approved headline, three offers, training, three projects, four steps"
       slug,
     ).not.toBeNull();
   expect(
-    within(screen.getByRole("list", { name: "How it works" })).getAllByRole(
+    within(screen.getByRole("list", { name: "How It Works" })).getAllByRole(
       "listitem",
     ),
   ).toHaveLength(4);

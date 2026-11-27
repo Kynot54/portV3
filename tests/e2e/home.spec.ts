@@ -165,14 +165,14 @@ test.describe("hero text wrapping", () => {
 });
 
 test.describe("home sections", () => {
-  test("sections appear in order: hero, Selected work, About, Contact", async ({
+  test("sections appear in order: hero, Selected Work, About, Contact", async ({
     page,
   }) => {
     await page.goto("/");
     const headings = await page.locator("main h1, main h2").allTextContents();
     expect(headings.map((h) => h.trim())).toEqual([
       "I'm Kyle Whynott, an AI engineer.",
-      "Selected work",
+      "Selected Work",
       "About",
       "Contact",
     ]);
@@ -186,7 +186,7 @@ test.describe("home sections", () => {
     await expect(page).toHaveURL(/#work$/);
     const heading = page.getByRole("heading", {
       level: 2,
-      name: "Selected work",
+      name: "Selected Work",
     });
     await expect(heading).toBeInViewport();
     const [h, nav] = await Promise.all([

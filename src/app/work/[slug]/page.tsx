@@ -88,7 +88,7 @@ export default async function WorkDetailPage({
       <Section id="context" title="Context">
         <p className="text-body-fluid text-muted-foreground">{entry.context}</p>
       </Section>
-      <Section id="action" title="What I built">
+      <Section id="action" title="What I Built">
         {body}
       </Section>
       <Section id="result" title={entry.impactHeading}>
@@ -109,10 +109,10 @@ export default async function WorkDetailPage({
           </ul>
         )}
       </Section>
-      <Section id="learned" title="What I learned">
+      <Section id="learned" title="What I Learned">
         <p className="text-body-fluid text-muted-foreground">{entry.learned}</p>
       </Section>
-      <Section id="tools" title="Built with">
+      <Section id="tools" title="Built With">
         <ul
           role="list"
           aria-labelledby="tools"

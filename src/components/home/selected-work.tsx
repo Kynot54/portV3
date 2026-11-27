@@ -9,7 +9,7 @@ export function SelectedWork({ entries }: { entries: WorkEntry[] }) {
       className="mx-auto w-full max-w-5xl px-gutter py-section"
     >
       <h2 id="work-title" className="text-h2 font-bold tracking-tight">
-        Selected work
+        Selected Work
       </h2>
       <ul role="list" className="mt-8 grid gap-4 md:grid-cols-3">
         {entries.map((e) => (

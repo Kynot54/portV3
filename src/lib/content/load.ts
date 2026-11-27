@@ -140,7 +140,7 @@ function description(r: Raw): string | null {
   return v;
 }
 
-const HEADINGS = ["Result", "What it does"] as const;
+const HEADINGS = ["Result", "What It Does"] as const;
 
 function heading(r: Raw): WorkEntry["impactHeading"] {
   const v = r.data.impactHeading;

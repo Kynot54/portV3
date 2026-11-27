@@ -14,17 +14,17 @@ test.describe("work detail pages", () => {
       );
       expect(h2, e.slug).toEqual([
         "Context",
-        "What I built",
+        "What I Built",
         e.impactHeading,
-        "What I learned",
-        "Built with",
+        "What I Learned",
+        "Built With",
       ]);
       await expect(page.getByText(e.context, { exact: true })).toBeVisible();
       await expect(page.getByText(e.learned, { exact: true })).toBeVisible();
       for (const item of e.impact)
         await expect(page.getByText(item, { exact: true })).toBeVisible();
       const tools = page
-        .getByRole("list", { name: "Built with" })
+        .getByRole("list", { name: "Built With" })
         .getByRole("listitem");
       await expect(tools).toHaveText(e.tools);
       await expect(
@@ -37,7 +37,7 @@ test.describe("work detail pages", () => {
   test("a single Result item renders as a paragraph", async ({ page }) => {
     await page.goto("/work/ai-mind-companion");
     const section = page.locator("section", {
-      has: page.getByRole("heading", { name: "What it does" }),
+      has: page.getByRole("heading", { name: "What It Does" }),
     });
     await expect(section.locator("ul")).toHaveCount(0);
     await expect(section.locator("p")).toHaveCount(1);
@@ -58,7 +58,7 @@ test.describe("work detail pages", () => {
         const res = await page.goto(path);
         expect(res?.status(), path).toBe(404);
         await expect(page.getByRole("heading", { level: 1 }), path).toHaveText(
-          "Page not found",
+          "Page Not Found",
         );
       }
     });

@@ -27,7 +27,7 @@ export default function ContactPage() {
       <div data-contact-grid className="mt-12 grid gap-12 md:grid-cols-2">
         <section aria-labelledby="message-title">
           <h2 id="message-title" className="text-h3 font-bold tracking-tight">
-            Send a message
+            Send a Message
           </h2>
           <div className="js-only mt-6">
             <ContactForm siteKey={siteKey} />
@@ -41,7 +41,7 @@ export default function ContactPage() {
 
         <section aria-labelledby="booking-title">
           <h2 id="booking-title" className="text-h3 font-bold tracking-tight">
-            Book a call
+            Book a Call
           </h2>
           <div className="js-only mt-6">
             <Booking calLink={calLink} />

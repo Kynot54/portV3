@@ -369,7 +369,7 @@ test("non-placeholder entry missing context fails loudly", async () => {
   });
 });
 
-test("impactHeading must be Result or What it does", async () => {
+test("impactHeading must be Result or What It Does", async () => {
   await expect(getWork(`${F}/work-bad-heading`)).rejects.toMatchObject({
     field: "impactHeading",
   });
@@ -380,7 +380,7 @@ test("ai-mind-companion carries the approved CARL copy", async () => {
   expect(e.context).toBe(
     "An exploratory project to see what AI can do in medicine.",
   );
-  expect(e.impactHeading).toBe("What it does");
+  expect(e.impactHeading).toBe("What It Does");
   expect(e.impact).toHaveLength(1);
   expect(e.learned).toMatch(/^I learned to build a native mobile app/);
 });

@@ -8,26 +8,26 @@ export const SERVICES_COPY = {
   title: "Software for your business, built around how it works.",
   lead: "I build websites and custom software for founders and small businesses. You don't need a technical background. We start with a call, and I work out what you need.",
   cta: { book: "Book a consultation", write: "Send a message" },
-  offersTitle: "What I build",
+  offersTitle: "What I Build",
   offers: [
     {
       title: "Websites",
       text: "A site that shows what you do and makes it easy for customers to reach you.",
     },
     {
-      title: "Custom software",
+      title: "Custom Software",
       text: "A CRM, an intake or booking tool, or an app that solves one problem in your niche, built around how your business already works.",
     },
     {
-      title: "AI that takes on repetitive work",
+      title: "AI That Takes On Repetitive Work",
       text: "Pipelines that read documents and handle routine steps, so your team spends less time on manual review.",
     },
   ],
   training: {
-    title: "Teaching your team",
+    title: "Teaching Your Team",
     text: "I teach teams to use technology and AI in their day-to-day work. At Cal State Fullerton I was Teacher of Record for Introduction to Machine Learning: two sections of 40+ students each, on a course I designed myself. I also taught C++ lectures and labs for 60+ students.",
   },
-  evidenceTitle: "Work I've done for businesses",
+  evidenceTitle: "Work I've Done for Businesses",
   evidence: [
     {
       slug: "control-bh",
@@ -45,7 +45,7 @@ export const SERVICES_COPY = {
       text: "Pipelines for 50+ clients that cut manual review by 50%.",
     },
   ],
-  stepsTitle: "How it works",
+  stepsTitle: "How It Works",
   steps: [
     {
       title: "A free 30-minute call.",
@@ -65,10 +65,10 @@ export const SERVICES_COPY = {
     },
   ],
   contact: {
-    title: "Tell me about your business",
+    title: "Tell Me About Your Business",
     reply: "I reply within 2–3 business days.",
-    messageTitle: "Send a message",
-    bookingTitle: "Book a call",
+    messageTitle: "Send a Message",
+    bookingTitle: "Book a Call",
     bookingIntro: "A free 30-minute consultation.",
   },
   linkLine: {
