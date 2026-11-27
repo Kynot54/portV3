@@ -18,14 +18,14 @@ test.describe("work detail pages", () => {
         e.impactHeading,
         ...(e.media?.clip ? ["See It in Action"] : []),
         "What I Learned",
-        "Built With",
+        "Built with",
       ]);
       await expect(page.getByText(e.context, { exact: true })).toBeVisible();
       await expect(page.getByText(e.learned, { exact: true })).toBeVisible();
       for (const item of e.impact)
         await expect(page.getByText(item, { exact: true })).toBeVisible();
       const tools = page
-        .getByRole("list", { name: "Built With" })
+        .getByRole("list", { name: "Built with" })
         .getByRole("listitem");
       await expect(tools).toHaveText(e.tools);
       await expect(

@@ -126,7 +126,7 @@ export default async function WorkDetailPage({
       <Section id="learned" title="What I Learned">
         <p className="text-body-fluid text-muted-foreground">{entry.learned}</p>
       </Section>
-      <Section id="tools" title="Built With">
+      <Section id="tools" title="Built with">
         <ul
           role="list"
           aria-labelledby="tools"

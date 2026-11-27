@@ -30,7 +30,7 @@ test("the approved headline, three offers, training, three projects, four steps"
   for (const title of [
     "Websites",
     "Custom Software",
-    "AI That Takes On Repetitive Work",
+    "AI that Takes on Repetitive Work",
   ])
     expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
   expect(

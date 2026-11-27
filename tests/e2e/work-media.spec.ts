@@ -144,7 +144,7 @@ test("project page: two images, then See It in Action before What I Learned", as
     "Result",
     "See It in Action",
     "What I Learned",
-    "Built With",
+    "Built with",
   ]);
   const video = page.getByRole("figure").locator("video");
   await expect(video).toHaveAttribute("controls");

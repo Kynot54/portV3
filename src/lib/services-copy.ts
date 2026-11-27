@@ -19,7 +19,7 @@ export const SERVICES_COPY = {
       text: "A CRM, an intake or booking tool, or an app that solves one problem in your niche, built around how your business already works.",
     },
     {
-      title: "AI That Takes On Repetitive Work",
+      title: "AI that Takes on Repetitive Work",
       text: "Pipelines that read documents and handle routine steps, so your team spends less time on manual review.",
     },
   ],
@@ -65,7 +65,7 @@ export const SERVICES_COPY = {
     },
   ],
   contact: {
-    title: "Tell Me About Your Business",
+    title: "Tell Me about Your Business",
     reply: "I reply within 2–3 business days.",
     messageTitle: "Send a Message",
     bookingTitle: "Book a Call",
