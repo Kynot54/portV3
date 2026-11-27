@@ -42,8 +42,11 @@ export function Booking({
   intro = "A 30-minute intro call.",
   label = "Book a call",
   openOnHash,
+  accent = false,
   timeoutMs = 10_000,
 }: {
+  /** The call-to-action colour, where booking is the page's main action (Services). */
+  accent?: boolean;
   /**
    * Opens the calendar when the page's hash becomes this (e.g. "#book"), so a
    * link elsewhere on the page can book directly. Without JS it's a jump link.
@@ -134,7 +137,7 @@ export function Booking({
       {calLink && (phase === "idle" || phase === "loading") && (
         <Button
           type="button"
-          variant="outline"
+          variant={accent ? "default" : "outline"}
           disabled={phase === "loading"}
           onClick={() => setPhase("loading")}
           className="h-11 px-5 text-sm"

@@ -8,7 +8,7 @@
   - Three offers: websites, custom software, and AI for repetitive work.
   - Teaching your team: Teacher of Record for CPSC 483, and the C++ lectures and labs.
   - Three projects with links to their Work pages: C.O.N.T.R.O.L. BH, O'Hagan Electrical and the AI document pipelines.
-  - Four steps, ending in hand-off and upkeep.
+  - Four steps, ending in handover and support.
 - **Booking:** "Book a consultation" opens Cal.com on the page, on your consultation event. The hero button opens it too.
 - **Contact form on the page:** messages from it arrive as **"Services: Name (Company)"**. Any other value is treated as a Contact message, and nothing from it reaches an email header.
 - **Placement B:** not in the nav. Linked from Home's contact section, the Contact page and the footer, only while Services is on.
@@ -50,11 +50,11 @@ A fresh reviewer read the whole branch. Verdict: ready with fixes. All five risk
   6. Two of the three lists aren't labelled the way the steps list is (each sits in a labelled section).
   7. Lighthouse measures Home and Contact only with the Services link showing.
 
-## Needs Kyle's call
+## Kyle's calls (2026-11-27)
 
-1. **Step 4's wording** (from your maintenance answer): "Hand-off and upkeep. I show your team how to use it. You own it, and its running costs (hosting and services) move to your accounts. I maintain it for a monthly fee until you have someone else to take it over."
-2. **The form's examples on Services** (new copy). The Contact examples were a recruiter's. On Services: role **"Owner"**, message **"Hi Kyle, I run a small business and need a simpler way to keep track of my customers."** Name, email and company examples are unchanged.
-3. **Two green buttons on Services:** the hero's "Book a consultation" and the form's "Send message". The Contact page keeps one. The alternative is an outline style for one of them.
+1. **Step 4, reworded for a professional tone** (please confirm the final text): **"Handover and support.** I train your team on the finished product and transfer full ownership to your business, including the hosting and service accounts and their costs. After launch, I provide ongoing maintenance at a monthly rate until you hire someone to take it over."
+2. **Form examples on Services (approved):** role **"Owner"**. The message example is now about what the founder wants built: **"Hi Kyle, I run a small business and I'd like a website where customers can request a quote online."**
+3. **Buttons in the call-to-action colour (approved):** on Services, the hero's "Book a consultation", the booking button and "Send message" all use the accent colour. "Send a message" in the hero stays an outline button as the secondary action. The Contact page is unchanged: one accent button, and its booking button stays outline.
 
 ## Live checklist (after merging)
 

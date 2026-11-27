@@ -60,8 +60,8 @@ export const SERVICES_COPY = {
       text: "You see progress as it happens.",
     },
     {
-      title: "Hand-off and upkeep.",
-      text: "I show your team how to use it. You own it, and its running costs (hosting and services) move to your accounts. I maintain it for a monthly fee until you have someone else to take it over.",
+      title: "Handover and support.",
+      text: "I train your team on the finished product and transfer full ownership to your business, including the hosting and service accounts and their costs. After launch, I provide ongoing maintenance at a monthly rate until you hire someone to take it over.",
     },
   ],
   contact: {

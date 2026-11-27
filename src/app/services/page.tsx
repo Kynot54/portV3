@@ -159,6 +159,7 @@ export default function ServicesPage() {
                 intro={C.contact.bookingIntro}
                 label={C.cta.book}
                 openOnHash="#book"
+                accent
               />
             </div>
             {calLink && (

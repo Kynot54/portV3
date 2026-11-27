@@ -45,11 +45,11 @@ const PLACEHOLDERS: Record<ContactField, string> = {
   message:
     "Hi Kyle, we're hiring a software engineer and I'd like to talk about the role.",
 };
-// On Services, a founder writes, not a recruiter (proposal, pending Kyle's call).
+// On Services, a founder writes about what they need, not a recruiter (Kyle, 2026-11-27).
 const SERVICES_PLACEHOLDERS: Partial<Record<ContactField, string>> = {
   role: "Owner",
   message:
-    "Hi Kyle, I run a small business and need a simpler way to keep track of my customers.",
+    "Hi Kyle, I run a small business and I'd like a website where customers can request a quote online.",
 };
 const AUTOCOMPLETE: Record<ContactField, string> = {
   name: "name",

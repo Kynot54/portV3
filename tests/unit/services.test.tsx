@@ -58,11 +58,18 @@ test("the approved headline, three offers, training, three projects, four steps"
   ).toBeInTheDocument();
 });
 
-test("step 4 is Kyle's hand-off and upkeep terms", () => {
+test("step 4 states Kyle's handover and maintenance terms", () => {
   expect(SERVICES_COPY.steps[3]).toEqual({
-    title: "Hand-off and upkeep.",
-    text: "I show your team how to use it. You own it, and its running costs (hosting and services) move to your accounts. I maintain it for a monthly fee until you have someone else to take it over.",
+    title: "Handover and support.",
+    text: "I train your team on the finished product and transfer full ownership to your business, including the hosting and service accounts and their costs. After launch, I provide ongoing maintenance at a monthly rate until you hire someone to take it over.",
   });
+});
+
+test("the booking button on Services uses the call-to-action colour", () => {
+  render(<ServicesPage />);
+  expect(
+    screen.getByRole("button", { name: "Book a consultation" }),
+  ).toHaveClass("accent-glow");
 });
 
 test("off: the page 404s and has no canonical", async () => {

@@ -261,7 +261,7 @@ test("on Services, the role and message examples fit a founder", () => {
   );
   expect(screen.getByLabelText("Message")).toHaveAttribute(
     "placeholder",
-    "Hi Kyle, I run a small business and need a simpler way to keep track of my customers.",
+    "Hi Kyle, I run a small business and I'd like a website where customers can request a quote online.",
   );
   // Name, email and company examples are shared.
   expect(screen.getByLabelText("Company (optional)")).toHaveAttribute(
