@@ -77,3 +77,9 @@ test("on: canonical and description for /services", async () => {
   expect(m.alternates?.canonical).toBe("https://kwhynott.dev/services");
   expect(m.title).toBe("Services");
 });
+
+test("off: the preview card 404s too", async () => {
+  delete process.env.SERVICES_ENABLED;
+  const { default: Card } = await import("@/app/services/opengraph-image");
+  expect(() => Card()).toThrow("NEXT_NOT_FOUND");
+});

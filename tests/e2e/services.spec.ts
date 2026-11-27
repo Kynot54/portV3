@@ -32,13 +32,20 @@ test("a message sent from Services is tagged services", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("hero links jump to the booking and message sections", async ({
-  page,
-}) => {
+test("the hero's Book a consultation opens the calendar", async ({ page }) => {
+  await stubThirdParty(page);
   await page.goto("/services");
   await page.getByRole("link", { name: "Book a consultation" }).click();
-  await expect(page).toHaveURL(/#book$/);
-  await expect(page.locator("#book")).toBeInViewport();
+  const region = page.getByRole("region", { name: "Booking calendar" });
+  await expect(region.locator("iframe")).toHaveAttribute(
+    "data-cal-link",
+    "test/consultation",
+  );
+  await expect(region).toBeFocused();
+});
+
+test("the hero's Send a message jumps to the form", async ({ page }) => {
+  await page.goto("/services");
   await page.getByRole("link", { name: "Send a message" }).click();
   await expect(page).toHaveURL(/#message$/);
   await expect(page.locator("#message")).toBeInViewport();

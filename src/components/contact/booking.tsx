@@ -41,8 +41,14 @@ export function Booking({
   calLink,
   intro = "A 30-minute intro call.",
   label = "Book a call",
+  openOnHash,
   timeoutMs = 10_000,
 }: {
+  /**
+   * Opens the calendar when the page's hash becomes this (e.g. "#book"), so a
+   * link elsewhere on the page can book directly. Without JS it's a jump link.
+   */
+  openOnHash?: string;
   calLink: string | undefined;
   /** The line above the button. */
   intro?: string;
@@ -57,6 +63,16 @@ export function Booking({
   const fallback = useRef<HTMLAnchorElement>(null);
   const { resolvedTheme } = useTheme();
   const theme = resolvedTheme === "light" ? "light" : "dark";
+
+  useEffect(() => {
+    if (!openOnHash || !calLink) return;
+    const open = () => {
+      if (window.location.hash === openOnHash)
+        setPhase((p) => (p === "idle" ? "loading" : p));
+    };
+    window.addEventListener("hashchange", open);
+    return () => window.removeEventListener("hashchange", open);
+  }, [openOnHash, calLink]);
 
   useEffect(() => {
     const el = region.current;

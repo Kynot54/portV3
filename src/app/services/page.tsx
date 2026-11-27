@@ -158,6 +158,7 @@ export default function ServicesPage() {
                 calLink={calLink}
                 intro={C.contact.bookingIntro}
                 label={C.cta.book}
+                openOnHash="#book"
               />
             </div>
             {calLink && (

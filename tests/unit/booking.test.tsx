@@ -132,3 +132,20 @@ test("Services labels with no link: the intro, no button, no error", () => {
   expect(screen.getByText(SERVICES.intro)).toBeInTheDocument();
   expect(screen.queryByRole("button")).toBeNull();
 });
+
+test("openOnHash: going to #book opens the calendar (the Services hero link)", async () => {
+  render(
+    <>
+      <Booking calLink="kyle/consultation" openOnHash="#book" />
+      <div id="booking-calendar" />
+    </>,
+  );
+  expect(loadScript).not.toHaveBeenCalled();
+  window.location.hash = "#book";
+  window.dispatchEvent(new HashChangeEvent("hashchange"));
+  expect(
+    await screen.findByRole("region", { name: "Booking calendar" }),
+  ).toBeInTheDocument();
+  expect(loadScript).toHaveBeenCalledTimes(1);
+  window.location.hash = "";
+});
