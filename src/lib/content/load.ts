@@ -1,8 +1,9 @@
+import { existsSync, statSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { DESCRIPTION_MAX, DESCRIPTION_MIN } from "@/lib/description-limits";
 import { isAbsolute, join } from "node:path";
 import matter from "gray-matter";
-import type { BlogPost, WorkEntry } from "./types";
+import type { BlogPost, MediaImage, WorkEntry, WorkMedia } from "./types";
 
 export type { BlogPost, WorkEntry } from "./types";
 
@@ -140,7 +141,7 @@ function description(r: Raw): string | null {
   return v;
 }
 
-const HEADINGS = ["Result", "What it does"] as const;
+const HEADINGS = ["Result", "What It Does"] as const;
 
 function heading(r: Raw): WorkEntry["impactHeading"] {
   const v = r.data.impactHeading;
@@ -153,7 +154,58 @@ function heading(r: Raw): WorkEntry["impactHeading"] {
   return v as WorkEntry["impactHeading"];
 }
 
-function toWork(r: Raw): WorkEntry {
+/** Where project media lives on disk; it's served from /images/work. */
+const MEDIA_ROOT = "public/images/work";
+
+/**
+ * Validates `media`: exactly two images with alt text, an optional clip with
+ * a description, every file present under <mediaRoot>/<slug>/.
+ */
+function media(r: Raw, mediaRoot: string): WorkMedia | null {
+  const v = r.data.media;
+  if (v === undefined || v === null) return null;
+  const fail = (problem: string): never => {
+    throw new ContentError(r.file, "media", problem);
+  };
+  if (typeof v !== "object" || Array.isArray(v)) fail("must be an object");
+  const m = v as { images?: unknown; clip?: unknown };
+  const root = isAbsolute(mediaRoot)
+    ? mediaRoot
+    : join(process.cwd(), mediaRoot);
+  const file = (src: unknown, kind: "image" | "clip"): string => {
+    if (typeof src !== "string" || !src.trim() || src.includes("/"))
+      fail("needs a file name for each src");
+    const name = (src as string).trim();
+    const path = join(root, r.slug, name);
+    if (!existsSync(path)) fail(`file ${r.slug}/${name} not found`);
+    if (!statSync(path).isFile()) fail(`${r.slug}/${name} is not a file`);
+    const ext = name.toLowerCase().slice(name.lastIndexOf("."));
+    if (kind === "image" && ![".png", ".jpg", ".jpeg", ".webp"].includes(ext))
+      fail(`image ${name} must be .png, .jpg, .jpeg or .webp`);
+    if (kind === "clip" && ext !== ".mp4") fail(`clip ${name} must be .mp4`);
+    return `/images/work/${r.slug}/${name}`;
+  };
+  if (!Array.isArray(m.images) || m.images.length !== 2)
+    fail("needs exactly two images");
+  const images = (m.images as unknown[]).map((img) => {
+    const i = (img ?? {}) as { src?: unknown; alt?: unknown };
+    if (typeof i.alt !== "string" || !i.alt.trim()) fail("alt is required");
+    return { src: file(i.src, "image"), alt: (i.alt as string).trim() };
+  }) as [MediaImage, MediaImage];
+  let clip: WorkMedia["clip"] = null;
+  if (m.clip !== undefined && m.clip !== null) {
+    const c = m.clip as { src?: unknown; description?: unknown };
+    if (typeof c.description !== "string" || !c.description.trim())
+      fail("clip description is required");
+    clip = {
+      src: file(c.src, "clip"),
+      description: (c.description as string).trim(),
+    };
+  }
+  return { images, clip };
+}
+
+function toWork(r: Raw, mediaRoot = MEDIA_ROOT): WorkEntry {
   const featured = bool(r, "featured");
   const order = optNum(r, "order");
   const label = optStr(r, "label");
@@ -174,6 +226,7 @@ function toWork(r: Raw): WorkEntry {
     order,
     label,
     body: r.body,
+    media: placeholder ? null : media(r, mediaRoot),
   };
   if (placeholder) {
     // Stand-in entries are never shown; CARL fields are optional for them.
@@ -220,8 +273,13 @@ function toPost(r: Raw): BlogPost {
   };
 }
 
-export async function getWork(dir = "content/work"): Promise<WorkEntry[]> {
-  return (await readEntries(dir)).map(toWork).sort(newestFirst);
+export async function getWork(
+  dir = "content/work",
+  mediaRoot = MEDIA_ROOT,
+): Promise<WorkEntry[]> {
+  return (await readEntries(dir))
+    .map((r) => toWork(r, mediaRoot))
+    .sort(newestFirst);
 }
 
 /** Entries for Home's Selected work: featured, not placeholders, by `order`. */
@@ -233,11 +291,27 @@ export async function getFeaturedWork(
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
-/** Every real entry, in list order (`order` ascending). */
-export async function getWorkList(dir = "content/work"): Promise<WorkEntry[]> {
-  return (await getWork(dir))
-    .filter((w) => !w.placeholder)
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+/**
+ * Every real entry, in list order (`order` ascending). With WORK_SAMPLES=1
+ * (e2e and Lighthouse only, never production), the media sample comes last.
+ */
+export async function getWorkList(
+  dir = "content/work",
+  env: Record<string, string | undefined> = process.env,
+  mediaRoot = MEDIA_ROOT,
+): Promise<WorkEntry[]> {
+  const samples =
+    env.WORK_SAMPLES === "1" && env.VERCEL_ENV !== "production"
+      ? await getWork("content/samples/work", mediaRoot)
+      : [];
+  const byOrder = (a: WorkEntry, b: WorkEntry) =>
+    (a.order ?? 0) - (b.order ?? 0);
+  return [
+    ...(await getWork(dir, mediaRoot))
+      .filter((w) => !w.placeholder)
+      .sort(byOrder),
+    ...samples.sort(byOrder),
+  ];
 }
 
 export async function getWorkEntry(

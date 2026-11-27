@@ -75,6 +75,7 @@ const entry = (
   learned: "Learned.",
   tools: ["Tool"],
   body: "",
+  media: null,
 });
 const FIXTURE_THREE = [
   entry(
@@ -104,7 +105,7 @@ const CONTACT =
 test("SelectedWork renders one linked card per entry with label, title, summary", () => {
   render(<SelectedWork entries={FIXTURE_THREE} />);
   expect(
-    screen.getByRole("heading", { level: 2, name: "Selected work" }),
+    screen.getByRole("heading", { level: 2, name: "Selected Work" }),
   ).toBeInTheDocument();
   const cards = screen.getAllByRole("link");
   expect(cards).toHaveLength(3);

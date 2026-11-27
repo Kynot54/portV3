@@ -40,6 +40,7 @@ test("getWork parses frontmatter, slugs from filename, newest first", async () =
     learned: "Something learned.",
     tools: ["Tool"],
     body: "Beta body.\n",
+    media: null,
   });
   expect(work[1].placeholder).toBe(false); // default
   expect(work[1].description).toBe(
@@ -369,7 +370,7 @@ test("non-placeholder entry missing context fails loudly", async () => {
   });
 });
 
-test("impactHeading must be Result or What it does", async () => {
+test("impactHeading must be Result or What It Does", async () => {
   await expect(getWork(`${F}/work-bad-heading`)).rejects.toMatchObject({
     field: "impactHeading",
   });
@@ -380,7 +381,7 @@ test("ai-mind-companion carries the approved CARL copy", async () => {
   expect(e.context).toBe(
     "An exploratory project to see what AI can do in medicine.",
   );
-  expect(e.impactHeading).toBe("What it does");
+  expect(e.impactHeading).toBe("What It Does");
   expect(e.impact).toHaveLength(1);
   expect(e.learned).toMatch(/^I learned to build a native mobile app/);
 });
@@ -480,4 +481,59 @@ test("BLOG_SAMPLES=1 is ignored in production", async () => {
       ),
     ),
   ).toEqual(["real-one"]);
+});
+
+const MEDIA = `${F}/../media`;
+
+test("media: two images with alt text and an optional clip, as site paths", async () => {
+  const w = await getWork(`${F}/work-media`, MEDIA);
+  const by = (slug: string) => w.find((e) => e.slug === slug)!;
+  expect(by("full").media).toEqual({
+    images: [
+      { src: "/images/work/full/1.png", alt: "The dashboard" },
+      { src: "/images/work/full/2.png", alt: "The report view" },
+    ],
+    clip: {
+      src: "/images/work/full/clip.mp4",
+      description: "Uploading an application and reading the AI insights",
+    },
+  });
+  expect(by("images-only").media?.clip).toBeNull();
+  expect(by("none").media).toBeNull();
+});
+
+test.each([
+  ["work-media-missing-file", /not found/],
+  ["work-media-no-alt", /alt is required/],
+  ["work-media-one-image", /exactly two images/],
+  ["work-media-clip-no-description", /description is required/],
+  ["work-media-dir-src", /not a file/],
+  ["work-media-wrong-type", /\.png, \.jpg, \.jpeg or \.webp/],
+])("bad media in %s fails the build", async (dir, problem) => {
+  const err = await getWork(`${F}/${dir}`, MEDIA).catch((e) => e);
+  expect(err).toMatchObject({ file: "x.mdx", field: "media" });
+  expect(err.message).toMatch(problem);
+});
+
+test("no real project has media yet", async () => {
+  for (const e of await getWorkList()) expect(e.media, e.slug).toBeNull();
+});
+
+test("WORK_SAMPLES adds the media sample last, never in production", async () => {
+  const slugs = async (env: Record<string, string>) =>
+    (await getWorkList("content/work", env)).map((e) => e.slug);
+  expect((await slugs({ WORK_SAMPLES: "1" })).at(-1)).toBe("sample-media");
+  expect(
+    await slugs({ WORK_SAMPLES: "1", VERCEL_ENV: "production" }),
+  ).not.toContain("sample-media");
+  expect(await slugs({})).not.toContain("sample-media");
+});
+
+test("the media sample has two images and a clip", async () => {
+  const sample = (await getWorkList("content/work", { WORK_SAMPLES: "1" })).at(
+    -1,
+  )!;
+  expect(sample.media?.images).toHaveLength(2);
+  expect(sample.media?.clip?.src).toBe("/images/work/sample-media/clip.mp4");
+  expect(sample.featured).toBe(false);
 });

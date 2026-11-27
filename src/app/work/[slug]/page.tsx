@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cacheLife } from "next/cache";
 import { MediaPlaceholder } from "@/components/work/media-placeholder";
+import { ProjectClip } from "@/components/work/project-clip";
+import { ProjectImages } from "@/components/work/project-images";
 import { getWorkList } from "@/lib/content/load";
 import { renderMdx } from "@/lib/mdx";
 import { describeWork, cardAlt, pageMetadata } from "@/lib/seo";
@@ -83,12 +85,16 @@ export default async function WorkDetailPage({
         {entry.summary}
       </p>
 
-      <MediaPlaceholder />
+      {entry.media ? (
+        <ProjectImages images={entry.media.images} />
+      ) : (
+        <MediaPlaceholder />
+      )}
 
       <Section id="context" title="Context">
         <p className="text-body-fluid text-muted-foreground">{entry.context}</p>
       </Section>
-      <Section id="action" title="What I built">
+      <Section id="action" title="What I Built">
         {body}
       </Section>
       <Section id="result" title={entry.impactHeading}>
@@ -109,7 +115,15 @@ export default async function WorkDetailPage({
           </ul>
         )}
       </Section>
-      <Section id="learned" title="What I learned">
+      {entry.media?.clip && (
+        <Section id="clip" title="See It in Action">
+          <ProjectClip
+            clip={entry.media.clip}
+            poster={entry.media.images[0].src}
+          />
+        </Section>
+      )}
+      <Section id="learned" title="What I Learned">
         <p className="text-body-fluid text-muted-foreground">{entry.learned}</p>
       </Section>
       <Section id="tools" title="Built with">

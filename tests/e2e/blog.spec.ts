@@ -37,7 +37,7 @@ test.describe("post page", () => {
         const res = await page.goto(path);
         expect(res?.status(), path).toBe(404);
         await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-          "Page not found",
+          "Page Not Found",
         );
       }
     });

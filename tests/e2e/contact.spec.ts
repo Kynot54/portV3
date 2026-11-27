@@ -1,5 +1,5 @@
 import { test, expect } from "./fixtures";
-import { THIRD_PARTY, fill, stubThirdParty } from "./third-party";
+import { THIRD_PARTY, fill, formReady, stubThirdParty } from "./third-party";
 
 test("no third-party request before interaction", async ({ page }) => {
   await stubThirdParty(page);
@@ -14,9 +14,7 @@ test("no third-party request before interaction", async ({ page }) => {
 test("send a message end to end", async ({ page }) => {
   await stubThirdParty(page);
   await page.goto("/contact");
-  const turnstile = page.waitForRequest(/challenges\.cloudflare\.com/);
-  await page.getByLabel("Name", { exact: true }).focus();
-  await turnstile;
+  await formReady(page);
   await fill(page);
   await page.getByRole("button", { name: "Send message" }).click();
   await expect(page.locator("main").getByRole("status")).toHaveText(
@@ -55,6 +53,7 @@ test.describe("server failure", () => {
       }),
     );
     await page.goto("/contact");
+    await formReady(page);
     await fill(page);
     await page.getByRole("button", { name: "Send message" }).click();
     await expect(page.locator("main").getByRole("alert")).toHaveText(
