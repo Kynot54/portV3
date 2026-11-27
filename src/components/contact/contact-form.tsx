@@ -9,6 +9,7 @@ import {
   validateContact,
   type ContactErrors,
   type ContactField,
+  type ContactSource,
 } from "@/lib/contact/validate";
 
 const TURNSTILE_SRC =
@@ -61,9 +62,12 @@ const field =
  */
 export function ContactForm({
   siteKey,
+  source = "contact",
   tokenTimeoutMs = 10_000,
 }: {
   siteKey: string | undefined;
+  /** Which page this form is on; Services messages arrive as "Services: …". */
+  source?: ContactSource;
   /** How long a submit waits for Turnstile's token before giving up. */
   tokenTimeoutMs?: number;
 }) {
@@ -170,7 +174,7 @@ export function ContactForm({
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...result.data, token: t }),
+        body: JSON.stringify({ ...result.data, token: t, source }),
       });
       if (res.ok) {
         setValues(empty);

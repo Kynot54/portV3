@@ -1,4 +1,4 @@
-import type { ContactInput } from "./validate";
+import type { ContactInput, ContactSource } from "./validate";
 
 export const FROM = "kwhynott.dev contact <onboarding@resend.dev>";
 
@@ -7,11 +7,16 @@ export const FROM = "kwhynott.dev contact <onboarding@resend.dev>";
 const oneLine = (s: string) => s.replace(/[\p{Cc}\p{Zl}\p{Zp}]+/gu, " ");
 
 /** The notification Kyle receives. Plain text only; Reply goes to the visitor. */
-export function buildEmail(data: ContactInput, to: string) {
+export function buildEmail(
+  data: ContactInput,
+  to: string,
+  source: ContactSource = "contact",
+) {
+  const prefix = source === "services" ? "Services" : "Contact";
   const subject = oneLine(
     data.company
-      ? `Contact: ${data.name} (${data.company})`
-      : `Contact: ${data.name}`,
+      ? `${prefix}: ${data.name} (${data.company})`
+      : `${prefix}: ${data.name}`,
   );
   const lines = [
     `Name: ${oneLine(data.name)}`,

@@ -1,4 +1,4 @@
-import { validateContact } from "@/lib/contact/validate";
+import { parseSource, validateContact } from "@/lib/contact/validate";
 
 const valid = {
   name: "Ada",
@@ -121,4 +121,17 @@ test("accepts ordinary real-world addresses", () => {
     "a_b-c@x-y.com",
   ])
     expect(validateContact({ ...valid, email }).ok, email).toBe(true);
+});
+
+test('parseSource: only exact "services", everything else is "contact"', () => {
+  expect(parseSource({ source: "services" })).toBe("services");
+  for (const raw of [
+    {},
+    { source: "Services" },
+    { source: "services\r\nBcc: x@y.z" },
+    { source: 1 },
+    null,
+    "services",
+  ])
+    expect(parseSource(raw)).toBe("contact");
 });

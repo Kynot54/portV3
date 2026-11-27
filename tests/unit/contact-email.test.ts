@@ -69,3 +69,12 @@ test("name, company and role can't add fake lines to the body", () => {
     "Role: C D",
   ]);
 });
+
+test("a Services message says so in the subject", () => {
+  expect(buildEmail(data, "k@i.t", "services").subject).toBe(
+    "Services: Ada Lovelace (Acme)",
+  );
+  expect(buildEmail(data, "k@i.t", "contact").subject).toBe(
+    "Contact: Ada Lovelace (Acme)",
+  );
+});

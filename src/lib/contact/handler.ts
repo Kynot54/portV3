@@ -2,7 +2,7 @@ import { isFakeSend, missingServerEnv } from "./config";
 import { buildEmail } from "./email";
 import type { sendEmail } from "./resend";
 import type { verifyTurnstile } from "./turnstile";
-import { validateContact } from "./validate";
+import { parseSource, validateContact } from "./validate";
 
 const MAX_BODY = 20_000;
 
@@ -61,7 +61,7 @@ export async function handleContact(
     return reply(403, { ok: false });
 
   const sent = await send(
-    buildEmail(result.data, env.CONTACT_TO_EMAIL!),
+    buildEmail(result.data, env.CONTACT_TO_EMAIL!, parseSource(body)),
     env.RESEND_API_KEY!,
   );
   if (!sent.ok) {
