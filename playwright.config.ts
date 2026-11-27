@@ -22,6 +22,9 @@ export default defineConfig({
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA",
       NEXT_PUBLIC_CAL_LINK: "test/30min",
       CONTACT_FAKE_SEND: "1",
+      // Services on, with a placeholder consultation link (stubbed like Cal above).
+      SERVICES_ENABLED: "true",
+      NEXT_PUBLIC_CAL_CONSULT_LINK: "test/consultation",
     },
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,

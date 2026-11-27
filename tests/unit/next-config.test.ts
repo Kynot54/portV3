@@ -27,3 +27,18 @@ test("assertPublicEnv passes outside production", () => {
   expect(() => assertPublicEnv({})).not.toThrow();
   expect(() => assertPublicEnv({ VERCEL_ENV: "preview" })).not.toThrow();
 });
+
+test("with Services on, production also needs the consultation link", () => {
+  const on = { VERCEL_ENV: "production", SERVICES_ENABLED: "true", ...both };
+  expect(() => assertPublicEnv(on)).toThrow(/NEXT_PUBLIC_CAL_CONSULT_LINK/);
+  expect(() =>
+    assertPublicEnv({ ...on, NEXT_PUBLIC_CAL_CONSULT_LINK: "kyle/consult" }),
+  ).not.toThrow();
+  // Off: not needed. Preview: never checked.
+  expect(() =>
+    assertPublicEnv({ VERCEL_ENV: "production", ...both }),
+  ).not.toThrow();
+  expect(() =>
+    assertPublicEnv({ VERCEL_ENV: "preview", SERVICES_ENABLED: "true" }),
+  ).not.toThrow();
+});
