@@ -106,6 +106,7 @@ test("valid submit posts fields + token and shows the sent line; fields clear", 
     role: "EM",
     message: "Hello there, Kyle.",
     token: "tok-1",
+    source: "contact",
   });
   expect(screen.getByLabelText("Name")).toHaveValue("");
   expect(screen.getByLabelText("Message")).toHaveValue("");
@@ -240,4 +241,31 @@ test("the button stays focusable while sending (focus isn't dropped)", async () 
   const button = screen.getByRole("button", { name: "Sending…" });
   expect(button).not.toHaveAttribute("disabled");
   expect(button).toHaveAttribute("aria-disabled", "true");
+});
+
+test('source="services" is sent with the message', async () => {
+  fetchMock.mockImplementation(() => ok());
+  const user = userEvent.setup();
+  render(<ContactForm siteKey="site" source="services" />);
+  await fillValid(user);
+  await user.click(screen.getByRole("button", { name: "Send message" }));
+  await screen.findByRole("status");
+  expect(JSON.parse(fetchMock.mock.calls[0][1].body).source).toBe("services");
+});
+
+test("on Services, the role and message examples fit a founder", () => {
+  render(<ContactForm siteKey="site" source="services" />);
+  expect(screen.getByLabelText("Your role (optional)")).toHaveAttribute(
+    "placeholder",
+    "Owner",
+  );
+  expect(screen.getByLabelText("Message")).toHaveAttribute(
+    "placeholder",
+    "Hi Kyle, I run a small business and I'd like a website where customers can request a quote online.",
+  );
+  // Name, email and company examples are shared.
+  expect(screen.getByLabelText("Company (optional)")).toHaveAttribute(
+    "placeholder",
+    "Acme Inc.",
+  );
 });

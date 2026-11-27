@@ -33,7 +33,7 @@ export const test = base.extend<{
 });
 export { expect };
 
-export const ROUTES = ["/", "/work", "/blog", "/contact"] as const;
+export const ROUTES = ["/", "/work", "/blog", "/contact", "/services"] as const;
 export const isMobile = (page: Page) =>
   (page.viewportSize()?.width ?? 1440) < 640;
 

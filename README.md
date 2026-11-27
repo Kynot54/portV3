@@ -19,7 +19,9 @@ npm run dev          # http://localhost:3000
 npm run build && npm run start
 ```
 
-`npm run dev` reads `.env.development`, which holds public test values: Turnstile's test key, Cal.com's demo calendar, and a fake send. The contact page works locally with no accounts. `next build` never reads it. The real keys live only in Vercel's Production environment.
+`npm run dev` reads `.env.development`, which holds public test values: Turnstile's test key, Cal.com's demo calendar (for both the intro call and the Services consultation), a fake send, and Services switched on. The contact page works locally with no accounts. `next build` never reads it. The real keys live only in Vercel's Production environment.
+
+**Services:** `/services` exists only when `SERVICES_ENABLED=true`. A production build with it on also needs `NEXT_PUBLIC_CAL_CONSULT_LINK` (the consultation event on Cal.com), or it fails.
 
 | Script                                                        | What it does                                                                          |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -52,7 +54,7 @@ Each project page shows one image in a 16:9 frame, at most 768 CSS px wide. A 4K
 
 ## Before merging a change to headers or third-party embeds
 
-Previews have no env vars, so check the real embeds locally. Build and start with Turnstile's public test key (`NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA`) and any public Cal link. Then, on `/contact` in Chromium, Firefox and WebKit, focus the form and press Book a call. There should be no "Refused to…" (CSP) errors. The e2e stand-ins can't catch these.
+Previews have no env vars, so check the real embeds locally. Build and start with Turnstile's public test key (`NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA`), any public Cal link for both `NEXT_PUBLIC_CAL_LINK` and `NEXT_PUBLIC_CAL_CONSULT_LINK`, and `SERVICES_ENABLED=true` (in zsh, export each one separately). Then, on `/contact` and `/services` in Chromium, Firefox and WebKit, focus the form and press the booking button. There should be no "Refused to…" (CSP) errors. The e2e stand-ins can't catch these.
 
 ## After a production deploy
 

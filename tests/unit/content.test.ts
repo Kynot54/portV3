@@ -12,7 +12,8 @@ import {
 } from "@/lib/content/load";
 import { HERO_PROOF } from "@/components/home/hero";
 import { ABOUT_TEXT } from "@/components/home/about";
-import { SITE_DESCRIPTION } from "@/lib/seo";
+import { PAGE_DESCRIPTIONS, SITE_DESCRIPTION } from "@/lib/seo";
+import { servicesCopyText } from "@/lib/services-copy";
 
 const F = resolve("tests/fixtures/content");
 
@@ -235,17 +236,38 @@ const CLAIMS: [copyFragment: string, resumePhrases: string[]][] = [
     "It screened 100+ applicants and raised hiring efficiency by over 35%.",
     ["100+ applicants", "hiring efficiency by over 35%"],
   ],
+  // Services (Slice 7)
+  [
+    "two sections of 40+ students each",
+    ["two sections of 40+ undergraduate students each"],
+  ],
+  ["lectures and labs for 60+ students", ["for 60+ undergraduate students"]],
+  [
+    "built in under two weeks and maintained for a year",
+    ["under 2 weeks", "maintenance for a year"],
+  ],
+  ["1,000+ users; donations rose 40%", ["serving 1,000+ users", "by 40%"]],
+  [
+    "screened 100+ applicants. Hiring efficiency rose over 35%",
+    ["100+ applicants", "hiring efficiency by over 35%"],
+  ],
+  [
+    "for 50+ clients that cut manual review by 50%",
+    ["over 50 clients", "cutting manual review down by 50%"],
+  ],
 ];
 /** Tool and degree names that contain digits but aren't claims. */
 const EXEMPT =
-  /GPT-\d(\.\d)?|PHP 8\.2|HTML5|CSS3|C\+\+|M\.S\.|one-time|one place|all three|each one/gi;
+  /30-minute|2–3 business days|one problem|GPT-\d(\.\d)?|PHP 8\.2|HTML5|CSS3|C\+\+|M\.S\.|one-time|one place|all three|each one/gi;
 const QUANTITY =
   /\d|\b(one|two|three|four|five|six|seven|eight|nine|ten|twelve|dozens?|hundreds?|thousands?|millions?|a (year|day|week|month))\b/i;
 
 /** Quantities left in `text` after removing exempt names and mapped fragments. */
 function unmappedQuantities(text: string): string | null {
   let rest = text.replace(EXEMPT, " ");
-  for (const [fragment] of CLAIMS) rest = rest.split(fragment).join(" ");
+  // Longest first, so a short fragment never cuts into a longer one.
+  const fragments = CLAIMS.map(([f]) => f).sort((x, y) => y.length - x.length);
+  for (const fragment of fragments) rest = rest.split(fragment).join(" ");
   return rest.match(QUANTITY)?.[0] ?? null;
 }
 
@@ -280,6 +302,8 @@ test("every quantity on Home and work pages traces to its exact resume phrase", 
     HERO_PROOF.join(" · "),
     ABOUT_TEXT,
     SITE_DESCRIPTION,
+    PAGE_DESCRIPTIONS.services,
+    ...servicesCopyText(),
   ];
   for (const text of copy)
     expect(

@@ -1,13 +1,14 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "BLOG_SAMPLES=1 NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA NEXT_PUBLIC_CAL_LINK=test/30min CONTACT_FAKE_SEND=1 npm run build && BLOG_SAMPLES=1 NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA NEXT_PUBLIC_CAL_LINK=test/30min CONTACT_FAKE_SEND=1 npm run start -- -p 3200",
+      "startServerCommand": "BLOG_SAMPLES=1 NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA NEXT_PUBLIC_CAL_LINK=test/30min NEXT_PUBLIC_CAL_CONSULT_LINK=test/consultation SERVICES_ENABLED=true CONTACT_FAKE_SEND=1 npm run build && BLOG_SAMPLES=1 NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA NEXT_PUBLIC_CAL_LINK=test/30min NEXT_PUBLIC_CAL_CONSULT_LINK=test/consultation SERVICES_ENABLED=true CONTACT_FAKE_SEND=1 npm run start -- -p 3200",
       "startServerReadyPattern": "Ready",
       "url": [
         "http://localhost:3200/",
         "http://localhost:3200/work",
         "http://localhost:3200/blog",
         "http://localhost:3200/contact",
+        "http://localhost:3200/services",
         "http://localhost:3200/work/ai-document-pipelines",
         "http://localhost:3200/work/control-bh",
         "http://localhost:3200/work/ulti-health",

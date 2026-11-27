@@ -145,3 +145,22 @@ test("a non-JSON content type is refused (blocks cross-site form posts)", async 
   expect(d.verify).not.toHaveBeenCalled();
   expect(d.send).not.toHaveBeenCalled();
 });
+
+test("source picks the subject; an unknown source is a Contact message", async () => {
+  for (const [source, prefix] of [
+    ["services", "Services: "],
+    ["x", "Contact: "],
+    [undefined, "Contact: "],
+  ] as const) {
+    const d = setup();
+    const res = await handleContact(
+      post(JSON.stringify({ ...body, source })),
+      d,
+    );
+    expect(res.status).toBe(200);
+    const [email] = vi.mocked(d.send).mock.calls[0] as unknown as [
+      { subject: string },
+    ];
+    expect(email.subject.startsWith(prefix), String(source)).toBe(true);
+  }
+});

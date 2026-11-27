@@ -112,3 +112,40 @@ test("on failure the empty calendar region goes away and the link takes focus", 
   expect(screen.queryByRole("region", { name: "Booking calendar" })).toBeNull();
   expect(link).toHaveFocus();
 });
+
+const SERVICES = {
+  intro: "A free 30-minute consultation.",
+  label: "Book a consultation",
+};
+
+test("intro and button label can be set (Services)", () => {
+  render(<Booking calLink="kyle/consultation" {...SERVICES} />);
+  expect(screen.getByText(SERVICES.intro)).toBeInTheDocument();
+  expect(
+    screen.getByRole("button", { name: "Book a consultation" }),
+  ).toBeInTheDocument();
+  expect(screen.queryByText("A 30-minute intro call.")).toBeNull();
+});
+
+test("Services labels with no link: the intro, no button, no error", () => {
+  render(<Booking calLink={undefined} {...SERVICES} />);
+  expect(screen.getByText(SERVICES.intro)).toBeInTheDocument();
+  expect(screen.queryByRole("button")).toBeNull();
+});
+
+test("openOnHash: going to #book opens the calendar (the Services hero link)", async () => {
+  render(
+    <>
+      <Booking calLink="kyle/consultation" openOnHash="#book" />
+      <div id="booking-calendar" />
+    </>,
+  );
+  expect(loadScript).not.toHaveBeenCalled();
+  window.location.hash = "#book";
+  window.dispatchEvent(new HashChangeEvent("hashchange"));
+  expect(
+    await screen.findByRole("region", { name: "Booking calendar" }),
+  ).toBeInTheDocument();
+  expect(loadScript).toHaveBeenCalledTimes(1);
+  window.location.hash = "";
+});

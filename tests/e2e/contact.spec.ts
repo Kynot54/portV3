@@ -1,32 +1,5 @@
-import type { Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
-
-const THIRD_PARTY = /challenges\.cloudflare\.com|cal\.com/;
-
-/** Serve stand-ins for Turnstile and Cal.com; never reach the real services. */
-async function stubThirdParty(page: Page, { calFails = false } = {}) {
-  await page.route("https://challenges.cloudflare.com/**", (r) =>
-    r.fulfill({
-      path: "tests/e2e/stubs/turnstile.js",
-      contentType: "text/javascript",
-    }),
-  );
-  await page.route("https://app.cal.com/**", (r) =>
-    calFails
-      ? r.abort()
-      : r.fulfill({
-          path: "tests/e2e/stubs/cal.js",
-          contentType: "text/javascript",
-        }),
-  );
-  await page.route("https://cal.com/**", (r) => r.abort());
-}
-
-async function fill(page: Page) {
-  await page.getByLabel("Name", { exact: true }).fill("Ada");
-  await page.getByLabel("Email", { exact: true }).fill("ada@example.com");
-  await page.getByLabel("Message", { exact: true }).fill("Hello there, Kyle.");
-}
+import { THIRD_PARTY, fill, stubThirdParty } from "./third-party";
 
 test("no third-party request before interaction", async ({ page }) => {
   await stubThirdParty(page);
@@ -98,6 +71,11 @@ test("Book a call loads the calendar full width and focuses it", async ({
   await page.getByRole("button", { name: "Book a call" }).click();
   const region = page.getByRole("region", { name: "Booking calendar" });
   await expect(region.locator("iframe")).toBeVisible();
+  // The intro call, not the Services consultation.
+  await expect(region.locator("iframe")).toHaveAttribute(
+    "data-cal-link",
+    "test/30min",
+  );
   await expect(region).toBeFocused();
   if (info.project.name === "desktop") {
     const grid = (await page.locator("[data-contact-grid]").boundingBox())!;

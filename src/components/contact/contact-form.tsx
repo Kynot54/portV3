@@ -9,6 +9,7 @@ import {
   validateContact,
   type ContactErrors,
   type ContactField,
+  type ContactSource,
 } from "@/lib/contact/validate";
 
 const TURNSTILE_SRC =
@@ -44,6 +45,12 @@ const PLACEHOLDERS: Record<ContactField, string> = {
   message:
     "Hi Kyle, we're hiring a software engineer and I'd like to talk about the role.",
 };
+// On Services, a founder writes about what they need, not a recruiter (Kyle, 2026-11-27).
+const SERVICES_PLACEHOLDERS: Partial<Record<ContactField, string>> = {
+  role: "Owner",
+  message:
+    "Hi Kyle, I run a small business and I'd like a website where customers can request a quote online.",
+};
 const AUTOCOMPLETE: Record<ContactField, string> = {
   name: "name",
   email: "email",
@@ -61,9 +68,12 @@ const field =
  */
 export function ContactForm({
   siteKey,
+  source = "contact",
   tokenTimeoutMs = 10_000,
 }: {
   siteKey: string | undefined;
+  /** Which page this form is on; Services messages arrive as "Services: …". */
+  source?: ContactSource;
   /** How long a submit waits for Turnstile's token before giving up. */
   tokenTimeoutMs?: number;
 }) {
@@ -170,7 +180,7 @@ export function ContactForm({
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...result.data, token: t }),
+        body: JSON.stringify({ ...result.data, token: t, source }),
       });
       if (res.ok) {
         setValues(empty);
@@ -214,7 +224,10 @@ export function ContactForm({
                 f === "email" ? "email" : f === "message" ? undefined : "text"
               }
               autoComplete={AUTOCOMPLETE[f]}
-              placeholder={PLACEHOLDERS[f]}
+              placeholder={
+                (source === "services" && SERVICES_PLACEHOLDERS[f]) ||
+                PLACEHOLDERS[f]
+              }
               rows={f === "message" ? 6 : undefined}
               value={values[f]}
               onChange={(e) =>

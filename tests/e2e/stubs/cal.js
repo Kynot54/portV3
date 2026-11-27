@@ -10,6 +10,8 @@
         : opts.elementOrSelector;
     const frame = document.createElement("iframe");
     frame.title = "Cal stub";
+    // Which event was asked for, so tests can tell the two calendars apart.
+    frame.dataset.calLink = opts.calLink;
     // A real (tiny) document: Firefox crashes when axe injects into an empty about:blank frame.
     frame.srcdoc =
       "<!doctype html><html lang=en><title>Cal stub</title><p>Calendar</p></html>";

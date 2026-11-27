@@ -1,3 +1,5 @@
+import { isServicesEnabled } from "../flags";
+
 type Env = Record<string, string | undefined>;
 
 const SERVER_ENV = [
@@ -31,7 +33,14 @@ const PUBLIC_ENV = [
  */
 export function assertPublicEnv(env: Env): void {
   if (env.VERCEL_ENV !== "production") return;
-  const missing = PUBLIC_ENV.filter((k) => !env[k]?.trim());
+  const required = [
+    ...PUBLIC_ENV,
+    // The Services page books on its own Cal.com event.
+    ...(isServicesEnabled(env)
+      ? (["NEXT_PUBLIC_CAL_CONSULT_LINK"] as const)
+      : []),
+  ];
+  const missing = required.filter((k) => !env[k]?.trim());
   if (missing.length)
     throw new Error(
       `Contact page: set ${missing.join(" and ")} in Vercel (Production) before deploying.`,

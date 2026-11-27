@@ -39,9 +39,24 @@ function cal(): CalApi {
  */
 export function Booking({
   calLink,
+  intro = "A 30-minute intro call.",
+  label = "Book a call",
+  openOnHash,
+  accent = false,
   timeoutMs = 10_000,
 }: {
+  /** The call-to-action colour, where booking is the page's main action (Services). */
+  accent?: boolean;
+  /**
+   * Opens the calendar when the page's hash becomes this (e.g. "#book"), so a
+   * link elsewhere on the page can book directly. Without JS it's a jump link.
+   */
+  openOnHash?: string;
   calLink: string | undefined;
+  /** The line above the button. */
+  intro?: string;
+  /** The button's text before the calendar loads. */
+  label?: string;
   timeoutMs?: number;
 }) {
   const [phase, setPhase] = useState<"idle" | "loading" | "ready" | "failed">(
@@ -51,6 +66,16 @@ export function Booking({
   const fallback = useRef<HTMLAnchorElement>(null);
   const { resolvedTheme } = useTheme();
   const theme = resolvedTheme === "light" ? "light" : "dark";
+
+  useEffect(() => {
+    if (!openOnHash || !calLink) return;
+    const open = () => {
+      if (window.location.hash === openOnHash)
+        setPhase((p) => (p === "idle" ? "loading" : p));
+    };
+    window.addEventListener("hashchange", open);
+    return () => window.removeEventListener("hashchange", open);
+  }, [openOnHash, calLink]);
 
   useEffect(() => {
     const el = region.current;
@@ -108,18 +133,16 @@ export function Booking({
 
   return (
     <div className="flex flex-col items-start gap-4">
-      <p className="text-body-fluid text-muted-foreground">
-        A 30-minute intro call.
-      </p>
+      <p className="text-body-fluid text-muted-foreground">{intro}</p>
       {calLink && (phase === "idle" || phase === "loading") && (
         <Button
           type="button"
-          variant="outline"
+          variant={accent ? "default" : "outline"}
           disabled={phase === "loading"}
           onClick={() => setPhase("loading")}
           className="h-11 px-5 text-sm"
         >
-          {phase === "loading" ? "Loading calendar…" : "Book a call"}
+          {phase === "loading" ? "Loading calendar…" : label}
         </Button>
       )}
       {calLink && phase === "failed" && (

@@ -1,5 +1,17 @@
 export type ContactField = "name" | "email" | "company" | "role" | "message";
 export type ContactInput = Record<ContactField, string>;
+/** Which page sent the message. It only picks the email subject. */
+export type ContactSource = "contact" | "services";
+
+/** "services" only when sent exactly; anything else is a Contact message. */
+export function parseSource(raw: unknown): ContactSource {
+  return raw &&
+    typeof raw === "object" &&
+    (raw as { source?: unknown }).source === "services"
+    ? "services"
+    : "contact";
+}
+
 export type ContactErrors = Partial<Record<ContactField, string>>;
 
 export const FIELDS: ContactField[] = [

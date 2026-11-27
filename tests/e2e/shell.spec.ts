@@ -19,12 +19,7 @@ test.describe("not found", () => {
     );
   });
 
-  test("/services is 404 while SERVICES_ENABLED is off", async ({ page }) => {
-    const res = await page.goto("/services");
-    expect(res?.status()).toBe(404);
-  });
-
-  for (const path of ["/nope", "/services"])
+  for (const path of ["/nope"])
     test(`${path} has no canonical and isn't indexed`, async ({ page }) => {
       await page.goto(path);
       await expect(page.locator('head link[rel="canonical"]')).toHaveCount(0);
