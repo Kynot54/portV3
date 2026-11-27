@@ -70,6 +70,7 @@ media:
 
 The build fails if a file is missing, an image has no alt text, there aren't exactly two images, or a clip has no description.
 
+- **Phone apps** (Ulti-Health, AI Mind Companion): place one or two phone screens on a 16:9 canvas, for the images and the clip.
 - **Hide client data** (names, figures, documents), and check that each client is fine with the media being public.
 - **Revisit if traffic surges** (Kyle, 2026-11-27): clips are served from this site. If they start to dominate Vercel's bandwidth, move them to a video host. Only the `src` values and the security policy's `media-src` would change.
 - **Tests:** `WORK_SAMPLES=1` adds a sample project with generated media (`scripts/make-sample-media.mjs`) to e2e and Lighthouse builds. It never appears in production.

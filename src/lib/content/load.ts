@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { DESCRIPTION_MAX, DESCRIPTION_MIN } from "@/lib/description-limits";
 import { isAbsolute, join } from "node:path";
@@ -172,12 +172,17 @@ function media(r: Raw, mediaRoot: string): WorkMedia | null {
   const root = isAbsolute(mediaRoot)
     ? mediaRoot
     : join(process.cwd(), mediaRoot);
-  const file = (src: unknown): string => {
+  const file = (src: unknown, kind: "image" | "clip"): string => {
     if (typeof src !== "string" || !src.trim() || src.includes("/"))
       fail("needs a file name for each src");
     const name = (src as string).trim();
-    if (!existsSync(join(root, r.slug, name)))
-      fail(`file ${r.slug}/${name} not found`);
+    const path = join(root, r.slug, name);
+    if (!existsSync(path)) fail(`file ${r.slug}/${name} not found`);
+    if (!statSync(path).isFile()) fail(`${r.slug}/${name} is not a file`);
+    const ext = name.toLowerCase().slice(name.lastIndexOf("."));
+    if (kind === "image" && ![".png", ".jpg", ".jpeg", ".webp"].includes(ext))
+      fail(`image ${name} must be .png, .jpg, .jpeg or .webp`);
+    if (kind === "clip" && ext !== ".mp4") fail(`clip ${name} must be .mp4`);
     return `/images/work/${r.slug}/${name}`;
   };
   if (!Array.isArray(m.images) || m.images.length !== 2)
@@ -185,14 +190,17 @@ function media(r: Raw, mediaRoot: string): WorkMedia | null {
   const images = (m.images as unknown[]).map((img) => {
     const i = (img ?? {}) as { src?: unknown; alt?: unknown };
     if (typeof i.alt !== "string" || !i.alt.trim()) fail("alt is required");
-    return { src: file(i.src), alt: (i.alt as string).trim() };
+    return { src: file(i.src, "image"), alt: (i.alt as string).trim() };
   }) as [MediaImage, MediaImage];
   let clip: WorkMedia["clip"] = null;
   if (m.clip !== undefined && m.clip !== null) {
     const c = m.clip as { src?: unknown; description?: unknown };
     if (typeof c.description !== "string" || !c.description.trim())
       fail("clip description is required");
-    clip = { src: file(c.src), description: (c.description as string).trim() };
+    clip = {
+      src: file(c.src, "clip"),
+      description: (c.description as string).trim(),
+    };
   }
   return { images, clip };
 }

@@ -507,6 +507,8 @@ test.each([
   ["work-media-no-alt", /alt is required/],
   ["work-media-one-image", /exactly two images/],
   ["work-media-clip-no-description", /description is required/],
+  ["work-media-dir-src", /not a file/],
+  ["work-media-wrong-type", /\.png, \.jpg, \.jpeg or \.webp/],
 ])("bad media in %s fails the build", async (dir, problem) => {
   const err = await getWork(`${F}/${dir}`, MEDIA).catch((e) => e);
   expect(err).toMatchObject({ file: "x.mdx", field: "media" });
