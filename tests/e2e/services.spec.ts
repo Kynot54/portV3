@@ -1,5 +1,5 @@
 import { test, expect } from "./fixtures";
-import { fill, stubThirdParty } from "./third-party";
+import { fill, formReady, stubThirdParty } from "./third-party";
 
 test("Book a consultation loads the consultation calendar below both columns", async ({
   page,
@@ -21,6 +21,7 @@ test("Book a consultation loads the consultation calendar below both columns", a
 test("a message sent from Services is tagged services", async ({ page }) => {
   await stubThirdParty(page);
   await page.goto("/services");
+  await formReady(page);
   await fill(page);
   const sent = page.waitForRequest("**/api/contact");
   await page.getByRole("button", { name: "Send message" }).click();

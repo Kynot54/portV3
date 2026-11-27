@@ -26,3 +26,13 @@ export async function fill(page: Page) {
   await page.getByLabel("Email", { exact: true }).fill("ada@example.com");
   await page.getByLabel("Message", { exact: true }).fill("Hello there, Kyle.");
 }
+
+/**
+ * Waits until the form can send: focusing a field loads Turnstile, which only
+ * happens once the form's code is running. Clicking earlier can do nothing.
+ */
+export async function formReady(page: Page) {
+  const turnstile = page.waitForRequest(/challenges\.cloudflare\.com/);
+  await page.getByLabel("Name", { exact: true }).focus();
+  await turnstile;
+}
